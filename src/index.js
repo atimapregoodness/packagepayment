@@ -50,6 +50,9 @@ app.use(methodOverride("_method"));
 app.use(passport.initialize());
 app.use(passport.session());
 
+const serverless = require("serverless-http");
+module.exports = serverless(app);
+
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(
   "/bootstrap",
