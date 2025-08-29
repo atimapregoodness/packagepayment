@@ -1,0 +1,27 @@
+<h1>My Links</h1>
+<div class="container">
+  <% for (let link of links) { %>
+
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title"><%= link.name %></h5>
+        <p class="card-text text-muted">
+          <%= link.description || "No description available." %>
+        </p>
+      </div>
+
+      <div class="card-footer bg-transparent border-top-0">
+        <a
+          href="<%= link.link %>"
+          target="_blank"
+          class="btn btn-primary btn-sm"
+        >
+          Visit Link
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <% } %>
+</div>

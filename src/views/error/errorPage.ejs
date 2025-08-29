@@ -1,0 +1,15 @@
+<title>Error <%= err.status %> -_ inGallery</title>
+
+<div class="errPageContainer">
+  <div class="text">
+    <% if(err.status === 404) {%>
+    <p>URL: <span><%= fullUrl %></span></p>
+    <p>please check the <span>url</span> and refresh this page</p>
+    <% } else{%>
+    <p><%= err.message %></p>
+    <% } %>
+  </div>
+  <a href="<%=previousUrl %>"
+    ><button><i class="fa-solid fa-arrow-left"></i> Back</button></a
+  >
+</div>

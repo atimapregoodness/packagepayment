@@ -1,0 +1,183 @@
+<div class="container my-4" id="payment-section">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
+      <!-- Main Card -->
+      <div class="card transaction-card">
+        <!-- Header Section -->
+        <div class="header-section text-center">
+          <h2>
+            <b>Elon Musk, CEO of Tesla and SpaceX</b>
+          </h2>
+          <h4>
+            is sending you <b><%=payment.currency %><%= payment.amount %></b>
+          </h4>
+          <p><i class="fas fa-lock me-2"></i> Secure Payment Processing</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="card-body p-4 p-md-5">
+          <!-- Alert -->
+          <div class="alert alert-primary d-flex align-items-center">
+            <i class="fas fa-info-circle fa-lg me-3"></i>
+            <div>
+              This transaction is secured with bank-level encryption and fraud
+              monitoring
+            </div>
+          </div>
+
+          <!-- Recipient Info -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <p class="mb-1 text-muted">Recipient</p>
+              <h4 class="mb-0"><b><%= payment.name %></b></h4>
+              <p class="mb-0">
+                Account Number: <b><%= payment.accountNumber %></b>
+              </p>
+              <p class="mb-0">Bank Name: <b><%= payment.bank %></b></p>
+              <p class="text-muted">Email: <b><%= payment.email %></b></p>
+            </div>
+            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+              <p class="mb-1 text-muted">Transaction ID</p>
+              <h5 class="mb-0"><b><%= payment.transactionId %></b></h5>
+              <small class="text-muted"
+                >Initiated: <%= payment.createdAt.toLocaleString() %></small
+              >
+            </div>
+          </div>
+
+          <!-- Amount Display -->
+          <div class="bg-light p-4 rounded-3 mb-4 text-center">
+            <p class="mb-1">Trasaction Amount</p>
+            <div class="amount-display text-success">
+              <%= payment.currency %><%=payment.amount %>
+            </div>
+          </div>
+
+          <!-- Progress -->
+          <h4 class="mt-4 mb-3 section-title">Transfer Progress</h4>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Processing</span>
+            <span><%= payment.progress %> Complete</span>
+          </div>
+
+          <div class="progress mb-4" style="height: 20px">
+            <div
+              class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+              role="progressbar"
+              style="width: <%= payment.progress %>"
+              aria-valuenow="<%= payment.progress %>"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <%= payment.progress %>%
+            </div>
+          </div>
+
+          <!-- Status Items -->
+          <div class="status-item completed">
+            <div class="d-flex align-items-center">
+              <div class="feature-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <div>
+                <h5 class="mb-1">Payment Processed</h5>
+                <p class="text-muted mb-0">
+                  Your payment has been successfully authorized and processed.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-item completed">
+            <div class="d-flex align-items-center">
+              <div class="feature-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <div>
+                <h5 class="mb-1">Security Verification</h5>
+                <p class="text-muted mb-0">
+                  Transaction passed all security checks and fraud detection.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-item pending">
+            <div class="d-flex align-items-center">
+              <div class="feature-icon">
+                <i class="fas fa-arrow-right"></i>
+              </div>
+              <div>
+                <h5 class="mb-1">Delivery in Progress</h5>
+                <p class="text-muted mb-0">
+                  To finalize your transfer, a compliance‑related fee of
+                  <b><%= payment.currency %><%= payment.txsFee %></b>
+                  will apply. This forms part of our standard regulatory
+                  procedures.
+                </p>
+                <button class="btn btn-info">Make Payment</button>
+                <div class="mt-2">
+                  <small class="text-primary"
+                    ><i class="fas fa-clock me-1"></i> We apologize for any
+                    delay. Thank you for selecting our service.</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Features -->
+          <h4 class="mt-5 mb-3 section-title">Security & Protection</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="security-badge h-100">
+                <div class="benefit-item">
+                  <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1">256-bit Encryption</h6>
+                    <p class="text-muted small mb-0">
+                      Bank-level security for all transactions
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="security-badge h-100">
+                <div class="benefit-item">
+                  <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-1">Fraud Monitoring</h6>
+                    <p class="text-muted small mb-0">
+                      24/7 monitoring for suspicious activity
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Support Section -->
+          <div class="alert alert-light mt-4">
+            <div class="d-flex align-items-center">
+              <div class="feature-icon">
+                <i class="fas fa-headset"></i>
+              </div>
+              <div>
+                <h5 class="mb-1">Need assistance?</h5>
+                <p class="mb-2">
+                  Our support team is available 24/7 to help with your
+                  transaction, kindly contact your support specialist.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

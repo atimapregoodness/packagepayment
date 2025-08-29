@@ -1,0 +1,175 @@
+<div class="card p-4 shadow-sm mx-auto" style="max-width: 600px">
+  <h5 class="mb-4 text-center fw-bold">Create Fake Funding Link</h5>
+  <form action="/create-link" method="POST">
+    <div class="mb-3">
+      <label for="name" class="form-label">Recipient Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        name="name"
+        placeholder="John Doe"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="phone" class="form-label">Recipient Phone Number</label>
+      <input
+        type="number"
+        class="form-control"
+        id="phone"
+        name="phone"
+        placeholder="enter phone number"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Recipient Email Address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="example@email.com"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="message" class="form-label">Fake Funding Message</label>
+      <textarea class="form-control" id="message" name="message" rows="3">
+To finalize your transfer, a compliance‑related fee of [Fee]  will apply. This forms part of our standard regulatory procedures.</textarea
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="currency" class="form-label">Currency</label>
+      <select class="form-select" id="currency" name="currency" required>
+        <option value="$">$ - US Dollar</option>
+        <option value="₦">₦ - Nigerian Naira</option>
+        <option value="€">€ - Euro</option>
+        <option value="£">£ - British Pound</option>
+        <option value="¥">¥ - Japanese Yen</option>
+        <option value="₹">₹ - Indian Rupee</option>
+        <option value="$">$ - Canadian Dollar</option>
+        <option value="$">$ - Australian Dollar</option>
+        <option value="R">R - South African Rand</option>
+        <option value="KSh">KSh - Kenyan Shilling</option>
+        <option value="₵">₵ - Ghanaian Cedi</option>
+        <option value="﷼ ">﷼ - Saudi Riyal</option>
+        <option value="R$">R$ - Brazilian Real</option>
+        <option value="₽">₽ - Russian Ruble</option>
+        <option value="$">$ - Mexican Peso</option>
+        <option value="Fr">Fr - Swiss Franc</option>
+        <option value="₨">₨ - Pakistani Rupee</option>
+        <option value="৳">৳ - Bangladeshi Taka</option>
+        <option value="Rp">Rp - Indonesian Rupiah</option>
+        <option value="₱">₱ - Philippine Peso</option>
+        <option value="د.إ ">د.إ - UAE Dirham</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="amount" class="form-label">Receive amount</label>
+      <input
+        type="number"
+        class="form-control"
+        id="amount"
+        name="amount"
+        placeholder="amount"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="bank" class="form-label">Recipient Bank</label>
+      <input
+        type="text"
+        class="form-control"
+        id="bank"
+        name="bank"
+        placeholder="enter bank name"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="accountNumber" class="form-label"
+        >Recipient Account Number</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        id="accountNumber"
+        name="accountNumber"
+        placeholder="enter account number"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="txsFee" class="form-label">Transaction Fee</label>
+      <input
+        type="number"
+        class="form-control"
+        id="txsFee"
+        name="txsFee"
+        placeholder="enter transaction fee"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="progressRange" class="form-label">Transfer Progress</label>
+      <div class="d-flex align-items-center gap-3">
+        <input
+          type="range"
+          class="form-range flex-grow-1"
+          id="progressRange"
+          name="progress"
+          min="0"
+          max="100"
+          step="1"
+          value="<%= typeof progress !== 'undefined' ? progress : 0 %>"
+          aria-describedby="progressHelp"
+        />
+        <input
+          type="number"
+          class="form-control"
+          id="progressNumber"
+          min="0"
+          max="100"
+          step="1"
+          value="<%= typeof progress !== 'undefined' ? progress : 0 %>"
+          style="width: 100px"
+        />
+      </div>
+      <div class="d-flex justify-content-between mt-1">
+        <small class="text-muted">0%</small>
+        <small class="text-muted">100%</small>
+      </div>
+      <div id="progressHelp" class="form-text">
+        Set the progress percentage for this transaction.
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-tesla text-primary">
+      Generate Link
+    </button>
+  </form>
+</div>
+
+<script>
+  (function () {
+    const range = document.getElementById("progressRange");
+    const number = document.getElementById("progressNumber");
+
+    if (range && number) {
+      const clamp = (v) => Math.min(100, Math.max(0, Number(v) || 0));
+      range.addEventListener("input", () => (number.value = range.value));
+      number.addEventListener("input", () => {
+        const v = clamp(number.value);
+        number.value = v;
+        range.value = v;
+      });
+    }
+  })();
+</script>
