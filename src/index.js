@@ -110,4 +110,12 @@ app.use((err, req, res, next) => {
 });
 
 // 🟢 9. EXPORT FOR SERVERLESS
-module.exports = serverless(app);
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running locally at http://localhost:${PORT}`);
+  });
+}
+
+// Export for Vercel
+module.exports = app;
