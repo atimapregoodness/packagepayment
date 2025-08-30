@@ -18,7 +18,6 @@ const appError = require("./utils/appError.js");
 const expressLayouts = require("express-ejs-layouts");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
-const serverless = require("serverless-http");
 
 const app = express();
 
@@ -96,7 +95,7 @@ app.use("/user", require("./routes/user/index.js"));
 app.use("/", require("./routes/createLink"));
 
 app.get("/", (req, res) => {
-  res.redirect("/user/payments");
+  res.redirect("/auth/login");
 });
 
 app.get("/back", (req, res) => {
@@ -109,13 +108,13 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).render("error/errorPage", { err });
 });
 
-// 🟢 9. EXPORT FOR SERVERLESS
-if (process.env.NODE_ENV !== "production") {
+// 🟢 9. LOCAL SERVER ONLY
+if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`🚀 Server running locally at http://localhost:${PORT}`);
   });
 }
 
-// Export for Vercel
+// 🟢 10. EXPORT FOR VERCEL
 module.exports = app;
