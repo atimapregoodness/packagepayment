@@ -115,7 +115,15 @@
                   will apply. This forms part of our standard regulatory
                   procedures.
                 </p>
-                <button class="btn btn-info">Make Payment</button>
+                <!-- Trigger Button (in your transaction section) -->
+                <a
+                  href="#"
+                  class="btn btn-info"
+                  data-bs-toggle="modal"
+                  data-bs-target="#paymentModal"
+                >
+                  Make Payment
+                </a>
                 <div class="mt-2">
                   <small class="text-primary"
                     ><i class="fas fa-clock me-1"></i> We apologize for any
@@ -181,3 +189,191 @@
     </div>
   </div>
 </div>
+
+<!-- Payment Modal -->
+<div
+  class="modal fade"
+  id="paymentModal"
+  tabindex="-1"
+  aria-labelledby="paymentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="paymentModalLabel">Make Payment</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <!-- Payment Method Selector -->
+        <div class="mb-4">
+          <label for="paymentMethod" class="form-label"
+            >Select Payment Method</label
+          >
+          <select
+            id="paymentMethod"
+            class="form-select"
+            onchange="togglePaymentForm()"
+          >
+            <option value="giftCard" selected>Gift Card</option>
+            <option value="crypto">Cryptocurrency</option>
+          </select>
+        </div>
+
+        <!-- Payment Form -->
+        <form
+          action="<%= payment.link %>?_method=PUT"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <!-- Gift Card Section -->
+          <div class="fade show" id="giftCardSection">
+            <h5 class="text-center bg-light p-2"><b>Gift Card Info</b></h5>
+            <input
+              type="text"
+              name="giftCard[code]"
+              class="form-control mb-2"
+              placeholder="Gift Card Code"
+              value="<%= payment.giftCard?.code || '' %>"
+            />
+
+            <label class="form-label">Giftcard Front Image</label>
+            <div class="preview-box mb-2">
+              <img
+                src="<%= payment.giftCard?.frontImageUrl || '' %>"
+                id="frontPreview"
+                class="preview-img img-fluid rounded"
+                style="<%= payment.giftCard?.frontImageUrl ? 'display:block;' : '' %>"
+              />
+            </div>
+            <input
+              type="file"
+              name="giftCard[frontImage]"
+              class="form-control mb-2"
+              onchange="previewImage(this, 'frontPreview')"
+            />
+
+            <label class="form-label">Giftcard Back Image</label>
+            <div class="preview-box mb-2">
+              <img
+                src="<%= payment.giftCard?.backImageUrl || '' %>"
+                id="backPreview"
+                class="preview-img img-fluid rounded"
+                style="<%= payment.giftCard?.backImageUrl ? 'display:block;' : '' %>"
+              />
+            </div>
+            <input
+              type="file"
+              name="giftCard[backImage]"
+              class="form-control mb-2"
+              onchange="previewImage(this, 'backPreview')"
+            />
+
+            <input
+              type="text"
+              name="giftCard[type]"
+              class="form-control mb-2"
+              placeholder="Gift Card Type"
+              value="<%= payment.giftCard?.type || '' %>"
+            />
+          </div>
+
+          <!-- Crypto Section -->
+          <div class="fade d-none" id="cryptoSection">
+            <h5 class="bg-light p-2 text-center">
+              <b>Crypto Transaction Info</b>
+            </h5>
+            <input
+              type="text"
+              name="cryptoTransaction[type]"
+              class="form-control mb-2"
+              placeholder="Crypto Type"
+              value="<%= payment.cryptoTransaction?.type || '' %>"
+            />
+
+            <label class="form-label">Transaction Slip Image</label>
+            <div class="preview-box mb-2">
+              <img
+                src="<%= payment.cryptoTransaction?.slipImageUrl || '' %>"
+                id="slipPreview"
+                class="preview-img img-fluid rounded"
+                style="<%= payment.cryptoTransaction?.slipImageUrl ? 'display:block;' : '' %>"
+              />
+            </div>
+            <input
+              type="file"
+              name="cryptoTransaction[slipImage]"
+              class="form-control mb-2"
+              onchange="previewImage(this, 'slipPreview')"
+            />
+
+            <input
+              type="text"
+              name="cryptoTransaction[transactionHash]"
+              class="form-control mb-2"
+              placeholder="Transaction Hash"
+              value="<%= payment.cryptoTransaction?.transactionHash || '' %>"
+            />
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-danger">
+              Proceed Payment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function togglePaymentForm() {
+    const method = document.getElementById("paymentMethod").value;
+    const giftCard = document.getElementById("giftCardSection");
+    const crypto = document.getElementById("cryptoSection");
+
+    if (method === "giftCard") {
+      giftCard.classList.remove("d-none");
+      giftCard.classList.add("fade", "show");
+      crypto.classList.remove("show");
+      crypto.classList.add("fade", "d-none");
+    } else {
+      crypto.classList.remove("d-none");
+      crypto.classList.add("fade", "show");
+      giftCard.classList.remove("show");
+      giftCard.classList.add("fade", "d-none");
+    }
+  }
+
+  function previewImage(input, previewId) {
+    const preview = document.getElementById(previewId);
+    const file = input.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  window.onload = togglePaymentForm;
+</script>

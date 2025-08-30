@@ -3,6 +3,23 @@ const router = express.Router();
 const wrapAssync = require("../../utils/wrapAsync");
 const Client = require("../../models/client"); // <-- your UserLink model
 
+router.get(
+  "/:linkTxt/payments/payment-method",
+  wrapAssync(async (req, res) => {
+    const { linkTxt } = req.params;
+
+    const userLink = await Client.findOne({
+      link: `/user/${linkTxt}/payments`,
+    }).populate("author");
+
+    console.log(userLink);
+
+    res.render("user/payment-method", {
+      client: userLink,
+    });
+  })
+);
+
 router.get("/:linkTxt/payments", async (req, res) => {
   try {
     const { linkTxt } = req.params;

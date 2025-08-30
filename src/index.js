@@ -13,7 +13,6 @@ const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
 const moment = require("moment");
-const ejsMate = require("ejs-mate");
 const appError = require("./utils/appError.js");
 const expressLayouts = require("express-ejs-layouts");
 const session = require("express-session");
@@ -23,7 +22,7 @@ const app = express();
 
 // 🟢 1. CONNECT TO DATABASE
 mongoose
-  .connect(process.env.MONGO_CONNECT, {})
+  .connect(process.env.MONGO_CONNECT)
   .then(() => console.log("✅ Database connected successfully"))
   .catch((err) => console.error("❌ Database connection failed", err));
 
@@ -60,12 +59,11 @@ app.use(
   express.static(path.join(__dirname, "../node_modules/bootstrap/dist"))
 );
 
-// 🟢 5. VIEW ENGINE SETUP
-app.engine("ejs", ejsMate);
+// 🟢 5. VIEW ENGINE + LAYOUTS
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(expressLayouts);
-app.set("layout", "layout/boilerplate");
+app.set("layout", "layout/boilerplate"); // default layout file (views/layout/boilerplate.ejs)
 
 // 🟢 6. GLOBAL VARIABLES
 app.use((req, res, next) => {
@@ -73,7 +71,7 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.info = req.flash("info");
-  res.warning = req.flash("warning");
+  res.locals.warning = req.flash("warning");
   res.locals.currentPage = req.originalUrl;
   res.locals.fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
   res.locals.moment = moment;
@@ -104,7 +102,7 @@ app.get("/back", (req, res) => {
 
 // 🟢 8. ERROR HANDLING
 app.use((err, req, res, next) => {
-  console.error(`[ERROR] ${err.message}`);
+  console.error(`[ERROR] ${err.stack}`);
   res.status(err.status || 500).render("error/errorPage", { err });
 });
 
