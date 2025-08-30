@@ -7,8 +7,6 @@ const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const passport = require("./config/passportConfig");
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
@@ -28,16 +26,23 @@ mongoose
   .catch((err) => console.error("❌ Database con  nection failed", err));
 
 // 🟢 2. SESSION CONFIGURATION
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+
 const sessionConfig = {
   secret: "pakagepayment",
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGO_CONNECT,
+    mongoUrl: process.env.MONGO_CONNECT, // ✅ Make sure this is defined
     collectionName: "sessions",
   }),
-  cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 1 day
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+  },
 };
+
+app.use(session(sessionConfig));
 
 // 🟢 3. MIDDLEWARE SETUP
 app.use(morgan(":method :url :status :response-time ms - [:date]"));

@@ -1,23 +1,30 @@
 <h1>My Links</h1>
-<div class="container">
+<div class="container justify-content-around col-auto">
   <% for (let link of links) { %>
 
-  <div class="col-md-4 mb-4">
+  <div class="col-md-4 mb-4 me-3 d-flex">
     <div class="card h-100 shadow-sm">
       <div class="card-body">
         <h5 class="card-title"><%= link.name %></h5>
         <p class="card-text text-muted">
-          <%= link.description || "No description available." %>
+          Created: <%= link.createdAt.toLocaleString() %>
         </p>
       </div>
 
-      <div class="card-footer bg-transparent border-top-0">
+      <div class="card-footer bg-transparent border-top-0 d-flex">
         <a
           href="<%= link.link %>"
           target="_blank"
-          class="btn btn-primary btn-sm"
+          class="btn btn-primary btn-sm me-2"
         >
           Visit Link
+        </a>
+        <a
+          href="/<%= link._id %>/link-info"
+          target="_blank"
+          class="btn btn-warning btn-sm"
+        >
+          Check Updates
         </a>
       </div>
     </div>
