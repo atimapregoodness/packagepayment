@@ -24,10 +24,7 @@ const app = express();
 
 // 🟢 1. CONNECT TO DATABASE
 mongoose
-  .connect(process.env.MONGO_CONNECT, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_CONNECT, {})
   .then(() => console.log("✅ Database connected successfully"))
   .catch((err) => console.error("❌ Database connection failed", err));
 
