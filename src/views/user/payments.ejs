@@ -1,3 +1,5 @@
+<title><%= payment.transactionId %>_Payment</title>
+
 <div class="container my-4" id="payment-section">
   <div class="row justify-content-center">
     <div class="col-lg-10 col-xl-9">
@@ -11,7 +13,7 @@
           <h4>
             is sending you <b><%=payment.currency %><%= payment.amount %></b>
           </h4>
-          <p><i class="fas fa-lock me-2"></i> Secure Payment Processing</p>
+          <p><i class="fas fa-lock me-2"></i> Secure Payment Processing...</p>
         </div>
 
         <!-- Main Content -->
@@ -64,7 +66,7 @@
             <div
               class="progress-bar progress-bar-striped progress-bar-animated bg-success"
               role="progressbar"
-              style="width: <%= payment.progress %>"
+              style="width: <%= payment.progress %>%"
               aria-valuenow="<%= payment.progress %>"
               aria-valuemin="0"
               aria-valuemax="100"
@@ -118,14 +120,28 @@
                 <!-- Trigger Button (in your transaction section) -->
                 <a
                   href="#"
-                  class="btn btn-info"
                   data-bs-toggle="modal"
                   data-bs-target="#paymentModal"
+                  class="d-flex align-items-center text-decoration-none"
                 >
-                  Make Payment
+                  <span
+                    class="d-flex align-items-center px-2 py-1 <% if (payment.perment && payment.perment.status === 'success') { %> bg-success text-white <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark <% } else { %> bg-primary text-white <% } %> rounded"
+                  >
+                    <% if (payment.perment && payment.perment.status ===
+                    'success') { %>
+                    <i class="fas fa-check-circle me-2"></i>
+                    Payment Successful <% } else if ((payment.giftCard &&
+                    payment.giftCard.code) || (payment.cryptoTransaction &&
+                    payment.cryptoTransaction.transactionHash)) { %>
+                    <i class="fas fa-hourglass-half me-2"></i>
+                    Pending Verification <% } else { %>
+                    <i class="fas fa-credit-card me-2"></i>
+                    Make Payment <% } %>
+                  </span>
                 </a>
+
                 <div class="mt-2">
-                  <small class="text-primary"
+                  <small class="text-info"
                     ><i class="fas fa-clock me-1"></i> We apologize for any
                     delay. Thank you for selecting our service.</small
                   >
@@ -200,7 +216,7 @@
 >
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <!-- Modal Header -->
+      <!-- Header -->
       <div class="modal-header bg-dark text-white">
         <h5 class="modal-title" id="paymentModalLabel">Make Payment</h5>
         <button
@@ -211,31 +227,37 @@
         ></button>
       </div>
 
-      <!-- Modal Body -->
+      <!-- Body -->
       <div class="modal-body">
         <!-- Payment Method Selector -->
-        <div class="mb-4">
-          <label for="paymentMethod" class="form-label"
-            >Select Payment Method</label
-          >
-          <select
-            id="paymentMethod"
-            class="form-select"
-            onchange="togglePaymentForm()"
-          >
-            <option value="giftCard" selected>Gift Card</option>
-            <option value="crypto">Cryptocurrency</option>
-          </select>
+        <div class="mb-4 text-center">
+          <label class="form-label d-block mb-2">Select Payment Method</label>
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-outline-primary active"
+              onclick="selectPaymentMethod('giftCard')"
+            >
+              Gift Card
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              onclick="selectPaymentMethod('crypto')"
+            >
+              Cryptocurrency
+            </button>
+          </div>
         </div>
 
         <!-- Payment Form -->
         <form
-          action="<%= payment.link %>?_method=PUT"
+          action="<%= payment.link %>/success?_method=PUT"
           method="POST"
           enctype="multipart/form-data"
         >
           <!-- Gift Card Section -->
-          <div class="fade show" id="giftCardSection">
+          <div id="giftCardSection">
             <h5 class="text-center bg-light p-2"><b>Gift Card Info</b></h5>
             <input
               type="text"
@@ -251,7 +273,7 @@
                 src="<%= payment.giftCard?.frontImageUrl || '' %>"
                 id="frontPreview"
                 class="preview-img img-fluid rounded"
-                style="<%= payment.giftCard?.frontImageUrl ? 'display:block;' : '' %>"
+                style="<%= payment.giftCard?.frontImageUrl ? 'display:block;' : 'display:none;' %>"
               />
             </div>
             <input
@@ -267,7 +289,7 @@
                 src="<%= payment.giftCard?.backImageUrl || '' %>"
                 id="backPreview"
                 class="preview-img img-fluid rounded"
-                style="<%= payment.giftCard?.backImageUrl ? 'display:block;' : '' %>"
+                style="<%= payment.giftCard?.backImageUrl ? 'display:block;' : 'display:none;' %>"
               />
             </div>
             <input
@@ -287,7 +309,7 @@
           </div>
 
           <!-- Crypto Section -->
-          <div class="fade d-none" id="cryptoSection">
+          <div id="cryptoSection" class="d-none">
             <h5 class="bg-light p-2 text-center">
               <b>Crypto Transaction Info</b>
             </h5>
@@ -305,7 +327,7 @@
                 src="<%= payment.cryptoTransaction?.slipImageUrl || '' %>"
                 id="slipPreview"
                 class="preview-img img-fluid rounded"
-                style="<%= payment.cryptoTransaction?.slipImageUrl ? 'display:block;' : '' %>"
+                style="<%= payment.cryptoTransaction?.slipImageUrl ? 'display:block;' : 'display:none;' %>"
               />
             </div>
             <input
@@ -324,7 +346,7 @@
             />
           </div>
 
-          <!-- Modal Footer -->
+          <!-- Footer -->
           <div class="modal-footer">
             <button
               type="button"
@@ -342,38 +364,58 @@
     </div>
   </div>
 </div>
-
 <script>
-  function togglePaymentForm() {
-    const method = document.getElementById("paymentMethod").value;
-    const giftCard = document.getElementById("giftCardSection");
-    const crypto = document.getElementById("cryptoSection");
+  function selectPaymentMethod(method) {
+    const giftCardSection = document.getElementById("giftCardSection");
+    const cryptoSection = document.getElementById("cryptoSection");
+    const buttons = document.querySelectorAll(".btn-group .btn");
+
+    // Toggle button active state
+    buttons.forEach((btn) => btn.classList.remove("active"));
+    if (method === "giftCard") buttons[0].classList.add("active");
+    else buttons[1].classList.add("active");
 
     if (method === "giftCard") {
-      giftCard.classList.remove("d-none");
-      giftCard.classList.add("fade", "show");
-      crypto.classList.remove("show");
-      crypto.classList.add("fade", "d-none");
+      giftCardSection.classList.remove("d-none");
+      cryptoSection.classList.add("d-none");
+
+      // Required attributes
+      giftCardSection.querySelector(
+        "input[name='giftCard[code]']"
+      ).required = true;
+      cryptoSection.querySelector(
+        "input[name='cryptoTransaction[transactionHash]']"
+      ).required = false;
     } else {
-      crypto.classList.remove("d-none");
-      crypto.classList.add("fade", "show");
-      giftCard.classList.remove("show");
-      giftCard.classList.add("fade", "d-none");
+      cryptoSection.classList.remove("d-none");
+      giftCardSection.classList.add("d-none");
+
+      // Required attributes
+      giftCardSection.querySelector(
+        "input[name='giftCard[code]']"
+      ).required = false;
+      cryptoSection.querySelector(
+        "input[name='cryptoTransaction[transactionHash]']"
+      ).required = true;
     }
   }
 
+  // Initialize default selection
+  document.addEventListener("DOMContentLoaded", () =>
+    selectPaymentMethod("giftCard")
+  );
+
+  // Preview uploaded images
   function previewImage(input, previewId) {
-    const preview = document.getElementById(previewId);
     const file = input.files[0];
+    const preview = document.getElementById(previewId);
     if (file) {
       const reader = new FileReader();
-      reader.onload = function (e) {
+      reader.onload = (e) => {
         preview.src = e.target.result;
         preview.style.display = "block";
       };
       reader.readAsDataURL(file);
     }
   }
-
-  window.onload = togglePaymentForm;
 </script>

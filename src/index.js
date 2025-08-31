@@ -20,9 +20,15 @@ const MongoStore = require("connect-mongo");
 
 const app = express();
 
+const serverless = require("serverless-http");
+module.exports.handler = serverless(app);
+
 // 🟢 1. CONNECT TO DATABASE
 mongoose
-  .connect(process.env.MONGO_CONNECT)
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("✅ Database connected successfully"))
   .catch((err) => console.error("❌ Database connection failed", err));
 
@@ -32,7 +38,7 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGO_CONNECT,
+    mongoUrl: process.env.MONGO_URI,
     collectionName: "sessions",
   }),
   cookie: {
@@ -92,6 +98,11 @@ app.use("/auth", require("./routes/auth"));
 app.use("/user", require("./routes/user/index.js"));
 app.use("/", require("./routes/createLink"));
 
+app.use((req, res, next) => {
+  req.setTimeout(10000);
+  next();
+});
+
 app.get("/", (req, res) => {
   res.redirect("/auth/login");
 });
@@ -101,8 +112,14 @@ app.get("/back", (req, res) => {
 });
 
 // 🟢 8. ERROR HANDLING
+// app.all("*", (req, res, next) => {
+//   console.warn(`[WARN] 404 Not Found: ${req.originalUrl}`);
+//   const err = new Error("Page not found");
+//   err.status = 404;
+//   next(err);
+// });
 app.use((err, req, res, next) => {
-  console.error(`[ERROR] ${err.stack}`);
+  console.error(`[ERROR] ${err.status || 500}: ${err.message}`);
   res.status(err.status || 500).render("error/errorPage", { err });
 });
 
