@@ -7,7 +7,7 @@ const Creator = require("../models/admin");
 
 const seedCreator = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_CONNECT);
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ Creator Database connected successfully");
 
     const CREATOR_EMAIL = process.env.CREATOR_EMAIL;

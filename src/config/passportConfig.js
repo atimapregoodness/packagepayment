@@ -1,25 +1,24 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/admin');
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const User = require("../models/admin");
 
+// Configure passport-local to use "email" instead of "username"
 passport.use(
   new LocalStrategy(
-    { usernameField: 'identifier' }, // Change to 'identifier' to support both email and username
-    async (identifier, password, done) => {
+    { usernameField: "email" }, // only accept email
+    async (email, password, done) => {
       try {
-        // Find user by email or username
-        const user = await User.findOne({
-          $or: [{ username: identifier }, { email: identifier }],
-        });
+        // Find user by email only
+        const user = await User.findOne({ email });
 
         if (!user) {
-          return done(null, false, { message: 'Invalid username or email' });
+          return done(null, false, { message: "Invalid email" });
         }
 
-        // Verify password
+        // Authenticate password with passport-local-mongoose helper
         const isValid = await user.authenticate(password);
         if (!isValid) {
-          return done(null, false, { message: 'Incorrect password' });
+          return done(null, false, { message: "Incorrect password" });
         }
 
         return done(null, user);
@@ -30,6 +29,7 @@ passport.use(
   )
 );
 
+// Required for sessions
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 

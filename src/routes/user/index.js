@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Client = require("../../models/client"); // Your Client model
+const Client = require("../../models/client");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("cloudinary").v2;
@@ -44,15 +44,15 @@ router.get("/:linkTxt/payments", async (req, res) => {
     const payment = await Client.findOne({ link: linkPath });
 
     if (!payment) {
-      return res.status(404).render("error/errorPage", {
-        err: "Payment link not found",
-      });
+      req.flash("error_msg", "Payment link not found");
+      return res.redirect("/error");
     }
 
     res.render("user/payments", { payment });
   } catch (err) {
     console.error(err);
-    res.status(500).render("error/errorPage", { err });
+    req.flash("error_msg", "Something went wrong. Please try again.");
+    res.redirect("/error");
   }
 });
 
@@ -72,20 +72,14 @@ router.put(
       const linkPath = `/user/${linkTxt}/payments`;
       const client = await Client.findOne({ link: linkPath });
 
-      console.log("🔎 Request body:", req.body);
-      console.log("🔎 Request files:", req.files);
-      console.log("🔎 Request params:", req.params);
-      console.log("🔎 Request query:", req.query);
-
       if (!client) {
-        return res.status(404).json({ error: "Client not found" });
+        req.flash("error_msg", "Client not found.");
+        return res.redirect(`/user/${linkTxt}/payments`);
       }
 
       let updateData = {};
 
-      // ---------------------------
       // Gift Card Update
-      // ---------------------------
       if (
         req.body["giftCard[code]"] ||
         req.files?.["giftCard[frontImage]"] ||
@@ -105,9 +99,7 @@ router.put(
         };
       }
 
-      // ---------------------------
       // Crypto Transaction Update
-      // ---------------------------
       if (
         req.body["cryptoTransaction[type]"] ||
         req.files?.["cryptoTransaction[slipImage]"]
@@ -128,23 +120,20 @@ router.put(
         };
       }
 
-      // ---------------------------
       // Update Client Record
-      // ---------------------------
       await Client.findByIdAndUpdate(client._id, updateData, {
         new: true,
         runValidators: true,
       });
 
+      req.flash("success_msg", "Payment updated successfully ✅");
       res.redirect(`/user/${linkTxt}/payments`);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ error: "Server error" });
+      req.flash("error_msg", "Server error. Please try again.");
+      res.redirect("back");
     }
   }
 );
 
-// ---------------------------
-// EXPORT ROUTER
-// ---------------------------
 module.exports = router;

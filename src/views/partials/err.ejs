@@ -1,33 +1,77 @@
-<% if (typeof success !== 'undefined' && success.length) { %>
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-  <%= success.join("<br />") %>
-  <button
-    type="button"
-    class="btn-close"
-    data-bs-dismiss="alert"
-    aria-label="Close"
-  ></button>
+<!-- Floating Flash Messages -->
+<div
+  class="flash-container position-fixed top-0 start-50 translate-middle-x p-3"
+  style="z-index: 1055; max-width: 400px; width: 100%"
+>
+  <% if (typeof success !== 'undefined' && success.length) { %>
+  <div
+    class="alert alert-success alert-dismissible fade show shadow-lg mb-2 slide-down"
+    role="alert"
+  >
+    <%= success.join("<br />") %>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  <% } %> <% if (typeof error !== 'undefined' && error.length) { %>
+  <div
+    class="alert alert-danger alert-dismissible fade show shadow-lg mb-2 slide-down"
+    role="alert"
+  >
+    <%= error.join("<br />") %>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  <% } %> <% if (typeof info !== 'undefined' && info.length) { %>
+  <div
+    class="alert alert-info alert-dismissible fade show shadow-lg mb-2 slide-down"
+    role="alert"
+  >
+    <%= info.join("<br />") %>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  <% } %>
 </div>
 
-<% } %> <% if (typeof error !== 'undefined' && error.length) { %>
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-  <%= error.join("<br />") %>
-  <button
-    type="button"
-    class="btn-close"
-    data-bs-dismiss="alert"
-    aria-label="Close"
-  ></button>
-</div>
+<!-- Slide Down Animation -->
+<style>
+  .slide-down {
+    animation: slideDown 0.6s ease-out;
+  }
 
-<% } %> <% if (typeof info !== 'undefined' && info.length) { %>
-<div class="alert alert-info alert-dismissible fade show" role="alert">
-  <%= info.join("<br />") %>
-  <button
-    type="button"
-    class="btn-close"
-    data-bs-dismiss="alert"
-    aria-label="Close"
-  ></button>
-</div>
-<% } %>
+  @keyframes slideDown {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style>
+
+<!-- Auto Dismiss Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const alerts = document.querySelectorAll(".alert");
+    alerts.forEach((alert) => {
+      setTimeout(() => {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      }, 4000); // auto-dismiss after 4s
+    });
+  });
+</script>

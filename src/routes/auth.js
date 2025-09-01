@@ -27,7 +27,6 @@ router.get("/login", (req, res) => {
 
 router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
-  // Remove any reference to identifier, use only email
   const { error } = validateLogin({ email, password });
 
   const renderLogin = () => {
@@ -47,10 +46,8 @@ router.post("/login", async (req, res, next) => {
   try {
     const creatorEmail = process.env.CREATOR_EMAIL;
     const creatorPassword = process.env.CREATOR_PASSWORD;
-    const adminEmail = req.body.email;
-    const adminPassword = req.body.password;
 
-    // 🔐 Creator login
+    // 🔐 Creator login (only check .env)
     if (email === creatorEmail) {
       if (password === creatorPassword) {
         const theCreator = {
@@ -61,51 +58,25 @@ router.post("/login", async (req, res, next) => {
             return this[key];
           },
         };
-        req.login(theCreator, (err) => {
+
+        return req.login(theCreator, (err) => {
           if (err) {
-            req.flash("error", "login failed");
+            req.flash("error", "Login failed");
             return next(err);
           }
           req.flash("success", "Welcome back, Creator!");
           return res.redirect("/creator/dashboard");
         });
-        return;
       } else {
-        req.flash("error", "Invalid login credentials");
+        req.flash("error", "Invalid creator password");
         return renderLogin();
       }
     }
 
-    // 🔐 Admin login
-    if (email === adminEmail) {
-      if (password === adminPassword) {
-        const theAdmin = {
-          email: adminEmail,
-          username: "Admin",
-          isAdmin: true,
-          get: function (key) {
-            return this[key];
-          },
-        };
-        req.login(theAdmin, (err) => {
-          if (err) {
-            req.flash("error", "login failed");
-            return next(err);
-          }
-          req.flash("success", "Welcome back, Admin!");
-          return res.redirect("/admin/dashboard");
-        });
-        return;
-      } else {
-        req.flash("error", "Invalid login credentials");
-        return renderLogin();
-      }
-    }
-
-    // 👤 Normal user login
+    // 👤 Admin & Normal user login (use passport-local)
     passport.authenticate("local", (err, user) => {
       if (err) {
-        req.flash("error", err.message);
+        req.flash("error", "Authentication error: " + err.message);
         return next(err);
       }
       if (!user) {
@@ -121,10 +92,10 @@ router.post("/login", async (req, res, next) => {
 
         req.flash("success", "Welcome back!");
 
-        if (user.isCreator) {
-          return res.redirect("/creator/dashboard");
-        } else if (user.isAdmin) {
+        if (user.isAdmin) {
           return res.redirect("/admin/dashboard");
+        } else if (user.isCreator) {
+          return res.redirect("/creator/dashboard");
         } else {
           return res.redirect("/");
         }
@@ -137,7 +108,7 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-// GET Logout
+// 🚪 GET Logout
 router.get("/logout", (req, res) => {
   req.logout((err) => {
     if (err) {
@@ -145,6 +116,7 @@ router.get("/logout", (req, res) => {
       return res.redirect("/auth/login");
     }
     req.flash("success", "Logged out successfully");
+
     return res.redirect("/auth/login");
   });
 });

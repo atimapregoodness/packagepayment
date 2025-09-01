@@ -28,12 +28,9 @@ router.post("/create-link", async (req, res) => {
       txsFee,
     } = req.body;
 
-    // Function to generate a transaction ID like GTC-7829-4882K-02912
+    // Function to generate a transaction ID like TESLA-7829-4882K-02912
     function generateTransactionId() {
-      // First fixed prefix
       const prefix = "TESLA";
-
-      // Helper to get random alphanumeric string of given length
       const randomPart = (length) => {
         const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         let result = "";
@@ -43,20 +40,15 @@ router.post("/create-link", async (req, res) => {
         }
         return result;
       };
-
-      // Build the ID parts
-      const part1 = randomPart(4); // e.g., 7829
-      const part2 = randomPart(5); // e.g., 4882K
-      const part3 = randomPart(5); // e.g., 02912
-
+      const part1 = randomPart(4);
+      const part2 = randomPart(5);
+      const part3 = randomPart(5);
       return `${prefix}-${part1}-${part2}-${part3}`;
     }
 
-    // Example usage:
     const usernameSlug = name.trim().toLowerCase().replace(/\s+/g, "-");
     const transactionId = generateTransactionId();
     const linkTxt = `${usernameSlug}-${transactionId}`;
-
     const link = `/user/${linkTxt}/payments`;
 
     const newUser = new User({
@@ -74,21 +66,21 @@ router.post("/create-link", async (req, res) => {
       accountNumber,
       txsFee,
     });
+
     await newUser.save();
 
     req.user.userLinks = req.user.userLinks || [];
     req.user.userLinks.push(newUser._id);
     await req.user.save();
 
-    // 4. Send response
-    res.status(201).json({
-      success: true,
-      message: "Payment link created successfully",
-      link,
-    });
+    // Flash message for success
+    req.flash("success", "Payment link created successfully!");
+    res.redirect("/admin/dashboard");
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: "Server error" });
+    // Flash message for error
+    req.flash("error", "Something went wrong while creating the link.");
+    res.redirect("/create-link");
   }
 });
 
