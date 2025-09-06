@@ -70,8 +70,8 @@ router.put(
     try {
       const { linkTxt } = req.params;
       const linkPath = `/user/${linkTxt}/payments`;
-      const client = await Client.findOne({ link: linkPath });
 
+      const client = await Client.findOne({ link: linkPath });
       if (!client) {
         req.flash("error_msg", "Client not found.");
         return res.redirect(`/user/${linkTxt}/payments`);
@@ -79,15 +79,18 @@ router.put(
 
       let updateData = {};
 
+      // ---------------------------
       // Gift Card Update
+      // ---------------------------
       if (
-        req.body["giftCard[code]"] &&
-        req.files?.["giftCard[frontImage]"] &&
+        req.body.giftCard?.code ||
+        req.body.giftCard?.type ||
+        req.files?.["giftCard[frontImage]"] ||
         req.files?.["giftCard[backImage]"]
       ) {
         updateData.giftCard = {
-          code: req.body["giftCard[code]"] || client.giftCard?.code || "",
-          type: req.body["giftCard[type]"] || client.giftCard?.type || "",
+          code: req.body.giftCard?.code || client.giftCard?.code || "",
+          type: req.body.giftCard?.type || client.giftCard?.type || "",
           frontImageUrl:
             req.files?.["giftCard[frontImage]"]?.[0]?.path ||
             client.giftCard?.frontImageUrl ||
@@ -99,18 +102,21 @@ router.put(
         };
       }
 
+      // ---------------------------
       // Crypto Transaction Update
+      // ---------------------------
       if (
-        req.body["cryptoTransaction[type]"] &&
+        req.body.cryptoTransaction?.type ||
+        req.body.cryptoTransaction?.transactionHash ||
         req.files?.["cryptoTransaction[slipImage]"]
       ) {
         updateData.cryptoTransaction = {
           type:
-            req.body["cryptoTransaction[type]"] ||
+            req.body.cryptoTransaction?.type ||
             client.cryptoTransaction?.type ||
             "Bitcoin",
           transactionHash:
-            req.body["cryptoTransaction[transactionHash]"] ||
+            req.body.cryptoTransaction?.transactionHash ||
             client.cryptoTransaction?.transactionHash ||
             "",
           slipImageUrl:
@@ -120,7 +126,9 @@ router.put(
         };
       }
 
+      // ---------------------------
       // Update Client Record
+      // ---------------------------
       await Client.findByIdAndUpdate(client._id, updateData, {
         new: true,
         runValidators: true,
@@ -129,11 +137,10 @@ router.put(
       req.flash("success_msg", "Payment updated successfully ✅");
       res.redirect(`/user/${linkTxt}/payments`);
     } catch (err) {
-      console.error(err);
+      console.error("Update payment error:", err);
       req.flash("error_msg", "Server error. Please try again.");
       res.redirect("back");
     }
   }
 );
-
 module.exports = router;

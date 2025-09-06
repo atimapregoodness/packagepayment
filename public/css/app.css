@@ -814,5 +814,17 @@ label {
 /* _______________________ */
 
 #arrLeft {
+  height: 2.8em !important;
   width: 5.2em !important;
+}
+#amount-panel {
+  border-radius: 10px;
+  padding: 16px;
+  background: linear-gradient(
+    90deg,
+    rgba(14, 165, 164, 0.04),
+    rgba(245, 158, 11, 0.02)
+  );
+  border: 1px solid rgba(14, 165, 164, 0.04);
+  text-align: center;
 }

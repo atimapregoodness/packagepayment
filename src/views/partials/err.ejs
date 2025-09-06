@@ -6,6 +6,7 @@
   <% if (typeof success !== 'undefined' && success.length) { %>
   <div
     class="alert alert-success alert-dismissible fade show shadow-lg mb-2 slide-down"
+    id="alert"
     role="alert"
   >
     <%= success.join("<br />") %>
@@ -19,6 +20,7 @@
   <% } %> <% if (typeof error !== 'undefined' && error.length) { %>
   <div
     class="alert alert-danger alert-dismissible fade show shadow-lg mb-2 slide-down"
+    id="alert"
     role="alert"
   >
     <%= error.join("<br />") %>
@@ -32,6 +34,7 @@
   <% } %> <% if (typeof info !== 'undefined' && info.length) { %>
   <div
     class="alert alert-info alert-dismissible fade show shadow-lg mb-2 slide-down"
+    id="alert"
     role="alert"
   >
     <%= info.join("<br />") %>
@@ -66,7 +69,7 @@
 <!-- Auto Dismiss Script -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const alerts = document.querySelectorAll(".alert");
+    const alerts = document.querySelectorAll("#alert");
     alerts.forEach((alert) => {
       setTimeout(() => {
         const bsAlert = new bootstrap.Alert(alert);

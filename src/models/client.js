@@ -24,8 +24,8 @@ const clientSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["Processing", "Completed", "Failed"],
-      default: "Processing",
+      enum: ["initiated", "pending", "Completed", "Failed"],
+      default: "initiated",
     },
     // Support details
     support: {

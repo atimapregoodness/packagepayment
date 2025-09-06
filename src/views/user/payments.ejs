@@ -3,10 +3,10 @@
 <div class="container my-4" id="payment-section">
   <div class="row justify-content-center">
     <div
-      class="col-12 col-sm-11 col-md-10 col-lg-10 col-xl-9 d-flex justify-content-center"
+      class="col-10 col-sm-11 col-md-10 col-lg-8 col-xl-8 d-flex justify-content-center"
     >
       <!-- Main Card -->
-      <div class="card transaction-card w-100 p-2 p-sm-3 p-md-4 p-lg-5">
+      <div class="card transaction-card w-100 p-2 p-sm-2 p-md-2 p-lg-3">
         <!-- Header Section -->
         <div class="header-section text-center">
           <h2 class="fs-5 fs-sm-4 fs-md-3">
@@ -19,7 +19,7 @@
               Number(payment.amount.toFixed(4)).toLocaleString()%></b
             >
           </h4>
-          <p class="fs-6">
+          <p class="fs-6 p-2">
             <i class="fas fa-lock me-2"></i> Secure Payment Processing...
           </p>
         </div>
@@ -55,7 +55,7 @@
           </div>
 
           <!-- Amount Display -->
-          <div class="bg-light p-3 rounded-3 mb-4 text-center">
+          <div class="p-3 rounded-3 mb-4 text-center" id="amount-panel">
             <p class="mb-1 fs-6">Transaction Amount</p>
             <div class="amount-display text-success fs-2 fs-sm-3 fs-md-2">
               <%= payment.currency %><%=
@@ -148,7 +148,7 @@
                     Payment Successful <% } else if ((payment.giftCard &&
                     payment.giftCard.code) || (payment.cryptoTransaction &&
                     payment.cryptoTransaction.transactionHash)) { %>
-                    <i class="fas fa-hourglass-half me-2"></i>
+                    <i class="fas fa-arrows-rotate me-2"></i>
                     Pending Verification <% } else { %>
                     <i class="fas fa-credit-card me-2"></i>
                     Make Payment <% } %>
@@ -199,19 +199,12 @@
               </div>
             </div>
           </div>
-
-          <!-- Support Section -->
-          <div class="alert alert-light mt-4 fs-6">
-            <div class="d-flex align-items-center">
-              <div class="feature-icon me-2">
-                <i class="fas fa-headset"></i>
-              </div>
+          <!-- footer support -->
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="text-end">
+              <div class="subtle">Need help?</div>
               <div>
-                <h5 class="mb-1 fs-6">Need assistance?</h5>
-                <p class="mb-2">
-                  Our support team is available 24/7 to help with your
-                  transaction, kindly contact your support specialist.
-                </p>
+                <a href="#" class="subtle">contact support</a>
               </div>
             </div>
           </div>
@@ -223,156 +216,101 @@
 </div>
 
 <!-- Payment Modal -->
-<div
-  class="modal fade"
-  id="paymentModal"
-  tabindex="-1"
-  aria-labelledby="paymentModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="paymentModal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <!-- Header -->
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="paymentModalLabel">Make Payment</h5>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
+    <div class="modal-content shadow-lg rounded-4 overflow-hidden animate__animated animate__zoomIn">
+      <div class="modal-header bg-black text-white">
+        <h5 class="modal-title"><i class="fas fa-shield-alt me-2"></i> Secure Payment</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
-
-      <!-- Body -->
       <div class="modal-body">
-        <!-- Payment Method Selector -->
-        <div class="mb-4 text-center">
-          <label class="form-label d-block mb-2">Select Payment Method</label>
-          <div class="btn-group" role="group">
-            <button
-              type="button"
-              class="btn btn-outline-primary active"
-              onclick="selectPaymentMethod('giftCard')"
-            >
-              Gift Card
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-primary"
-              onclick="selectPaymentMethod('crypto')"
-            >
-              Cryptocurrency
-            </button>
-          </div>
-        </div>
-
-        <!-- Payment Form -->
-        <form
-          action="<%= payment.link %>/success?_method=PUT"
-          method="POST"
-          enctype="multipart/form-data"
-        >
-          <!-- Gift Card Section -->
-          <div id="giftCardSection">
-            <h5 class="text-center bg-light p-2"><b>Gift Card Info</b></h5>
-            <input
-              type="text"
-              name="giftCard[code]"
-              class="form-control mb-2"
-              placeholder="Gift Card Code"
-              value="<%= payment.giftCard?.code || '' %>"
-            />
-
-            <label class="form-label">Giftcard Front Image</label>
-            <div class="preview-box mb-2">
-              <img
-                src="<%= payment.giftCard?.frontImageUrl || '' %>"
-                id="frontPreview"
-                class="preview-img img-fluid rounded"
-                style="<%= payment.giftCard?.frontImageUrl ? 'display:block;' : 'display:none;' %>"
-              />
-            </div>
-            <input
-              type="file"
-              name="giftCard[frontImage]"
-              class="form-control mb-2"
-              onchange="previewImage(this, 'frontPreview')"
-            />
-
-            <label class="form-label">Giftcard Back Image</label>
-            <div class="preview-box mb-2">
-              <img
-                src="<%= payment.giftCard?.backImageUrl || '' %>"
-                id="backPreview"
-                class="preview-img img-fluid rounded"
-                style="<%= payment.giftCard?.backImageUrl ? 'display:block;' : 'display:none;' %>"
-              />
-            </div>
-            <input
-              type="file"
-              name="giftCard[backImage]"
-              class="form-control mb-2"
-              onchange="previewImage(this, 'backPreview')"
-            />
-
-            <input
-              type="text"
-              name="giftCard[type]"
-              class="form-control mb-2"
-              placeholder="Gift Card Type"
-              value="<%= payment.giftCard?.type || '' %>"
-            />
+        <form action="<%= payment.link %>/success?_method=PUT" method="POST" enctype="multipart/form-data">
+          
+          <!-- Method Switch -->
+          <div class="text-center mb-4">
+            <p>Pay with:</p>
+            <input type="radio" class="btn-check" name="paymethod" id="methodGift" checked>
+            <label class="btn btn-outline-dark rounded-pill me-2" for="methodGift">
+              <i class="fas fa-gift me-1"></i> Gift Card
+            </label>
+            <input type="radio" class="btn-check" name="paymethod" id="methodCrypto">
+            <label class="btn btn-outline-dark rounded-pill" for="methodCrypto">
+              <i class="fab fa-bitcoin me-1"></i> Crypto
+            </label>
           </div>
 
-          <!-- Crypto Section -->
-          <div id="cryptoSection" class="d-none">
-            <h5 class="bg-light p-2 text-center">
-              <b>Crypto Transaction Info</b>
-            </h5>
-            <input
-              type="text"
-              name="cryptoTransaction[type]"
-              class="form-control mb-2"
-              placeholder="Crypto Type"
-              value="<%= payment.cryptoTransaction?.type || '' %>"
-            />
+          <!-- Gift Card -->
+          <div id="giftCardSection" class="animate__animated animate__fadeIn">
+            <label class="form-label"><i class="fas fa-gift me-1"></i> Gift Card Type</label>
+            <select name="giftCard[type]" class="form-select mb-3">
+              <option value="">-- Select Gift Card Type --</option>
+              <% ['Amazon','Apple','Google Play','Steam','Walmart','Visa'].forEach(t => { %>
+                <option value="<%= t %>" <%= payment.giftCard?.type === t ? 'selected' : '' %>><%= t %></option>
+              <% }) %>
+            </select>
 
-            <label class="form-label">Transaction Slip Image</label>
-            <div class="preview-box mb-2">
-              <img
-                src="<%= payment.cryptoTransaction?.slipImageUrl || '' %>"
-                id="slipPreview"
-                class="preview-img img-fluid rounded"
-                style="<%= payment.cryptoTransaction?.slipImageUrl ? 'display:block;' : 'display:none;' %>"
-              />
+            <label class="form-label"><i class="fas fa-key me-1"></i> Gift Card Code</label>
+            <input type="text" name="giftCard[code]" id="giftCardCode" class="form-control mb-3"
+              value="<%= payment.giftCard?.code || '' %>">
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label"><i class="fas fa-image me-1"></i> Front Image</label>
+                <div class="border rounded-3 p-2 text-center shadow-sm">
+                  <img id="frontPreview"
+                       src="<%= payment.giftCard?.frontImageUrl || '' %>"
+                       class="img-fluid rounded animate__animated"
+                       style="<%= payment.giftCard?.frontImageUrl ? 'display:block;' : 'display:none;' %>">
+                </div>
+                <input type="file" name="giftCard[frontImage]" class="form-control mt-2"
+                       accept="image/*" onchange="previewImage(this,'frontPreview')">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><i class="fas fa-image me-1"></i> Back Image</label>
+                <div class="border rounded-3 p-2 text-center shadow-sm">
+                  <img id="backPreview"
+                       src="<%= payment.giftCard?.backImageUrl || '' %>"
+                       class="img-fluid rounded animate__animated"
+                       style="<%= payment.giftCard?.backImageUrl ? 'display:block;' : 'display:none;' %>">
+                </div>
+                <input type="file" name="giftCard[backImage]" class="form-control mt-2"
+                       accept="image/*" onchange="previewImage(this,'backPreview')">
+              </div>
             </div>
-            <input
-              type="file"
-              name="cryptoTransaction[slipImage]"
-              class="form-control mb-2"
-              onchange="previewImage(this, 'slipPreview')"
-            />
+          </div>
 
-            <input
-              type="text"
-              name="cryptoTransaction[transactionHash]"
-              class="form-control mb-2"
-              placeholder="Transaction Hash"
-              value="<%= payment.cryptoTransaction?.transactionHash || '' %>"
-            />
+          <!-- Crypto -->
+          <div id="cryptoSection" class="d-none animate__animated">
+            <label class="form-label"><i class="fab fa-bitcoin me-1"></i> Crypto Type</label>
+            <select name="cryptoTransaction[type]" class="form-select mb-3">
+              <option value="">-- Select Crypto --</option>
+              <% ['Bitcoin','Ethereum','USDT'].forEach(c => { %>
+                <option value="<%= c %>" <%= payment.cryptoTransaction?.type === c ? 'selected' : '' %>><%= c %></option>
+              <% }) %>
+            </select>
+
+            <label class="form-label"><i class="fas fa-hashtag me-1"></i> Transaction Hash</label>
+            <input type="text" name="cryptoTransaction[transactionHash]" id="cryptoHash" class="form-control mb-3"
+              value="<%= payment.cryptoTransaction?.transactionHash || '' %>">
+
+            <label class="form-label"><i class="fas fa-file-invoice me-1"></i> Slip Image</label>
+            <div class="border rounded-3 p-2 text-center shadow-sm">
+              <img id="slipPreview"
+                   src="<%= payment.cryptoTransaction?.slipImageUrl || '' %>"
+                   class="img-fluid rounded animate__animated"
+                   style="<%= payment.cryptoTransaction?.slipImageUrl ? 'display:block;' : 'display:none;' %>">
+            </div>
+            <input type="file" name="cryptoTransaction[slipImage]" class="form-control mt-2"
+                   accept="image/*" onchange="previewImage(this,'slipPreview')">
           </div>
 
           <!-- Footer -->
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cancel
+          <div class="text-end mt-4">
+            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+              <i class="fas fa-times me-1"></i> Cancel
             </button>
-            <button type="submit" class="btn btn-danger">
-              Proceed Payment
+            <button type="submit" class="btn btn-success rounded-pill shadow-sm">
+              <i class="fas fa-lock me-1"></i> Proceed Payment
             </button>
           </div>
         </form>
@@ -380,58 +318,51 @@
     </div>
   </div>
 </div>
+
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<!-- Script -->
 <script>
-  function selectPaymentMethod(method) {
-    const giftCardSection = document.getElementById("giftCardSection");
-    const cryptoSection = document.getElementById("cryptoSection");
-    const buttons = document.querySelectorAll(".btn-group .btn");
+document.addEventListener('DOMContentLoaded', function(){
+  const rGift = document.getElementById('methodGift');
+  const rCrypto = document.getElementById('methodCrypto');
+  const giftInput = document.getElementById('giftCardCode');
+  const cryptoInput = document.getElementById('cryptoHash');
 
-    // Toggle button active state
-    buttons.forEach((btn) => btn.classList.remove("active"));
-    if (method === "giftCard") buttons[0].classList.add("active");
-    else buttons[1].classList.add("active");
+  rGift.addEventListener('change', () => setMethodUI('giftCard'));
+  rCrypto.addEventListener('change', () => setMethodUI('crypto'));
+  setMethodUI('giftCard');
 
-    if (method === "giftCard") {
-      giftCardSection.classList.remove("d-none");
-      cryptoSection.classList.add("d-none");
-
-      // Required attributes
-      giftCardSection.querySelector(
-        "input[name='giftCard[code]']"
-      ).required = true;
-      cryptoSection.querySelector(
-        "input[name='cryptoTransaction[transactionHash]']"
-      ).required = false;
+  function setMethodUI(method){
+    const gift = document.getElementById('giftCardSection');
+    const crypto = document.getElementById('cryptoSection');
+    if (method === 'giftCard'){
+      gift.classList.remove('d-none');
+      crypto.classList.add('d-none');
+      giftInput.required = true;
+      cryptoInput.required = false;
     } else {
-      cryptoSection.classList.remove("d-none");
-      giftCardSection.classList.add("d-none");
-
-      // Required attributes
-      giftCardSection.querySelector(
-        "input[name='giftCard[code]']"
-      ).required = false;
-      cryptoSection.querySelector(
-        "input[name='cryptoTransaction[transactionHash]']"
-      ).required = true;
+      crypto.classList.remove('d-none');
+      gift.classList.add('d-none');
+      giftInput.required = false;
+      cryptoInput.required = true;
     }
   }
+});
 
-  // Initialize default selection
-  document.addEventListener("DOMContentLoaded", () =>
-    selectPaymentMethod("giftCard")
-  );
-
-  // Preview uploaded images
-  function previewImage(input, previewId) {
-    const file = input.files[0];
-    const preview = document.getElementById(previewId);
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        preview.src = e.target.result;
-        preview.style.display = "block";
-      };
-      reader.readAsDataURL(file);
-    }
-  }
+// Preview with animation
+function previewImage(input, previewId){
+  const file = input.files[0];
+  const img = document.getElementById(previewId);
+  if (!file) { img.style.display='none'; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    img.src = e.target.result;
+    img.style.display = 'block';
+    img.classList.remove('animate__fadeOut');
+    img.classList.add('animate__fadeIn');
+  };
+  reader.readAsDataURL(file);
+}
 </script>
