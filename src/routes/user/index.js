@@ -81,8 +81,8 @@ router.put(
 
       // Gift Card Update
       if (
-        req.body["giftCard[code]"] ||
-        req.files?.["giftCard[frontImage]"] ||
+        req.body["giftCard[code]"] &&
+        req.files?.["giftCard[frontImage]"] &&
         req.files?.["giftCard[backImage]"]
       ) {
         updateData.giftCard = {
@@ -101,7 +101,7 @@ router.put(
 
       // Crypto Transaction Update
       if (
-        req.body["cryptoTransaction[type]"] ||
+        req.body["cryptoTransaction[type]"] &&
         req.files?.["cryptoTransaction[slipImage]"]
       ) {
         updateData.cryptoTransaction = {

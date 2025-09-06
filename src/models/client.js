@@ -9,7 +9,6 @@ const clientSchema = new mongoose.Schema(
     },
     name: { type: String, required: true }, // Matches form "name"
     phone: { type: String, required: true }, // Matches form "phone"
-    email: { type: String, required: true },
     message: { type: String }, // Matches form "message"
 
     bank: { type: String, required: true }, // Matches form "bank"
