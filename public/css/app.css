@@ -828,3 +828,7 @@ label {
   border: 1px solid rgba(14, 165, 164, 0.04);
   text-align: center;
 }
+
+#loadingOverlay {
+  backdrop-filter: blur(12px);
+}
