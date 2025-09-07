@@ -17,10 +17,11 @@ const appError = require("./utils/appError.js");
 const expressLayouts = require("express-ejs-layouts");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+const serverless = require("serverless-http");
 
 const app = express();
 
-const serverless = require("serverless-http");
+// Wrap app for serverless deployment (Vercel, Netlify, etc.)
 module.exports.handler = serverless(app);
 
 // 🟢 1. CONNECT TO DATABASE
@@ -34,7 +35,7 @@ mongoose
 
 // 🟢 2. SESSION CONFIGURATION
 const sessionConfig = {
-  secret: "pakagepayment",
+  secret: process.env.SESSION_SECRET || "pakagepayment",
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
@@ -69,7 +70,8 @@ app.use(
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(expressLayouts);
-app.set("layout", "layout/boilerplate"); // default layout file (views/layout/boilerplate.ejs)
+
+app.set("layout", "layout/boilerplate");
 
 // 🟢 6. GLOBAL VARIABLES
 app.use((req, res, next) => {
@@ -96,7 +98,8 @@ app.use("/admin", require("./routes/admin/index.js"));
 app.use("/creator", require("./routes/creator/index.js"));
 app.use("/auth", require("./routes/auth"));
 app.use("/user", require("./routes/user/index.js"));
-app.use("/", require("./routes/createLink"));
+
+// app.use("/", require("./routes/createLink"));
 app.use("/", require("./routes/viewLink.js"));
 
 app.use((req, res, next) => {
@@ -113,12 +116,6 @@ app.get("/back", (req, res) => {
 });
 
 // 🟢 8. ERROR HANDLING
-// app.all("*", (req, res, next) => {
-//   console.warn(`[WARN] 404 Not Found: ${req.originalUrl}`);
-//   const err = new Error("Page not found");
-//   err.status = 404;
-//   next(err);
-// });
 app.use((err, req, res, next) => {
   console.error(`[ERROR] ${err.status || 500}: ${err.message}`);
   res.status(err.status || 500).render("error/errorPage", { err });
