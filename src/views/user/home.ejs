@@ -1,0 +1,71 @@
+<!-- Hero Section with Slider -->
+<section id="hero" class="d-flex align-items-center justify-content-center">
+  <div class="col-lg-7 col-sm-10 text-center" id="txsIdForm">
+    <h3 class="mb-2"><b>Enter Trasaction Id</b></h3>
+    <p class="mb-3 p-2 text-muted" id="smallTxt">
+      Enter your transaction ID to access your outstanding Tesla Package offers,
+      review your personalized benefits, and confirm your eligibility.
+    </p>
+    <form
+      action="/user/:txsId"
+      method="post"
+      class="d-flex align-items-center justify-content-center border-1"
+    >
+      <div class="btns d-flex">
+        <input
+          type="text"
+          name="txsId"
+          id="txsId"
+          class="p-2 rounded-1 border-0 tesla-login-card shadow-sm"
+          placeholder="Enter your trasaction id"
+          value="TESLA-XXXX-XXXXX-XXXXX"
+        />
+        <button
+          type="submit"
+          class="btn btn-tesla text-danger col-3 bg-white"
+          id="txsBtn"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+    <div class="container text-center"></div>
+  </div>
+</section>
+
+<style>
+  /* Hero Section */
+
+  #smallTxt {
+    font-size: 14px;
+  }
+  #hero {
+    overflow: hidden;
+    height: 80vh;
+  }
+
+  #txsId {
+    width: 16em;
+  }
+
+  #txsBtn {
+    margin-left: 0.3em;
+  }
+
+  #txsIdForm {
+    background: linear-gradient(
+      90deg,
+      rgba(14, 165, 164, 0.04),
+      rgba(245, 158, 11, 0.02)
+    );
+    padding: 5em 3em;
+    /* border-radius: 1em; */
+    border: 1px solid rgba(14, 165, 164, 0.04);
+  }
+</style>
+
+<!-- Animate.css CDN for smooth animations -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+/>

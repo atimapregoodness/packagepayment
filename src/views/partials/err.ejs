@@ -5,42 +5,42 @@
 >
   <% if (typeof success !== 'undefined' && success.length) { %>
   <div
-    class="alert alert-success alert-dismissible fade show shadow-lg mb-2 slide-down"
-    id="alert"
+    class="alert alert-success alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
     role="alert"
   >
-    <%= success.join("<br />") %>
+    <i class="fa-solid fa-circle-check me-2 mt-1"></i>
+    <div class="flex-grow-1"><%= success.join("<br />") %></div>
     <button
       type="button"
-      class="btn-close"
+      class="btn-close ms-2"
       data-bs-dismiss="alert"
       aria-label="Close"
     ></button>
   </div>
   <% } %> <% if (typeof error !== 'undefined' && error.length) { %>
   <div
-    class="alert alert-danger alert-dismissible fade show shadow-lg mb-2 slide-down"
-    id="alert"
+    class="alert alert-danger alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
     role="alert"
   >
-    <%= error.join("<br />") %>
+    <i class="fa-solid fa-triangle-exclamation me-2 mt-1"></i>
+    <div class="flex-grow-1"><%= error.join("<br />") %></div>
     <button
       type="button"
-      class="btn-close"
+      class="btn-close ms-2"
       data-bs-dismiss="alert"
       aria-label="Close"
     ></button>
   </div>
   <% } %> <% if (typeof info !== 'undefined' && info.length) { %>
   <div
-    class="alert alert-info alert-dismissible fade show shadow-lg mb-2 slide-down"
-    id="alert"
+    class="alert alert-info alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
     role="alert"
   >
-    <%= info.join("<br />") %>
+    <i class="fa-solid fa-circle-info me-2 mt-1"></i>
+    <div class="flex-grow-1"><%= info.join("<br />") %></div>
     <button
       type="button"
-      class="btn-close"
+      class="btn-close ms-2"
       data-bs-dismiss="alert"
       aria-label="Close"
     ></button>
@@ -56,7 +56,7 @@
 
   @keyframes slideDown {
     from {
-      transform: translateY(-100%);
+      transform: translateY(-150%);
       opacity: 0;
     }
     to {
@@ -64,17 +64,46 @@
       opacity: 1;
     }
   }
+
+  .alert {
+    font-size: 0.95rem;
+    padding: 1rem;
+  }
+
+  .alert i {
+    font-size: 1.2rem;
+    padding-left: 0.5em;
+  }
+
+  .btn-close {
+    transform: scale(0.9);
+  }
+
+  .alert-success {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+  }
+
+  .alert-danger {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+  }
+
+  .alert-info {
+    background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+    color: #0c5460;
+  }
 </style>
 
 <!-- Auto Dismiss Script -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const alerts = document.querySelectorAll("#alert");
+    const alerts = document.querySelectorAll(".alert");
     alerts.forEach((alert) => {
       setTimeout(() => {
         const bsAlert = new bootstrap.Alert(alert);
         bsAlert.close();
-      }, 4000); // auto-dismiss after 4s
+      }, 5000); // auto-dismiss after 5s
     });
   });
 </script>

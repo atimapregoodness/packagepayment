@@ -3,6 +3,7 @@ const router = express.Router();
 const Client = require("../../models/client");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const app = require("../..");
 const cloudinary = require("cloudinary").v2;
 
 // ---------------------------
@@ -53,6 +54,30 @@ router.get("/:linkTxt/payments", async (req, res) => {
     console.error(err);
     req.flash("error_msg", "Something went wrong. Please try again.");
     res.redirect("/error");
+  }
+});
+
+router.post("/:txsId", async (req, res, next) => {
+  try {
+    const txsId = req.body.txsId;
+    const getLink = await Client.findOne({ transactionId: txsId });
+
+    if (!getLink) {
+      req.flash(
+        "error",
+        "Payment for this ID could not be found. Please verify the ID."
+      );
+      return res.redirect("/home"); // <- return here to stop execution
+    }
+
+    res.redirect(getLink.link);
+  } catch (err) {
+    console.error(err); // log error for debugging
+    req.flash(
+      "error",
+      "An error occurred while processing your request. Please try again."
+    );
+    res.redirect("/home");
   }
 });
 

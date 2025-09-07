@@ -100,9 +100,13 @@ app.use("/user", require("./routes/user/index.js"));
 // app.use("/", require("./routes/createLink"));
 app.use("/", require("./routes/viewLink.js"));
 
-// Root route
 app.get("/", (req, res) => {
-  res.redirect("/auth/login");
+  res.redirect("/home");
+});
+
+// Root route
+app.get("/home", (req, res) => {
+  res.render("user/home");
 });
 
 // Go back to previous page
@@ -110,19 +114,31 @@ app.get("/back", (req, res) => {
   res.redirect(req.session.previousUrl || "/");
 });
 
-// 🟢 8. CATCH-ALL (must come last, after real routes)
-// app.all("*", (req, res) => {
-//   res.redirect("/");
-// });
-
-app.all(/.*/, (req, res) => {
-  res.redirect("/");
+app.all(/.*/, (req, res, next) => {
+  const err = new Error("Page not found");
+  err.status = 404;
+  next(err);
 });
 
 // 🟢 9. ERROR HANDLING
 app.use((err, req, res, next) => {
-  console.error(`[ERROR] ${err.status || 500}: ${err.message}`);
-  res.status(err.status || 500).render("error/errorPage", { err });
+  const status = err.status || 500;
+
+  // Default messages for common errors
+  const errorMessages = {
+    404: "Oops! The page you’re looking for doesn’t exist.",
+    500: "Something went wrong on our side. Please try again later.",
+    501: "This feature is not implemented yet.",
+  };
+
+  const message =
+    errorMessages[status] || "Unexpected error occurred. Please try again.";
+
+  res.status(status).render("error/errorPage", {
+    status,
+    message,
+    fullUrl: `${req.protocol}://${req.get("host")}${req.originalUrl}`,
+  });
 });
 
 // 🟢 10. LOCAL SERVER ONLY

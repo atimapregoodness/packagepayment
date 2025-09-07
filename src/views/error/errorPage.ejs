@@ -1,15 +1,50 @@
-<title>Error <%= err.status %> -_ inGallery</title>
+<div
+  class="container-fluid min-vh-100 d-flex align-items-center justify-content-center"
+>
+  <div class="row w-100 justify-content-center">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-5">
+      <div class="card border-0 rounded-3">
+        <div class="card-body p-3 text-center">
+          <!-- Icon -->
+          <div class="mb-2 d-flex justify-content-center">
+            <% if (status === 404) { %>
+            <i class="fa-solid fa-circle-exclamation fa-3x text-warning"></i>
+            <h1 class="fs-1"><%= status %></h1>
+            <% } else if (status === 500) { %>
+            <i class="fa-solid fa-server fa-3x text-danger"></i>
+            <% } else if (status === 501) { %>
+            <i class="fa-solid fa-rocket fa-3x text-primary"></i>
+            <% } else { %>
+            <i
+              class="fa-solid fa-triangle-exclamation fa-3x text-secondary"
+            ></i>
+            <% } %>
+          </div>
 
-<div class="errPageContainer">
-  <div class="text">
-    <% if(err.status === 404) {%>
-    <p>URL: <span><%= fullUrl %></span></p>
-    <p>please check the <span>url</span> and refresh this page</p>
-    <% } else{%>
-    <p><%= err.message %></p>
-    <% } %>
+          <% if (fullUrl) { %>
+          <p class="small text-muted text-truncate mb-2" title="<%= fullUrl %>">
+            URL: <span class="text-break"><%= fullUrl %></span>
+          </p>
+          <% } %>
+
+          <!-- Action buttons -->
+          <div class="d-flex justify-content-center gap-2 mt-2">
+            <a
+              href="<%= previousUrl || '/' %>"
+              class="btn btn-outline-primary btn-sm rounded-pill"
+            >
+              <i class="fa-solid fa-arrow-left me-1"></i> Back
+            </a>
+            <a href="/" class="btn btn-primary btn-sm rounded-pill">
+              <i class="fa-solid fa-house me-1"></i> Home
+            </a>
+          </div>
+
+          <div class="mt-2 small text-muted">
+            If this keeps happening, contact support.
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <a href="<%=previousUrl %>"
-    ><button><i class="fa-solid fa-arrow-left"></i> Back</button></a
-  >
 </div>
