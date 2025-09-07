@@ -13,7 +13,6 @@ const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
 const moment = require("moment");
-const appError = require("./utils/appError.js");
 const expressLayouts = require("express-ejs-layouts");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
@@ -70,7 +69,6 @@ app.use(
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(expressLayouts);
-
 app.set("layout", "layout/boilerplate");
 
 // 🟢 6. GLOBAL VARIABLES
@@ -102,26 +100,32 @@ app.use("/user", require("./routes/user/index.js"));
 // app.use("/", require("./routes/createLink"));
 app.use("/", require("./routes/viewLink.js"));
 
-app.use((req, res, next) => {
-  req.setTimeout(10000);
-  next();
-});
-
+// Root route
 app.get("/", (req, res) => {
   res.redirect("/auth/login");
 });
 
+// Go back to previous page
 app.get("/back", (req, res) => {
   res.redirect(req.session.previousUrl || "/");
 });
 
-// 🟢 8. ERROR HANDLING
+// 🟢 8. CATCH-ALL (must come last, after real routes)
+// app.all("*", (req, res) => {
+//   res.redirect("/");
+// });
+
+app.all(/.*/, (req, res) => {
+  res.redirect("/");
+});
+
+// 🟢 9. ERROR HANDLING
 app.use((err, req, res, next) => {
   console.error(`[ERROR] ${err.status || 500}: ${err.message}`);
   res.status(err.status || 500).render("error/errorPage", { err });
 });
 
-// 🟢 9. LOCAL SERVER ONLY
+// 🟢 10. LOCAL SERVER ONLY
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
@@ -129,5 +133,5 @@ if (require.main === module) {
   });
 }
 
-// 🟢 10. EXPORT FOR VERCEL
+// 🟢 11. EXPORT FOR VERCEL
 module.exports = app;
