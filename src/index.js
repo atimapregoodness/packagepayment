@@ -97,7 +97,7 @@ app.use("/creator", require("./routes/creator/index.js"));
 app.use("/auth", require("./routes/auth"));
 app.use("/user", require("./routes/user/index.js"));
 
-// app.use("/", require("./routes/createLink"));
+app.use("/", require("./routes/createLink"));
 app.use("/", require("./routes/viewLink.js"));
 
 app.get("/", (req, res) => {
