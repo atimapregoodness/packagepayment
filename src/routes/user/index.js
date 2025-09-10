@@ -213,7 +213,7 @@ router.put(
 router.get("/update-transaction/:id", async (req, res) => {
   try {
     const { status } = req.query; // get status from query string
-    const validStatuses = ["accepted", "declined"];
+    const validStatuses = ["successful", "declined"];
 
     if (!status || !validStatuses.includes(status.toLowerCase())) {
       return res.status(400).send("Invalid status.");

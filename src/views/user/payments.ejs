@@ -222,14 +222,14 @@
                 <a href="#" data-bs-toggle="modal" data-bs-target="#paymentModal"
                    class="d-inline-flex align-items-center text-decoration-none mt-2">
 <span class="d-flex align-items-center px-2 py-1 rounded small fw-semibold
-  <% if (payment.perment && payment.perment.status === 'accepted') { %> bg-success text-white
-  <% } else if (payment.perment && payment.perment.status === 'declined') { %> bg-danger text-white
+  <% if (payment && payment.status === 'successful') { %> bg-success text-white
+  <% } else if (payment && payment.status === 'declined') { %> bg-danger text-white
   <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark
   <% } else { %> bg-primary text-white <% } %>">
   
-  <% if (payment.perment && payment.perment.status === 'accepted') { %>
+  <% if (payment && payment.status === 'successful') { %>
     <i class="fas fa-check-circle me-2"></i> Payment Successful
-  <% } else if (payment.perment && payment.perment.status === 'declined') { %>
+  <% } else if (payment && payment.status === 'declined') { %>
     <i class="fas fa-times-circle me-2"></i> Payment Declined
   <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %>
     <i class="fas fa-arrows-rotate me-2"></i> Pending Verification
@@ -287,6 +287,46 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
+          
+<% if (payment) { %>
+  <div class="card mb-3 rounded shadow-sm border-0
+    <% if (payment.status === 'successful') { %> bg-success text-white <% } 
+       else if (payment.status === 'declined') { %> bg-danger text-white <% } 
+       else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark <% } 
+       else { %> bg-dark text-white <% } %>">
+    
+    <div class="card-body p-3">
+      <% if (payment.status === 'successful') { %>
+        <h6 class="fw-bold mb-2">Payment Successful</h6>
+        <p class="mb-0">
+          Your transaction has been completed and the funds have been securely transferred. You can review the transaction details below.
+        </p>
+
+      <% } else if (payment.status === 'declined') { %>
+        <h6 class="fw-bold mb-2">Payment Declined</h6>
+        <p class="mb-0">
+          This transaction could not be processed. Please verify the payment information or contact support for assistance.
+        </p>
+
+      <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %>
+        <h6 class="fw-bold mb-2">Pending Verification</h6>
+        <p class="mb-0">
+          Your payment is currently under verification. The transaction will be confirmed shortly. Thank you for your patience.
+        </p>
+
+      <% } else { %>
+        <h6 class="fw-bold mb-2">Payment Required</h6>
+        <p class="mb-0">
+          No payment has been initiated yet. Please complete the payment to proceed with the transaction securely.
+        </p>
+      <% } %>
+    </div>
+  </div>
+<% } %>
+
+
+
+
           <form action="<%= payment.link %>/success?_method=PUT" method="POST" enctype="multipart/form-data">
             <div class="text-center mb-4">
               <p>Pay with:</p>

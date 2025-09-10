@@ -28,14 +28,7 @@ const clientSchema = new mongoose.Schema(
     // Status updated for Accept/Decline flow
     status: {
       type: String,
-      enum: [
-        "initiated",
-        "pending",
-        "accepted",
-        "declined",
-        "completed",
-        "failed",
-      ],
+      enum: ["initiated", "pending", "successful", "declined"],
       default: "initiated",
     },
 
