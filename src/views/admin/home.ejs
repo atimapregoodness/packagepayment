@@ -22,12 +22,15 @@
               </a>
             </div>
             <div class="col-6">
-              <a
-                href="/link-info/<%= link.transactionId %>"
+              <button
+                type="button"
                 class="btn btn-warning btn-sm w-100"
+                data-bs-toggle="modal"
+                data-bs-target="#paymentModal"
+                onclick="loadPaymentDetails('<%= link.transactionId %>')"
               >
                 Check Updates
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -36,3 +39,48 @@
     <% } %>
   </div>
 </div>
+
+<!-- One Reusable Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div
+      class="modal-content shadow-lg rounded-4 overflow-hidden animate__animated animate__zoomIn"
+    >
+      <div class="modal-header bg-black text-white">
+        <h5 class="modal-title">
+          <i class="fas fa-shield-alt me-2"></i> Client Payment Details
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- Dynamic content will be injected here -->
+
+        <!-- ______________ -->
+        <div id="paymentDetailsContainer" class="p-2 text-center">
+          <p class="text-muted">Select a client to view details.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function loadPaymentDetails(transactionId) {
+    const container = document.getElementById("paymentDetailsContainer");
+    container.innerHTML = '<p class="text-muted">Loading details...</p>';
+
+    try {
+      const res = await fetch(`/link-info/${transactionId}`);
+      if (!res.ok) throw new Error("Failed to fetch details");
+      const html = await res.text(); // server sends rendered partial
+      container.innerHTML = html;
+    } catch (err) {
+      container.innerHTML =
+        '<p class="text-danger">❌ Could not load payment details.</p>';
+    }
+  }
+</script>

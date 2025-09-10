@@ -1,0 +1,101 @@
+<div class="info-card text-start">
+  <div class="section-title">Client Information</div>
+  <p>
+    <span class="label">Name</span>
+    <span class="value"><%= client.name %></span>
+  </p>
+  <p>
+    <span class="label">Phone</span>
+    <span class="value"><%= client.phone %></span>
+  </p>
+  <p>
+    <span class="label">Email</span>
+    <span class="value"><%= client.email %></span>
+  </p>
+  <p>
+    <span class="label">Message</span>
+    <span class="value"><%= client.message || "—" %></span>
+  </p>
+  <p>
+    <span class="label">Unique Link</span>
+    <span class="value"
+      ><a href="<%= client.link %>" target="_blank"><%= client.link %></a></span
+    >
+  </p>
+</div>
+
+<div class="info-card text-start">
+  <div class="section-title">Payment Details</div>
+  <p>
+    <span class="label">Bank</span>
+    <span class="value"><%= client.bank %></span>
+  </p>
+  <p>
+    <span class="label">Account Number</span>
+    <span class="value"><%= client.accountNumber %></span>
+  </p>
+  <p>
+    <span class="label">Amount</span>
+    <span class="value"
+      ><%= client.amount.toLocaleString() %> <%= client.currency %></span
+    >
+  </p>
+  <p>
+    <span class="label">Transaction Fee</span>
+    <span class="value"><%= client.txsFee %></span>
+  </p>
+  <p>
+    <span class="label">Transaction ID</span>
+    <span class="value"><%= client.transactionId %></span>
+  </p>
+  <p>
+    <span class="label">Initiated At</span>
+    <span class="value"><%= client.initiatedAt.toDateString() %></span>
+  </p>
+  <p>
+    <span class="label">Status</span>
+    <span class="badge"><%= client.status %></span>
+  </p>
+</div>
+
+<% if (client.giftCard && (client.giftCard.code ||
+client.giftCard.frontImageUrl)) { %>
+<div class="info-card text-start">
+  <div class="section-title">Gift Card</div>
+  <p>
+    <span class="label">Code</span>
+    <span class="value"><%= client.giftCard.code || "—" %></span>
+  </p>
+  <p>
+    <span class="label">Type</span>
+    <span class="value"><%= client.giftCard.type || "—" %></span>
+  </p>
+  <% if (client.giftCard.frontImageUrl) { %>
+  <p><span class="label">Front Image</span></p>
+  <img src="<%= client.giftCard.frontImageUrl %>" class="img-preview" />
+  <% } %> <% if (client.giftCard.backImageUrl) { %>
+  <p><span class="label">Back Image</span></p>
+  <img src="<%= client.giftCard.backImageUrl %>" class="img-preview" />
+  <% } %>
+</div>
+<% } %> <% if (client.cryptoTransaction &&
+(client.cryptoTransaction.slipImageUrl ||
+client.cryptoTransaction.transactionHash)) { %>
+<div class="info-card text-start">
+  <div class="section-title">Crypto Transaction</div>
+  <p>
+    <span class="label">Type</span>
+    <span class="value"><%= client.cryptoTransaction.type %></span>
+  </p>
+  <p>
+    <span class="label">Transaction Hash</span>
+    <span class="value"
+      ><%= client.cryptoTransaction.transactionHash || "—" %></span
+    >
+  </p>
+  <% if (client.cryptoTransaction.slipImageUrl) { %>
+  <p><span class="label">Transaction Slip</span></p>
+  <img src="<%= client.cryptoTransaction.slipImageUrl %>" class="img-preview" />
+  <% } %>
+</div>
+<% } %>

