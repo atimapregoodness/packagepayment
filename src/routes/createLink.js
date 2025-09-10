@@ -28,9 +28,9 @@ router.post("/create-link", async (req, res) => {
       txsFee,
     } = req.body;
 
-    // Function to generate a transaction ID like TESLA-7829-4882K-02912
+    // Function to generate a transaction ID like galaxy-7829-4882K-02912
     function generateTransactionId() {
-      const prefix = "TESLA";
+      const prefix = "TLGF";
       const randomPart = (length) => {
         const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         let result = "";

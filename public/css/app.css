@@ -18,7 +18,7 @@ body {
     Segoe UI, Roboto, sans-serif;
   color: var(--text-light);
   scroll-behavior: smooth;
-  scroll-snap-type: y proximity; /* vertical snap like Tesla sections */
+  scroll-snap-type: y proximity; /* vertical snap like galaxy sections */
 }
 
 * {
@@ -33,11 +33,10 @@ body {
   min-height: 100vh;
 }
 
-#tesla-logo {
-  border-right: 2px solid #393c4156;
+/* #galaxy-logo {
   font-size: 22px;
-}
-.tesla-login-card {
+} */
+.galaxy-login-card {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 24px rgba(0, 0, 0, 0.08);
@@ -50,7 +49,7 @@ body {
 .topspace {
   padding-bottom: 5em;
 }
-.tesla-logo {
+.galaxy-logo {
   display: block;
   padding: 0 auto 1.5rem auto;
   width: 80px;
@@ -68,7 +67,7 @@ body {
   border-color: #393c41;
   box-shadow: 0 0 0 0.2rem rgba(57, 60, 65, 0.15);
 }
-.btn-tesla {
+.btn-galaxy {
   background: #393c41;
   color: #fff;
   border-radius: 20px;
@@ -77,7 +76,7 @@ body {
   padding: 0.75rem;
   transition: background 0.2s;
 }
-.btn-tesla:hover {
+.btn-galaxy:hover {
   background: #222326;
   color: #fff;
 }
@@ -99,7 +98,7 @@ nav {
   z-index: 100;
   /* padding: 0.7em 3.5em !important; */
 }
-/* Tesla-style Navbar */
+/* galaxy-style Navbar */
 .navbar {
   position: fixed;
   width: 100%;
@@ -154,7 +153,7 @@ nav {
 .nav-link.position-relative {
   color: #222 !important;
 }
-.btn-tesla {
+.btn-galaxy {
   background: #393c41;
   color: #fff;
   border: none;
@@ -170,14 +169,14 @@ nav {
   cursor: pointer;
 }
 
-.btn-tesla:hover,
-.btn-tesla:focus {
+.btn-galaxy:hover,
+.btn-galaxy:focus {
   background: #222326;
   color: #fff;
   box-shadow: 0 4px 16px rgba(57, 60, 65, 0.12);
 }
 
-.btn-tesla:active {
+.btn-galaxy:active {
   background: #111;
   color: #fff;
 }
@@ -186,22 +185,22 @@ nav {
   transition: color 0.3s, transform 0.3s;
 }
 
-/* Tesla Text Logo Style */
+/* galaxy Text Logo Style */
 @font-face {
-  font-family: "Tesla";
-  src: url("/fonts/TESLA.ttf") format("truetype");
+  font-family: "galaxy";
+  src: url("/fonts/galaxy.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
-#tesla-logo {
-  font-family: "Tesla";
+#galaxy-logo {
+  font-family: "galaxy";
   font-weight: normal;
   font-style: normal;
   padding-right: 1em;
 }
 
-.tesla-signup-container {
+.galaxy-signup-container {
   max-width: 400px;
   margin: 60px auto;
   background: #fff;
@@ -209,12 +208,12 @@ nav {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   padding: 40px 32px 32px 32px;
 }
-.tesla-logo {
+.galaxy-logo {
   display: block;
   margin: 0 auto 24px auto;
   width: 120px;
 }
-.tesla-title {
+.galaxy-title {
   text-align: center;
   font-weight: 700;
   font-size: 2rem;
@@ -383,7 +382,7 @@ nav {
   border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
-  text-transform: none; /* Tesla tends to use Title Case, not full uppercase */
+  text-transform: none; /* galaxy tends to use Title Case, not full uppercase */
   letter-spacing: 0.02em;
   transition: transform 120ms ease, background-color 160ms ease,
     color 160ms ease, border-color 160ms ease;
@@ -455,7 +454,7 @@ nav {
   border-radius: 0.5em;
 }
 
-.tesla-footer {
+.galaxy-footer {
   background-color: #f8f9fa;
   padding: 40px 20px;
   color: #333;
@@ -529,7 +528,7 @@ nav {
 .header-section {
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   color: white;
-  padding: 30px;
+  padding-top: 20px;
 }
 
 .logo {
@@ -641,13 +640,13 @@ nav {
   padding-top: 5em;
 }
 
-/* Tesla-style footer */
-.footer-tesla {
-  background-color: #171a20; /* Tesla dark */
+/* galaxy-style footer */
+.footer-galaxy {
+  background-color: #171a20; /* galaxy dark */
 }
 
 /* Monochrome, subtle logos */
-.footer-tesla .brand-logo {
+.footer-galaxy .brand-logo {
   height: 24px; /* keep logos consistent */
   max-height: 24px;
   filter: invert(1) grayscale(1) contrast(1.2) opacity(0.8);
@@ -655,7 +654,7 @@ nav {
 }
 
 /* Uppercase, spaced labels */
-.footer-tesla .brand-name {
+.footer-galaxy .brand-name {
   margin-top: 0.5rem;
   font-size: 0.75rem;
   letter-spacing: 0.06em;
@@ -664,15 +663,15 @@ nav {
 }
 
 /* Hover lift + brighter logo */
-.footer-tesla .brand-item:hover .brand-logo {
+.footer-galaxy .brand-item:hover .brand-logo {
   transform: translateY(-2px);
   opacity: 1;
   filter: invert(1) grayscale(1) contrast(1.4) opacity(1);
 }
 
-#teslaBd {
+#galaxyBd {
   border: none !important;
-  font-family: "Tesla";
+  font-family: "galaxy";
   font-weight: normal;
   font-style: normal;
   padding-right: 1em;
@@ -692,7 +691,7 @@ nav {
     opacity: 1;
   }
 }
-.tesla-card {
+.galaxy-card {
   background-color: #1a1a1a;
   border-radius: 12px;
   padding: 2rem;
@@ -730,50 +729,50 @@ label {
   transition: opacity 0.5s ease-in-out;
 }
 
-.tesla-card {
+.galaxy-card {
   border-radius: 14px;
   background: #fff;
 }
-.tesla-header {
+.galaxy-header {
   background: #000;
   color: #fff;
   border-radius: 14px 14px 0 0;
 }
-.tesla-section-title {
+.galaxy-section-title {
   text-align: center;
   font-weight: 600;
   margin: 20px 0;
   font-size: 1.1rem;
   color: #111;
 }
-.tesla-input {
+.galaxy-input {
   border-radius: 8px;
   border: 1px solid #ddd;
   padding: 10px 14px;
   font-size: 0.95rem;
   transition: 0.2s ease-in-out;
 }
-.tesla-input:focus {
+.galaxy-input:focus {
   border-color: #e82127;
   box-shadow: none;
 }
-.tesla-select {
+.galaxy-select {
   border-radius: 8px;
   padding: 10px 14px;
 }
-.tesla-preview img {
+.galaxy-preview img {
   max-height: 180px;
   border-radius: 10px;
   border: 1px solid #eee;
   padding: 5px;
 }
-.tesla-btn {
+.galaxy-btn {
   padding: 10px 22px;
   border-radius: 50px;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
-.tesla-btn-red {
+.galaxy-btn-red {
   background: #e82127;
   color: #fff;
   border-radius: 50px;
@@ -781,7 +780,7 @@ label {
   font-weight: 600;
   transition: background 0.3s;
 }
-.tesla-btn-red:hover {
+.galaxy-btn-red:hover {
   background: #c21820;
 }
 
@@ -819,7 +818,7 @@ label {
 }
 #amount-panel {
   border-radius: 10px;
-  padding: 16px;
+
   background: linear-gradient(
     90deg,
     rgba(14, 165, 164, 0.04),

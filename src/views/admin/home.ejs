@@ -11,7 +11,7 @@
           </p>
         </div>
         <div class="card-footer bg-transparent border-top-0">
-          <div class="row g-2 w-90">
+          <div class="row g-2 w-100">
             <div class="col-6">
               <a
                 href="<%= link.link %>"
@@ -22,15 +22,21 @@
               </a>
             </div>
             <div class="col-6">
-              <button
+              <!-- <button
                 type="button"
                 class="btn btn-warning btn-sm w-100"
                 data-bs-toggle="modal"
                 data-bs-target="#paymentModal"
                 onclick="loadPaymentDetails('<%= link.transactionId %>')"
               >
-                Check Updates
-              </button>
+                View Details
+              </button> -->
+              <a
+                href="/link-info/<%= link.transactionId %>"
+                class="btn btn-primary btn-sm w-100"
+              >
+                Visit Link
+              </a>
             </div>
           </div>
         </div>
@@ -40,15 +46,15 @@
   </div>
 </div>
 
-<!-- One Reusable Modal -->
+<!-- Admin Modal for Client Details
 <div class="modal fade" id="paymentModal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div
       class="modal-content shadow-lg rounded-4 overflow-hidden animate__animated animate__zoomIn"
     >
-      <div class="modal-header bg-black text-white">
+      <div class="modal-header bg-dark text-white">
         <h5 class="modal-title">
-          <i class="fas fa-shield-alt me-2"></i> Client Payment Details
+          <i class="fas fa-user-shield me-2"></i> Client Details
         </h5>
         <button
           type="button"
@@ -57,11 +63,8 @@
         ></button>
       </div>
       <div class="modal-body">
-        <!-- Dynamic content will be injected here -->
-
-        <!-- ______________ -->
         <div id="paymentDetailsContainer" class="p-2 text-center">
-          <p class="text-muted">Select a client to view details.</p>
+          <p class="text-muted">Select a client to view their details.</p>
         </div>
       </div>
     </div>
@@ -71,16 +74,17 @@
 <script>
   async function loadPaymentDetails(transactionId) {
     const container = document.getElementById("paymentDetailsContainer");
-    container.innerHTML = '<p class="text-muted">Loading details...</p>';
+    container.innerHTML = '<p class="text-muted">Loading client details...</p>';
 
     try {
-      const res = await fetch(`/link-info/${transactionId}`);
-      if (!res.ok) throw new Error("Failed to fetch details");
-      const html = await res.text(); // server sends rendered partial
+      const res = await fetch(`/user/link-info/${transactionId}`); // match route exactly
+      if (!res.ok) throw new Error("Failed to fetch client details");
+      const html = await res.text();
       container.innerHTML = html;
     } catch (err) {
+      console.error(err);
       container.innerHTML =
-        '<p class="text-danger">❌ Could not load payment details.</p>';
+        '<p class="text-danger">❌ Could not load client details.</p>';
     }
   }
-</script>
+</script> -->

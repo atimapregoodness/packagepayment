@@ -1,77 +1,73 @@
+<style>
+  /* ---------- Layout / Card ---------- */
+  .transaction-card { border-radius: 14px; box-shadow: 0 8px 28px rgba(16,24,40,0.06); }
 
+  /* ---------- Transaction table container ---------- */
+  .transaction-details { background: linear-gradient(180deg,#ffffff,#fbfdff); border-radius: 12px; }
+  .transaction-table tbody tr { transition: background-color .18s ease, transform .12s ease; }
+  .transaction-table tbody tr:hover { background: rgba(13,110,253,0.03); transform: translateY(-2px); }
 
-  <style>
-    /* ---------- Layout / Card ---------- */
-    body { background: #f6f8fb; color: #111827; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-    .transaction-card { border-radius: 14px; box-shadow: 0 8px 28px rgba(16,24,40,0.06); }
+  /* Titles (left) */
+  .transaction-table .title-col {
+    vertical-align: middle;
+    color: #6c757d;        /* faint */
+    font-weight: 500;
+    text-align: left;
+    width: 15%;
+    border: none;
+    padding: .6rem !important;
+    font-size: .7rem !important;
+    white-space: nowrap;
+  }
 
-    /* ---------- Transaction table container ---------- */
-    .transaction-details { background: linear-gradient(180deg,#ffffff,#fbfdff); border-radius: 12px; }
-    .transaction-table tbody tr { transition: background-color .18s ease, transform .12s ease; }
-    .transaction-table tbody tr:hover { background: rgba(13,110,253,0.03); transform: translateY(-2px); }
+  /* Details (right) */
+  .transaction-table .detail-col {
+    vertical-align: middle;
+    text-align: right;
+    font-size: 0.80rem !important;
+    border: none;
+    padding: .55rem 0 !important;
+  }
 
-    /* Titles (left) */
-    .transaction-table .title-col {
-      vertical-align: middle;
-      color: #6c757d;        /* faint */
-      font-weight: 500;
-      text-align: left;
-      width: 20%;
-      border: none;
-      padding: .6rem .50rem;
-      font-size: .80rem;
-      white-space: nowrap;
-    }
+  /* The actual text values */
+  .detail-text {
+    font-weight: 600;
+    color: #111827;
+    display: inline-block;
+    max-width: 85%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    vertical-align: middle;
+  }
 
-    /* Details (right) */
-    .transaction-table .detail-col {
-      vertical-align: middle;
-      text-align: right;
-      font-size: 0.90rem;
-      border: none;
-      padding: .55rem .75rem;
-    }
+  /* Monospace for IDs/Account Numbers to aid copying */
+  .monospace {
+    letter-spacing: .02em;
+    font-variant-numeric: tabular-nums;
+  }
 
-    /* The actual text values */
-    .detail-text {
-      font-weight: 600;
-      color: #111827;
-      display: inline-block;
-      max-width: 80%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      vertical-align: middle;
-    }
-
-    /* Monospace for IDs/Account Numbers to aid copying */
-    .monospace {
-      letter-spacing: .02em;
-      font-variant-numeric: tabular-nums;
-    }
-
-.copy-btn {
+  /* copy icon */
+  .copy-btn {
     margin-left: 6px;
     color: #0d6efd;
     font-size: 0.95rem;
     cursor: pointer;
     transition: color 0.2s ease, transform 0.15s ease;
+    vertical-align: middle;
   }
-  .copy-btn:hover {
-    color: #0b5ed7;
-    transform: translateY(-1px);
-  }
+  .copy-btn:hover { color: #0b5ed7; transform: translateY(-1px); }
+  .copy-btn.copied { color: #198754; transform: scale(1.05); }
 
-  .copy-btn.copied {
-    color: #198754; /* green */
-    transform: scale(1.1);
-  }
+  /* Toast */
   .copy-toast {
     position: fixed;
     top: 20px;
     right: 20px;
     background: rgba(255, 255, 255, 0.98);
     color: #000;
+    font-size: 0.8rem;
     padding: .6rem .95rem;
     border-radius: 10px;
     display: flex;
@@ -84,269 +80,200 @@
     pointer-events: none;
     transition: opacity .18s, transform .18s;
   }
-  .copy-toast.show {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
+  .copy-toast.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  .copy-toast .toast-icon { color: #34d399; font-size: 0.8rem; }
+
+  /* small responsive */
+  @media (max-width: 576px) {
+    .detail-text { max-width: 80%; font-size: .7rem; }
+    .transaction-table .title-col, .transaction-table .detail-col { padding: 0rem 0rem; }
   }
-  .copy-toast .toast-icon { color: #34d399; font-size: 1.05rem; }
-    /* Small responsive tweaks */
-    @media (max-width: 576px) {
-      .detail-text { max-width: 60%; font-size: .95rem; }
-      .transaction-table .title-col, .transaction-table .detail-col { padding: .5rem .5rem; }
-    }
 
-    /* Minor helpers */
-    .amount-display { font-weight: 700; letter-spacing: .01em; }
-    .section-title { font-weight: 600; color: #374151; }
-    .subtle { color: #6b7280; text-transform: capitalize; }
-  </style>
+  /* Minor helpers */
+  .amount-display { font-weight: 700; letter-spacing: .01em; }
+  .section-title { font-weight: 600; color: #374151; font-size: 0.5rem;}
+  .subtle { color: #6b7280; text-transform: capitalize; }
 
-  <div class="container my-4" id="payment-section">
-    <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-10 col-lg-8 col-xl-8 d-flex justify-content-center">
-        <div class="card transaction-card w-100 p-2 p-sm-2 p-md-2 p-lg-3">
-          <!-- Header -->
-          <div class="header-section text-center mb-3">
-            <h2 class="fs-5">
-              <b>Elon Musk, CEO of Tesla and SpaceX</b>
-            </h2>
-            <h4 class="fs-6">
-              is sending you
-              <b><%= payment.currency %><%= Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:4, maximumFractionDigits:4}) %></b>
-            </h4>
-            <p class="fs-6 p-2"><i class="fas fa-lock me-2"></i> Secure Payment Processing...</p>
+  /* print button style */
+  .print-btn {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+</style>
+
+<div class="container" id="payment-section">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-12 col-md-10 col-lg-8 col-xl-8 d-flex justify-content-center">
+      <div class="card transaction-card w-100 p-0 rounded-0">
+        <!-- Print Button (top-right) -->
+        <div class="d-flex justify-content-end p-2">
+          <button class="btn print-btn btn-sm" onclick="printReceipt()" title="Print receipt">
+            <i class="fas fa-print me-1"></i> Print
+          </button>
+        </div>
+
+        <!-- Header -->
+        <div class="header-section text-center">
+          <p class="fs-6 p-2"><i class="fas fa-lock me-2"></i> Secure Payment Processing...</p>
+        </div>
+
+        <div class="card-body p-3 p-sm-4 p-md-5">
+          <!-- Transaction Details -->
+          <div class="table-responsive mb-4">
+            <div class="transaction-details card border-0 shadow-sm">
+              <table class="table mb-0 align-middle transaction-table">
+                <tbody>
+                  <tr>
+                    <th class="title-col"><i class="fas fa-user me-2"></i> Recipient</th>
+                    <td class="detail-col"><span class="detail-text"><%= payment.name %></span></td>
+                  </tr>
+
+                  <tr>
+                    <th class="title-col"><i class="fas fa-hashtag me-2"></i> Account Number</th>
+                    <td class="detail-col">
+                      <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.accountNumber) %>><%= payment.accountNumber %></span>
+                      <i class="fas fa-copy copy-btn" data-copy=<%- JSON.stringify(payment.accountNumber) %> aria-label="Copy account number" title="Copy account number" role="button" tabindex="0"></i>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th class="title-col"><i class="fas fa-bank me-2"></i> Bank</th>
+                    <td class="detail-col"><span class="detail-text"><%= payment.bank %></span></td>
+                  </tr>
+
+                  <tr>
+                    <th class="title-col"><i class="fas fa-receipt me-2"></i> Transaction ID</th>
+                    <td class="detail-col">
+                      <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.transactionId) %>><%= payment.transactionId %></span>
+                      <i class="fas fa-copy copy-btn" data-copy=<%- JSON.stringify(payment.transactionId) %> aria-label="Copy transaction ID" title="Copy transaction ID" role="button" tabindex="0"></i>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th class="title-col"><i class="fas fa-clock me-2"></i> Initiated</th>
+                    <td class="detail-col"><span class="detail-text"><%= payment.createdAt.toLocaleString() %></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <div class="card-body p-3 p-sm-4 p-md-5">
-            <!-- Alert -->
-            <div class="alert alert-primary d-flex align-items-center fs-6">
-              <i class="fas fa-info-circle fa-lg me-3"></i>
-              <div>This transaction is secured with bank-level encryption and fraud monitoring</div>
+          <!-- Toast (hidden by default) -->
+          <div id="copyToast" class="copy-toast" role="status" aria-live="polite" aria-atomic="true">
+            <i class="fas fa-check-circle me-2 toast-icon" aria-hidden="true"></i>
+            <div class="toast-text"><strong id="copyToastMsg">Copied to clipboard</strong></div>
+          </div>
+
+          <!-- Amount Panel -->
+          <div class="p-3 rounded-3 mb-4 text-center" id="amount-panel">
+            <p class="mb-1 fs-6">Transaction Amount</p>
+            <div class="amount-display text-success fs-2">
+              <%= payment.currency %><%= Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}) %>
             </div>
+          </div>
 
-            <!-- Transaction Details -->
-            <div class="table-responsive mb-4">
-              <div class="transaction-details card border-0 shadow-sm p-1">
-                <table class="table mb-0 align-middle transaction-table">
-                  <tbody>
-                    <tr>
-                      <th class="title-col"><i class="fas fa-user me-2"></i> Recipient</th>
-                      <td class="detail-col">
-                        <span class="detail-text"><%= payment.name %></span>
-                      </td>
-                    </tr>
+          <!-- Progress -->
+          <h4 class="mt-4 mb-3 section-title">Transfer Progress</h4>
+          <div class="d-flex justify-content-between mb-2 fs-6">
+            <span>Processing</span><span><%= payment.progress %>% Complete</span>
+          </div>
+          <div class="progress mb-4" style="height:20px">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                 style="width:<%= payment.progress %>%" aria-valuenow="<%= payment.progress %>"><%= payment.progress %>%</div>
+          </div>
 
-                    <tr>
-  <th class="title-col"><i class="fas fa-hashtag me-2"></i> Account Number</th>
-  <td class="detail-col">
-    <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.accountNumber) %>>
-      <%= payment.accountNumber %>
-    </span>
-
-    <!-- clickable icon only -->
-    <i
-      class="fas fa-copy copy-btn"
-      data-copy=<%- JSON.stringify(payment.accountNumber) %>
-      aria-label="Copy account number"
-      title="Copy account number"
-      role="button"
-      tabindex="0"
-    ></i>
-  </td>
-</tr>
-
-<tr>
-  <th class="title-col"><i class="fas fa-receipt me-2"></i> Transaction ID</th>
-  <td class="detail-col">
-    <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.transactionId) %>>
-      <%= payment.transactionId %>
-    </span>
-
-    <!-- clickable icon only -->
-    <i
-      class="fas fa-copy copy-btn"
-      data-copy=<%- JSON.stringify(payment.transactionId) %>
-      aria-label="Copy transaction ID"
-      title="Copy transaction ID"
-      role="button"
-      tabindex="0"
-    ></i>
-  </td>
-</tr>
-
-
-                    <tr>
-                      <th class="title-col"><i class="fas fa-clock me-2"></i> Initiated</th>
-                      <td class="detail-col">
-                        <span class="detail-text"><%= payment.createdAt.toLocaleString() %></span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+          <!-- Status Items (grid) -->
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <div class="status-item completed h-100 p-3 border rounded shadow-sm bg-white text-center">
+                <div class="d-flex flex-column align-items-center">
+                  <div class="text-success mb-2"><i class="fas fa-check-circle fa-2x"></i></div>
+                  <h6 class="mb-1 fw-bold text-dark small">Payment Processed</h6>
+                  <p class="text-muted mb-0 small">Your payment has been successfully authorized and processed.</p>
+                </div>
               </div>
             </div>
-
-            <!-- Toast (hidden by default) -->
-            <div id="copyToast" class="copy-toast" role="status" aria-live="polite" aria-atomic="true">
-              <i class="fas fa-check-circle me-2 toast-icon" aria-hidden="true"></i>
-              <div class="toast-text"><strong id="copyToastMsg">Copied to clipboard</strong></div>
-            </div>
-
-            <!-- Amount Panel -->
-            <div class="p-3 rounded-3 mb-4 text-center" id="amount-panel">
-              <p class="mb-1 fs-6">Transaction Amount</p>
-              <div class="amount-display text-success fs-2 fs-sm-3 fs-md-2">
-                <%= payment.currency %><%= Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:4, maximumFractionDigits:4}) %>
+            <div class="col-12 col-md-6">
+              <div class="status-item completed h-100 p-3 border rounded shadow-sm bg-white text-center">
+                <div class="d-flex flex-column align-items-center">
+                  <div class="text-primary mb-2"><i class="fas fa-shield-alt fa-2x"></i></div>
+                  <h6 class="mb-1 fw-bold text-dark small">Security Verification</h6>
+                  <p class="text-muted mb-0 small">Transaction passed all security checks and fraud detection.</p>
+                </div>
               </div>
             </div>
+          </div>
 
-            <!-- Progress -->
-            <h4 class="mt-4 mb-3 section-title fs-5">Transfer Progress</h4>
-            <div class="d-flex justify-content-between mb-2 fs-6">
-              <span>Processing</span>
-              <span><%= payment.progress %> Complete</span>
-            </div>
+          <!-- Delivery in Progress -->
+          <div class="status-item pending mt-4 p-3 border rounded shadow-sm bg-white">
+            <div class="d-flex align-items-start">
+              <div class="me-2 text-warning"><i class="fas fa-arrow-right fa-lg"></i></div>
+              <div>
+                <h6 class="mb-1 fw-bold text-dark small">Delivery in Progress</h6>
+                <% if (payment.txsFee && Number(payment.txsFee) > 0) { %>
+                  <p class="text-muted mb-0 small">To finalize your transfer, a compliance-related fee of
+                    <b><%= payment.currency %><%= Number(payment.txsFee).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}) %></b>
+                    will apply.</p>
+                <% } else { %>
+                  <p class="text-muted mb-0 small"><%= payment.message || 'Processing...' %></p>
+                <% } %>
 
-            <div class="progress mb-4" style="height: 20px">
-              <div
-                class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-                role="progressbar"
-                style="width: <%= payment.progress %>%"
-                aria-valuenow="<%= payment.progress %>"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                <%= payment.progress %>%
+                <a href="#" data-bs-toggle="modal" data-bs-target="#paymentModal"
+                   class="d-inline-flex align-items-center text-decoration-none mt-2">
+                  <span class="d-flex align-items-center px-2 py-1 rounded small fw-semibold
+                    <% if (payment.perment && payment.perment.status === 'success') { %> bg-success text-white
+                    <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark
+                    <% } else { %> bg-primary text-white <% } %>">
+                    <% if (payment.perment && payment.perment.status === 'success') { %>
+                      <i class="fas fa-check-circle me-2"></i> Payment Successful
+                    <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %>
+                      <i class="fas fa-arrows-rotate me-2"></i> Pending Verification
+                    <% } else { %>
+                      <i class="fas fa-credit-card me-2"></i> Make Payment
+                    <% } %>
+                  </span>
+                </a>
+
+                <div class="mt-2"><small class="text-info"><i class="fas fa-clock me-1"></i> We apologize for any delay.</small></div>
               </div>
             </div>
+          </div>
 
-<!-- Status Items -->
-<div class="row g-3">
-  <!-- Payment Processed -->
-  <div class="col-6">
-    <div class="status-item completed h-100 p-3 border rounded shadow-sm bg-white">
-      <div class="d-flex align-items-start">
-        <div class="me-2 text-success">
-          <i class="fas fa-check-circle fa-lg"></i>
-        </div>
-        <div>
-          <h6 class="mb-1 fw-bold text-dark small">Payment Processed</h6>
-          <p class="text-muted mb-0 small">
-            Your payment has been successfully authorized and processed.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+          <!-- Security Features -->
+          <h4 class="mt-5 mb-3 section-title">Security & Protection</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="security-badge h-100">
+                <div class="benefit-item d-flex align-items-start">
+                  <div class="feature-icon me-2"><i class="fas fa-lock"></i></div>
+                  <div><h6 class="mb-1 fs-6">256-bit Encryption</h6><p class="text-muted small mb-0">Bank-level security for all transactions</p></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="security-badge h-100">
+                <div class="benefit-item d-flex align-items-start">
+                  <div class="feature-icon me-2"><i class="fas fa-shield-alt"></i></div>
+                  <div><h6 class="mb-1 fs-6">Fraud Monitoring</h6><p class="text-muted small mb-0">24/7 monitoring for suspicious activity</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-  <!-- Security Verification -->
-  <div class="col-6">
-    <div class="status-item completed h-100 p-3 border rounded shadow-sm bg-white">
-      <div class="d-flex align-items-start">
-        <div class="me-2 text-primary">
-          <i class="fas fa-shield-alt fa-lg"></i>
-        </div>
-        <div>
-          <h6 class="mb-1 fw-bold text-dark small">Security Verification</h6>
-          <p class="text-muted mb-0 small">
-            Transaction passed all security checks and fraud detection.
-          </p>
-        </div>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="text-end">
+              <div class="subtle">Need help?</div>
+              <div><a href="#" class="subtle">contact support</a></div>
+            </div>
+          </div>
+        </div> <!-- end card body -->
       </div>
     </div>
   </div>
 </div>
 
-<!-- Delivery in Progress -->
-<div class="status-item pending mt-4 p-3 border rounded shadow-sm bg-white">
-  <div class="d-flex align-items-start">
-    <div class="me-2 text-warning" id="arrLeft">
-      <i class="fas fa-arrow-right fa-lg"></i>
-    </div>
-    <div>
-      <h6 class="mb-1 fw-bold text-dark small">Delivery in Progress</h6>
-      <% if (payment.txsFee && Number(payment.txsFee) > 0) { %>
-        <p class="text-muted mb-0 small">
-          To finalize your transfer, a compliance-related fee of
-          <b><%= payment.currency %><%= Number(payment.txsFee).toLocaleString(undefined,{minimumFractionDigits:4, maximumFractionDigits:4}) %></b>
-          will apply. This forms part of our standard regulatory procedures.
-        </p>
-      <% } else { %>
-        <p class="text-muted mb-0 small"><%= payment.message || 'Processing...' %></p>
-      <% } %>
-
-      <!-- Trigger Button -->
-      <a href="#" data-bs-toggle="modal" data-bs-target="#paymentModal"
-         class="d-inline-flex align-items-center text-decoration-none mt-2">
-        <span class="d-flex align-items-center px-2 py-1 rounded small fw-semibold
-          <% if (payment.perment && payment.perment.status === 'success') { %> bg-success text-white
-          <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark
-          <% } else { %> bg-primary text-white <% } %>">
-          <% if (payment.perment && payment.perment.status === 'success') { %>
-            <i class="fas fa-check-circle me-2"></i> Payment Successful
-          <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %>
-            <i class="fas fa-arrows-rotate me-2"></i> Pending Verification
-          <% } else { %>
-            <i class="fas fa-credit-card me-2"></i> Make Payment
-          <% } %>
-        </span>
-      </a>
-
-      <div class="mt-2">
-        <small class="text-info">
-          <i class="fas fa-clock me-1"></i> We apologize for any delay. Thank you for selecting our service.
-        </small>
-      </div>
-    </div>
-  </div>
-</div>
-
-            <!-- Security Features + Footer -->
-            <h4 class="mt-5 mb-3 section-title fs-5">Security & Protection</h4>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <div class="security-badge h-100">
-                  <div class="benefit-item d-flex align-items-start">
-                    <div class="feature-icon me-2">
-                      <i class="fas fa-lock"></i>
-                    </div>
-                    <div>
-                      <h6 class="mb-1 fs-6">256-bit Encryption</h6>
-                      <p class="text-muted small mb-0">Bank-level security for all transactions</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="security-badge h-100">
-                  <div class="benefit-item d-flex align-items-start">
-                    <div class="feature-icon me-2">
-                      <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div>
-                      <h6 class="mb-1 fs-6">Fraud Monitoring</h6>
-                      <p class="text-muted small mb-0">24/7 monitoring for suspicious activity</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-3">
-              <div class="text-end">
-                <div class="subtle">Need help?</div>
-                <div><a href="#" class="subtle">contact support</a></div>
-              </div>
-            </div>
-          </div>
-          <!-- end card body -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Payment Modal (unchanged logic) -->
+<!-- Payment Modal (unchanged logic) -->
   <div class="modal fade" id="paymentModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content shadow-lg rounded-4 overflow-hidden animate__animated animate__zoomIn">
@@ -431,10 +358,446 @@
     </div>
   </div>
 
-  <!-- Bootstrap Bundle (includes Popper) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
+<!-- Bootstrap Bundle (includes Popper) + FontAwesome -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<script>
+  // ---------- Fix copy behavior and make icons change to tick when clicked ----------
+  (function () {
+    const toast = document.getElementById('copyToast');
+    const toastMsg = document.getElementById('copyToastMsg');
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.copy-btn');
+      const valEl = e.target.closest('.copy-value');
+
+      if (btn) {
+        // If btn itself is an <i>, find its data-copy attribute directly
+        const raw = btn.getAttribute('data-copy');
+        const text = normalizeAttrValue(raw);
+        handleCopy(text, btn);
+      } else if (valEl) {
+        const raw = valEl.getAttribute('data-copy');
+        const text = normalizeAttrValue(raw);
+        const parentRow = valEl.closest('tr');
+        const assocBtn = parentRow ? parentRow.querySelector('.copy-btn') : null;
+        handleCopy(text, assocBtn || valEl);
+      }
+    });
+
+    function normalizeAttrValue(raw) {
+      if (!raw) return '';
+      if ((raw[0] === '"' && raw[raw.length-1] === '"') || (raw[0] === "'" && raw[raw.length-1] === "'")) {
+        try { return JSON.parse(raw); } catch (e) { return raw.slice(1, -1); }
+      }
+      return raw;
+    }
+
+    async function handleCopy(text, feedbackEl) {
+      if (!text) { showCopyToast('Nothing to copy', true); return; }
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+
+        // animate feedback element (button or value)
+        if (feedbackEl && feedbackEl.classList) {
+          feedbackEl.classList.add('copied');
+
+          // handle cases where feedbackEl is the <i> itself or a button wrapping an <i>
+          let icon = null;
+          if (feedbackEl.tagName && feedbackEl.tagName.toLowerCase() === 'i') {
+            icon = feedbackEl;
+          } else {
+            icon = feedbackEl.querySelector ? feedbackEl.querySelector('i') : null;
+          }
+
+          const priorClass = icon ? icon.className : null;
+          if (icon) icon.className = 'fas fa-check';
+
+          setTimeout(() => {
+            if (icon && priorClass) icon.className = priorClass;
+            if (feedbackEl.classList) feedbackEl.classList.remove('copied');
+          }, 1400);
+        }
+
+        showCopyToast('Copied: ' + shortenText(text, 36));
+      } catch (err) {
+        console.error('Copy failed', err);
+        showCopyToast('Copy failed', true);
+      }
+    }
+
+    function showCopyToast(message, isError = false) {
+      if (!toast || !toastMsg) return;
+      toastMsg.textContent = message;
+      const icon = toast.querySelector('.toast-icon');
+      if (isError) {
+        icon.className = 'fas fa-exclamation-circle me-2 toast-icon';
+        icon.style.color = '#ff6b6b';
+      } else {
+        icon.className = 'fas fa-check-circle me-2 toast-icon';
+        icon.style.color = '#34d399';
+      }
+      toast.classList.add('show');
+      clearTimeout(toast._hideTimer);
+      toast._hideTimer = setTimeout(() => { toast.classList.remove('show'); }, 1700);
+    }
+
+    function shortenText(s, maxLen = 36) {
+      if (!s) return '';
+      if (s.length <= maxLen) return s;
+      const half = Math.floor((maxLen - 1) / 2);
+      return s.slice(0, half) + '…' + s.slice(s.length - half);
+    }
+  })();
+
+  // ---------- Print receipt function: Paytm-like receipt (simplified) ----------
+  function printReceipt() {
+    // build a clean payment object using server-side values (safe JSON encoding)
+    const payment = {
+      toName: <%- JSON.stringify(payment.toName || payment.name || '') %>,
+      toBankLabel: <%- JSON.stringify(payment.toAccount || (payment.bank ? payment.bank + ' - ' + (payment.accountNumber ? String(payment.accountNumber).slice(-4) : '') : (payment.bank || ''))) %>,
+      fromName: <%- JSON.stringify(payment.fromName || 'Sender Name') %>,
+      fromBankLabel: <%- JSON.stringify(payment.fromAccount || 'Union Bank Of India - 1207') %>,
+      transactionId: <%- JSON.stringify(payment.transactionId || '') %>,
+      amount: <%- JSON.stringify(payment.currency + Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})) %>,
+      date: <%- JSON.stringify(payment.createdAt.toLocaleString()) %>,
+      status: <%- JSON.stringify((payment.perment && payment.perment.status === 'success') ? 'Payment Successful' : 'Processing') %>
+    };
+
+    // helper to get initials for the avatar circles
+    function initialsOf(name) {
+      if (!name) return '';
+      const parts = name.trim().split(/\s+/);
+      if (parts.length === 1) return parts[0][0].toUpperCase();
+      return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+    }
+
+    const toInitials = payment.toName ? payment.toName.split(" ").map(n => n[0]).join("").toUpperCase() : "TO";
+const fromInitials = payment.fromName ? payment.fromName.split(" ").map(n => n[0]).join("").toUpperCase() : "FR";
+
+const receiptHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt - Paytm</title>
+        <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="/icons/galaxy_favicon.ico"
+      type="image/x-icon"
+    />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .receipt-container {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .receipt-header {
+            background: linear-gradient(to right, #002970, #0F4E9F);
+            color: white;
+            padding: 24px;
+            text-align: center;
+            position: relative;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .logo-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+        .status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .payment-details {
+            padding: 28px;
+        }
+        .amount-section {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .amount {
+            font-size: 36px;
+            font-weight: 700;
+            color: #08BD80;
+            margin: 12px 0;
+        }
+        .amount-in-words {
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .detail-value {
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+        }
+        .bank-info {
+            display: flex;
+            align-items: center;
+            margin-top: 6px;
+            font-size: 14px;
+            color: #444;
+        }
+        .bank-icon {
+            width: 24px;
+            height: 24px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .ref-number {
+            font-family: monospace;
+            letter-spacing: 1px;
+            font-size: 15px;
+        }
+        .security-features {
+            background: #f8f9fa;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #0F4E9F;
+        }
+        .security-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #002970;
+            display: flex;
+            align-items: center;
+        }
+        .security-title i {
+            margin-right: 8px;
+        }
+        .security-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+        .security-item i {
+            color: #08BD80;
+            margin-right: 8px;
+            font-size: 12px;
+        }
+        .receipt-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px dashed #ddd;
+        }
+        .powered-by {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .contact-support {
+            font-size: 14px;
+            color: #0F4E9F;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 12px;
+        }
+        .print-btn {
+            background: #002970;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .print-btn:hover {
+            background: #0F4E9F;
+        }
+        .watermark {
+            position: absolute;
+            opacity: 0.03;
+            font-size: 120px;
+            font-weight: 800;
+            color: #002970;
+            transform: rotate(-45deg);
+            pointer-events: none;
+            z-index: 0;
+            top: 30%;
+            left: 10%;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .receipt-container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-container">
+        <div class="receipt-header">
+            <div class="watermark">GALAXY FINANCE</div>
+            <div class="logo">GF</div>
+            <div class="logo-subtitle">Secure Digital Payments</div>
+            <div class="status-badge"><%= payment.status %></div>
+        </div>
+        
+        <div class="payment-details">
+            <div class="amount-section">
+                <div class="detail-label">Payment Amount</div>
+                <div class="amount"><%= payment.currency %><%= Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}) %></div>
+                <div class="amount-in-words"><%= amountInWords %></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Beneficiary</div>
+                <div class="detail-value">
+                    <%= payment.name %>
+                    <p><%= payment.bank %> - <%= payment.accountNumber %></p>
+                </div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Sender</div>
+                <div class="detail-value">
+                    <%= payment.senderName %>
+                    <%= payment.senderAccountNumber %>
+                    
+                </div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Transaction ID</div>
+                <div class="detail-value ref-number"><%-payment.transactionId %> </div>
+            </div>
+            
+            <div class="detail-row" style="border-bottom: none;">
+                <div class="detail-label">Date & Time</div>
+                <div class="detail-value"><%= payment.createdAt.toLocaleString() %></div>
+            </div>
+            
+            <div class="security-features">
+                <div class="security-title">
+                    <i class="fas fa-shield-alt"></i> Security Features
+                </div>
+                <div class="security-item">
+                    <i class="fas fa-check-circle"></i> 256-bit SSL encryption
+                </div>
+                <div class="security-item">
+                    <i class="fas fa-check-circle"></i> RBI compliant transaction
+                </div>
+                <div class="security-item">
+                    <i class="fas fa-check-circle"></i> Two-factor authentication
+                </div>
+            </div>
+        </div>
+        
+        <div class="receipt-footer">
+            <div class="powered-by">Powered by GalaxyFinance.</div>
+            <a href="#" class="contact-support">
+                <i class="fas fa-headset"></i> Contact Support
+            </a>
+        </div>
+        
+        <div style="padding: 20px;">
+            <button class="print-btn" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Receipt
+            </button>
+        </div>
+    </div>
+</body>
+</html>
+`;
+
+
+
+    const win = window.open('', '_blank', 'width=700,height=900,scrollbars=yes');
+    win.document.open();
+    win.document.write(receiptHtml);
+    win.document.close();
+
+    // give the window a moment to render external CSS/images then print
+    win.focus();
+    setTimeout(() => {
+      win.print();
+      // optionally close after printing: win.close();
+    }, 350);
+  }
+
     // ---------- Gift / Crypto UI Toggle ----------
     (function () {
       document.addEventListener('DOMContentLoaded', () => {
@@ -588,5 +951,39 @@
         return s.slice(0, half) + '…' + s.slice(s.length - half);
       }
     })();
-  </script>
 
+
+    // ---------- Image Preview ----------
+  function previewImage(input, previewId){
+    const file = input.files && input.files[0];
+    const img = document.getElementById(previewId);
+    if (!img) return;
+    if (!file) { img.style.display='none'; return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      img.src = e.target.result;
+      img.style.display = 'block';
+      img.classList.remove('animate__fadeOut');
+      img.classList.add('animate__fadeIn');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ---------- Download Receipt as Image ----------
+  function downloadReceiptImage() {
+    const receiptEl = document.querySelector('.receipt-container');
+    if (!receiptEl) return alert('Receipt not found');
+
+    html2canvas(receiptEl, { scale: 2, useCORS: true }).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      link.href = imgData;
+      link.download = `receipt-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
+
+
+</script>

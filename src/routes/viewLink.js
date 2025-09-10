@@ -31,7 +31,9 @@ router.get("/link-info/:transactionId", async (req, res) => {
     }
 
     // Render only the partial
-    res.render("partials/paymentDetails", { client });
+    res.render("clientDetails", { client });
+
+    // res.send(client);
   } catch (err) {
     console.error(err);
     res

@@ -1,121 +1,138 @@
-<div class="container py-5 text-center">
-  <h1>Client Payment Details</h1>
+<div class="container py-2">
+  <h1 class="mb-4 text-center">Client Payment Details</h1>
 
-  <!-- General Info -->
-  <div class="info-card text-start">
-    <div class="section-title">Client Information</div>
-    <p>
-      <span class="label">Name</span>
-      <span class="value"><%= client.name %></span>
-    </p>
-    <p>
-      <span class="label">Phone</span>
-      <span class="value"><%= client.phone %></span>
-    </p>
-    <p>
-      <span class="label">Email</span>
-      <span class="value"><%= client.email %></span>
-    </p>
-    <p>
-      <span class="label">Message</span>
-      <span class="value"><%= client.message || "—" %></span>
-    </p>
-    <p>
-      <span class="label">Unique Link</span>
-      <span class="value"
-        ><a href="<%= client.link %>"><%= client.link %></a></span
-      >
-    </p>
+  <!-- Client Info -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0"><i class="fas fa-user me-2"></i>Client Information</h5>
+    </div>
+    <div class="card-body row">
+      <div class="col-md-6 mb-2"><strong>Name:</strong> <%= client.name %></div>
+      <div class="col-md-6 mb-2">
+        <strong>Phone:</strong> <%= client.phone %>
+      </div>
+      <div class="col-md-6 mb-2">
+        <strong>Email:</strong> <%= client.email %>
+      </div>
+      <div class="col-md-6 mb-2">
+        <strong>Message:</strong> <%= client.message || "—" %>
+      </div>
+      <div class="col-12">
+        <strong>Unique Link:</strong>
+        <a href="<%= client.link %>" target="_blank"><%= client.link %></a>
+      </div>
+    </div>
   </div>
 
   <!-- Payment Info -->
-  <div class="info-card text-start">
-    <div class="section-title">Payment Details</div>
-    <p>
-      <span class="label">Bank</span>
-      <span class="value"><%= client.bank %></span>
-    </p>
-    <p>
-      <span class="label">Account Number</span>
-      <span class="value"><%= client.accountNumber %></span>
-    </p>
-    <p>
-      <span class="label">Amount</span>
-      <span class="value"
-        ><%= client.amount.toLocaleString() %> <%= client.currency %></span
-      >
-    </p>
-    <p>
-      <span class="label">Transaction Fee</span>
-      <span class="value"><%= client.txsFee %></span>
-    </p>
-    <p>
-      <span class="label">Transaction ID</span>
-      <span class="value"><%= client.transactionId || "—" %></span>
-    </p>
-    <p>
-      <span class="label">Initiated At</span>
-      <span class="value"><%= client.initiatedAt.toDateString() %></span>
-    </p>
-    <p>
-      <span class="label">Status</span>
-      <span class="badge"><%= client.status %></span>
-    </p>
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0">
+        <i class="fas fa-credit-card me-2"></i>Payment Details
+      </h5>
+    </div>
+    <div class="card-body row">
+      <div class="col-md-6 mb-2"><strong>Bank:</strong> <%= client.bank %></div>
+      <div class="col-md-6 mb-2">
+        <strong>Account Number:</strong> <%= client.accountNumber %>
+      </div>
+      <div class="col-md-6 mb-2">
+        <strong>Amount:</strong> <%= client.amount.toLocaleString() %> <%=
+        client.currency %>
+      </div>
+      <div class="col-md-6 mb-2">
+        <strong>Transaction Fee:</strong> <%= client.txsFee %>
+      </div>
+      <div class="col-md-6 mb-2">
+        <strong>Transaction ID:</strong> <%= client.transactionId || "—" %>
+      </div>
+      <div class="col-md-6 mb-2">
+        <strong>Initiated At:</strong> <%= client.initiatedAt.toDateString() %>
+      </div>
+      <div class="col-12">
+        <strong>Status:</strong>
+        <span
+          class="badge <%= client.status.toLowerCase() === 'completed' ? 'bg-success' : 'bg-warning text-dark' %>"
+        >
+          <%= client.status %>
+        </span>
+      </div>
+    </div>
   </div>
 
-  <!-- Support Info -->
+  <!-- Support Contact -->
   <% if (client.support && client.support.contact) { %>
-  <div class="info-card text-start">
-    <div class="section-title">Support Contact</div>
-    <p><span class="value"><%= client.support.contact %></span></p>
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-info text-white">
+      <h5 class="mb-0"><i class="fas fa-headset me-2"></i>Support Contact</h5>
+    </div>
+    <div class="card-body"><%= client.support.contact %></div>
   </div>
   <% } %>
 
   <!-- Gift Card -->
   <% if (client.giftCard && (client.giftCard.code ||
   client.giftCard.frontImageUrl)) { %>
-  <div class="info-card text-start">
-    <div class="section-title">Gift Card</div>
-    <p>
-      <span class="label">Code</span>
-      <span class="value"><%= client.giftCard.code || "—" %></span>
-    </p>
-    <p>
-      <span class="label">Type</span>
-      <span class="value"><%= client.giftCard.type || "—" %></span>
-    </p>
-    <% if (client.giftCard.frontImageUrl) { %>
-    <p><span class="label">Front Image</span></p>
-    <img src="<%= client.giftCard.frontImageUrl %>" class="img-preview" />
-    <% } %> <% if (client.giftCard.backImageUrl) { %>
-    <p><span class="label">Back Image</span></p>
-    <img src="<%= client.giftCard.backImageUrl %>" class="img-preview" />
-    <% } %>
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-warning text-dark">
+      <h5 class="mb-0"><i class="fas fa-gift me-2"></i>Gift Card</h5>
+    </div>
+    <div class="card-body row">
+      <div class="col-md-6 mb-2">
+        <strong>Code:</strong> <%= client.giftCard.code || "—" %>
+      </div>
+      <div class="col-md-6 mb-2">
+        <strong>Type:</strong> <%= client.giftCard.type || "—" %>
+      </div>
+      <% if (client.giftCard.frontImageUrl) { %>
+      <div class="col-6 mb-2">
+        <strong>Front Image:</strong>
+        <a href="<%= client.giftCard.frontImageUrl %>">
+          <img
+            src="<%= client.giftCard.frontImageUrl %>"
+            class="img-fluid rounded shadow-sm"
+        /></a>
+      </div>
+      <% } %> <% if (client.giftCard.backImageUrl) { %>
+      <div class="col-6 mb-2">
+        <strong>Back Image:</strong>
+        <a href="<%= client.giftCard.backImageUrl %>">
+          <img
+            src="<%= client.giftCard.backImageUrl %>"
+            class="img-fluid rounded shadow-sm"
+        /></a>
+      </div>
+      <% } %>
+    </div>
   </div>
   <% } %>
 
   <!-- Crypto Transaction -->
   <% if (client.cryptoTransaction && (client.cryptoTransaction.slipImageUrl ||
   client.cryptoTransaction.transactionHash)) { %>
-  <div class="info-card text-start">
-    <div class="section-title">Crypto Transaction</div>
-    <p>
-      <span class="label">Type</span>
-      <span class="value"><%= client.cryptoTransaction.type %></span>
-    </p>
-    <p>
-      <span class="label">Transaction Hash</span>
-      <span class="value"
-        ><%= client.cryptoTransaction.transactionHash || "—" %></span
-      >
-    </p>
-    <% if (client.cryptoTransaction.slipImageUrl) { %>
-    <p><span class="label">Transaction Slip</span></p>
-    <img
-      src="<%= client.cryptoTransaction.slipImageUrl %>"
-      class="img-preview"
-    />
-    <% } %>
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-secondary text-white">
+      <h5 class="mb-0"><i class="fas fa-coins me-2"></i>Crypto Transaction</h5>
+    </div>
+    <div class="card-body row">
+      <div class="col-md-6 mb-2">
+        <strong>Type:</strong> <%= client.cryptoTransaction.type %>
+      </div>
+      <div class="col-md-6 mb-2">
+        <strong>Transaction Hash:</strong> <%=
+        client.cryptoTransaction.transactionHash || "—" %>
+      </div>
+      <% if (client.cryptoTransaction.slipImageUrl) { %>
+      <div class="col-12 mt-2">
+        <strong>Transaction Slip:</strong>
+        <a href="<%= client.cryptoTransaction.slipImageUrl %>">
+          <img
+            src="<%= client.cryptoTransaction.slipImageUrl %>"
+            class="img-fluid rounded shadow-sm"
+        /></a>
+      </div>
+      <% } %>
+    </div>
   </div>
   <% } %>
 </div>
