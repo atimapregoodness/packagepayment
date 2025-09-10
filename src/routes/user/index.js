@@ -209,4 +209,32 @@ router.put(
   }
 );
 
+// Update transaction status
+router.get("/update-transaction/:id", async (req, res) => {
+  try {
+    const { status } = req.query; // accept status from query string
+    const validStatuses = ["accepted", "declined"];
+
+    if (!status || !validStatuses.includes(status.toLowerCase())) {
+      return res.status(400).send("Invalid status.");
+    }
+
+    const client = await Client.findByIdAndUpdate(
+      req.params.id,
+      { status: status.toLowerCase() },
+      { new: true }
+    );
+
+    if (!client) {
+      return res.status(404).send("Client not found.");
+    }
+
+    // Redirect back to the client details page or links page
+    res.redirect("back"); // or a specific page
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error.");
+  }
+});
+
 module.exports = router;

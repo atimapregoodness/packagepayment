@@ -136,3 +136,20 @@
   </div>
   <% } %>
 </div>
+
+<div class="text-center my-4">
+  <a
+    href="/user/update-transaction/<%= client._id %>?status=accepted"
+    class="btn btn-success me-2"
+    onclick="return confirm('Are you sure you want to ACCEPT this transaction?');"
+  >
+    <i class="fas fa-check me-1"></i> Accept Transaction
+  </a>
+  <a
+    href="/user/update-transaction/<%= client._id %>?status=declined"
+    class="btn btn-danger"
+    onclick="return confirm('Are you sure you want to DECLINE this transaction?');"
+  >
+    <i class="fas fa-times me-1"></i> Decline Transaction
+  </a>
+</div>
