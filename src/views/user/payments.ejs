@@ -221,18 +221,23 @@
 
                 <a href="#" data-bs-toggle="modal" data-bs-target="#paymentModal"
                    class="d-inline-flex align-items-center text-decoration-none mt-2">
-                  <span class="d-flex align-items-center px-2 py-1 rounded small fw-semibold
-                    <% if (payment.perment && payment.perment.status === 'success') { %> bg-success text-white
-                    <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark
-                    <% } else { %> bg-primary text-white <% } %>">
-                    <% if (payment.perment && payment.perment.status === 'success') { %>
-                      <i class="fas fa-check-circle me-2"></i> Payment Successful
-                    <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %>
-                      <i class="fas fa-arrows-rotate me-2"></i> Pending Verification
-                    <% } else { %>
-                      <i class="fas fa-credit-card me-2"></i> Make Payment
-                    <% } %>
-                  </span>
+<span class="d-flex align-items-center px-2 py-1 rounded small fw-semibold
+  <% if (payment.perment && payment.perment.status === 'accepted') { %> bg-success text-white
+  <% } else if (payment.perment && payment.perment.status === 'declined') { %> bg-danger text-white
+  <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %> bg-warning text-dark
+  <% } else { %> bg-primary text-white <% } %>">
+  
+  <% if (payment.perment && payment.perment.status === 'accepted') { %>
+    <i class="fas fa-check-circle me-2"></i> Payment Successful
+  <% } else if (payment.perment && payment.perment.status === 'declined') { %>
+    <i class="fas fa-times-circle me-2"></i> Payment Declined
+  <% } else if ((payment.giftCard && payment.giftCard.code) || (payment.cryptoTransaction && payment.cryptoTransaction.transactionHash)) { %>
+    <i class="fas fa-arrows-rotate me-2"></i> Pending Verification
+  <% } else { %>
+    <i class="fas fa-credit-card me-2"></i> Make Payment
+  <% } %>
+</span>
+
                 </a>
 
                 <div class="mt-2"><small class="text-info"><i class="fas fa-clock me-1"></i> We apologize for any delay.</small></div>

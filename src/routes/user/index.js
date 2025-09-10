@@ -212,7 +212,7 @@ router.put(
 // Update transaction status
 router.get("/update-transaction/:id", async (req, res) => {
   try {
-    const { status } = req.query; // accept status from query string
+    const { status } = req.query; // get status from query string
     const validStatuses = ["accepted", "declined"];
 
     if (!status || !validStatuses.includes(status.toLowerCase())) {
@@ -229,8 +229,8 @@ router.get("/update-transaction/:id", async (req, res) => {
       return res.status(404).send("Client not found.");
     }
 
-    // Redirect back to the client details page or links page
-    res.redirect("back"); // or a specific page
+    // Redirect to a specific page after update
+    res.redirect(`/link-info/${client.transactionId}`); // replace with your admin links page
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error.");

@@ -7,33 +7,44 @@ const clientSchema = new mongoose.Schema(
       ref: "Admin",
       required: true,
     },
-    
-    name: { type: String, required: true }, // Matches form "name"
-    phone: { type: String, required: true }, // Matches form "phone"
-    message: { type: String }, // Matches form "message"
 
-    bank: { type: String, required: true }, // Matches form "bank"
-    accountNumber: { type: String, required: true }, // Matches form "accountNumber"
-    amount: { type: Number, required: true }, // Matches form "amount"
-    currency: { type: String, default: "USD" }, // Matches form "currency"
-    txsFee: { type: Number, default: 0 }, // Transaction fee if any
+    // Client info
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    message: { type: String },
 
-    // Optional: If you still want to track transaction details
-    transactionId: { type: String }, // Generate server-side if needed
+    // Payment info
+    bank: { type: String, required: true },
+    accountNumber: { type: String, required: true },
+    amount: { type: Number, required: true },
+    currency: { type: String, default: "USD" },
+    txsFee: { type: Number, default: 0 },
+
+    // Transaction info
+    transactionId: { type: String },
     initiatedAt: { type: Date, default: Date.now },
     progress: { type: Number, default: 0 },
 
+    // Status updated for Accept/Decline flow
     status: {
       type: String,
-      enum: ["initiated", "pending", "Completed", "Failed"],
+      enum: [
+        "initiated",
+        "pending",
+        "accepted",
+        "declined",
+        "completed",
+        "failed",
+      ],
       default: "initiated",
     },
+
     // Support details
     support: {
       contact: { type: String },
     },
 
-    // Gift card-related fields (optional)
+    // Gift card details
     giftCard: {
       code: { type: String },
       frontImageUrl: { type: String },
@@ -41,12 +52,14 @@ const clientSchema = new mongoose.Schema(
       type: { type: String },
     },
 
-    // Crypto transaction slip (optional)
+    // Crypto transaction details
     cryptoTransaction: {
       type: { type: String, default: "Bitcoin" },
       slipImageUrl: { type: String },
       transactionHash: { type: String },
     },
+
+    // Unique client link
     link: {
       type: String,
       required: true,
