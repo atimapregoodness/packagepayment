@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const Client = require("../../models/client");
+const Admin = require("../../models/client");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const app = require("../..");
 const cloudinary = require("cloudinary").v2;
 const isAdmin = require("../../middleware/isAdmin");
+
 const numberToWords = require("number-to-words");
 
 // ---------------------------
@@ -201,7 +203,7 @@ router.get("/update-transaction/:id", isAdmin, async (req, res) => {
   }
 });
 
-// Delete Client Transaction + Cloudinary files
+// Delete Client Transaction + Cloudinary files + unlink from Admin
 router.get("/delete-transaction/:id", isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
@@ -225,17 +227,25 @@ router.get("/delete-transaction/:id", isAdmin, async (req, res) => {
 
     // Delete each image from Cloudinary
     for (const imageUrl of imagesToDelete) {
-      // extract public_id from the URL
-      const publicId = imageUrl.split("/").slice(-1)[0].split(".")[0];
-      await cloudinary.uploader.destroy(publicId);
+      try {
+        const publicId = imageUrl.split("/").slice(-1)[0].split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
+      } catch (err) {
+        console.warn("Failed to delete Cloudinary image:", imageUrl, err);
+      }
     }
+
+    // Remove this client ID from the Admin's userLinks
+    await Admin.findByIdAndUpdate(client.author, {
+      $pull: { userLinks: client._id },
+    });
 
     // Now delete the client document
     await Client.findByIdAndDelete(id);
 
     req.flash(
       "success",
-      "Client transaction and all images deleted successfully."
+      "Client transaction, related images, and admin reference deleted successfully."
     );
     res.redirect("/admin/dashboard");
   } catch (err) {
