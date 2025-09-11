@@ -122,7 +122,6 @@ app.all(/.*/, (req, res, next) => {
   next(err);
 });
 
-🟢 9. ERROR HANDLING
 app.use((err, req, res, next) => {
   const status = err.status || 500;
 
