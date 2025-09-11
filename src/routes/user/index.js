@@ -1,14 +1,12 @@
+// routes/user/payments.js
 const express = require("express");
 const router = express.Router();
 const Client = require("../../models/client");
-const Admin = require("../../models/client");
+const Admin = require("../../models/admin");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const app = require("../..");
 const cloudinary = require("cloudinary").v2;
 const isAdmin = require("../../middleware/isAdmin");
-
-const numberToWords = require("number-to-words");
 
 // ---------------------------
 // Cloudinary Configuration
@@ -33,16 +31,22 @@ const storage = new CloudinaryStorage({
       folder,
       allowed_formats: ["jpg", "jpeg", "png", "webp"],
       public_id: file.fieldname + "-" + Date.now(),
+      transformation: [
+        { width: 600, crop: "scale" }, // reduce width more
+        { quality: "auto:low" }, // stronger compression
+        { fetch_format: "auto" }, // serve as WebP/AVIF when possible
+      ],
     };
   },
 });
+
+
 
 const upload = multer({ storage });
 
 // ---------------------------
 // GET PAYMENT PAGE
 // ---------------------------
-
 router.get("/:linkTxt/payments", async (req, res) => {
   try {
     const { linkTxt } = req.params;
@@ -58,12 +62,14 @@ router.get("/:linkTxt/payments", async (req, res) => {
   } catch (err) {
     console.error(err);
     req.flash("error_msg", "Something went wrong. Please try again.");
-    res.redirect("/error");
+    return res.redirect("/error");
   }
 });
 
-router.post("/txs", async (req, res, next) => {
-  console.log(req.params);
+// ---------------------------
+// POST: SEARCH TXS BY ID
+// ---------------------------
+router.post("/txs", async (req, res) => {
   try {
     const txsId = req.body.txsId;
     const getLink = await Client.findOne({ transactionId: txsId });
@@ -76,14 +82,14 @@ router.post("/txs", async (req, res, next) => {
       return res.redirect("/home");
     }
 
-    res.redirect(`${getLink.link}`);
+    return res.redirect(`${getLink.link}`);
   } catch (err) {
     console.error(err);
     req.flash(
       "error",
       "An error occurred while processing your request. Please try again."
     );
-    res.redirect("/home");
+    return res.redirect("/home");
   }
 });
 
@@ -110,9 +116,7 @@ router.put(
 
       let updateData = {};
 
-      // ---------------------------
       // Gift Card Update
-      // ---------------------------
       if (
         req.body.giftCard?.code ||
         req.body.giftCard?.type ||
@@ -133,9 +137,7 @@ router.put(
         };
       }
 
-      // ---------------------------
       // Crypto Transaction Update
-      // ---------------------------
       if (
         req.body.cryptoTransaction?.type ||
         req.body.cryptoTransaction?.transactionHash ||
@@ -157,28 +159,27 @@ router.put(
         };
       }
 
-      // ---------------------------
-      // Update Client Record
-      // ---------------------------
       await Client.findByIdAndUpdate(client._id, updateData, {
         new: true,
         runValidators: true,
       });
 
       req.flash("success_msg", "Payment updated successfully ✅");
-      res.redirect(`/user/${linkTxt}/payments`);
+      return res.redirect(`/user/${linkTxt}/payments`);
     } catch (err) {
       console.error("Update payment error:", err);
       req.flash("error_msg", "Server error. Please try again.");
-      res.redirect("back");
+      return res.redirect("back");
     }
   }
 );
 
-// Update transaction status
+// ---------------------------
+// UPDATE TRANSACTION STATUS
+// ---------------------------
 router.get("/update-transaction/:id", isAdmin, async (req, res) => {
   try {
-    const { status } = req.query; // get status from query string
+    const { status } = req.query;
     const validStatuses = ["successful", "declined", "initiated"];
 
     if (!status || !validStatuses.includes(status.toLowerCase())) {
@@ -195,19 +196,19 @@ router.get("/update-transaction/:id", isAdmin, async (req, res) => {
       return res.status(404).send("Client not found.");
     }
 
-    // Redirect to a specific page after update
-    res.redirect(`/link-info/${client.transactionId}`); // replace with your admin links page
+    return res.redirect(`/link-info/${client.transactionId}`);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error.");
+    return res.status(500).send("Server error.");
   }
 });
 
-// Delete Client Transaction + Cloudinary files + unlink from Admin
+// ---------------------------
+// DELETE CLIENT TRANSACTION
+// ---------------------------
 router.get("/delete-transaction/:id", isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-
     const client = await Client.findById(id);
 
     if (!client) {
@@ -215,9 +216,7 @@ router.get("/delete-transaction/:id", isAdmin, async (req, res) => {
       return res.redirect("/admin/dashboard");
     }
 
-    // Collect all Cloudinary images (if any exist)
     const imagesToDelete = [];
-
     if (client.giftCard?.frontImageUrl)
       imagesToDelete.push(client.giftCard.frontImageUrl);
     if (client.giftCard?.backImageUrl)
@@ -225,33 +224,35 @@ router.get("/delete-transaction/:id", isAdmin, async (req, res) => {
     if (client.cryptoTransaction?.slipImageUrl)
       imagesToDelete.push(client.cryptoTransaction.slipImageUrl);
 
-    // Delete each image from Cloudinary
+    // Delete Cloudinary images safely
     for (const imageUrl of imagesToDelete) {
       try {
-        const publicId = imageUrl.split("/").slice(-1)[0].split(".")[0];
+        const parts = imageUrl.split("/");
+        const folderAndFile = parts.slice(-2).join("/"); // keep folder + file
+        const publicId = folderAndFile.split(".")[0];
         await cloudinary.uploader.destroy(publicId);
       } catch (err) {
         console.warn("Failed to delete Cloudinary image:", imageUrl, err);
       }
     }
 
-    // Remove this client ID from the Admin's userLinks
+    // Unlink from Admin
     await Admin.findByIdAndUpdate(client.author, {
       $pull: { userLinks: client._id },
     });
 
-    // Now delete the client document
+    // Delete client record
     await Client.findByIdAndDelete(id);
 
     req.flash(
       "success",
       "Client transaction, related images, and admin reference deleted successfully."
     );
-    res.redirect("/admin/dashboard");
+    return res.redirect("/admin/dashboard");
   } catch (err) {
     console.error(err);
     req.flash("error", "Server error while deleting transaction.");
-    res.redirect("/admin/dashboard");
+    return res.redirect("/admin/dashboard");
   }
 });
 
