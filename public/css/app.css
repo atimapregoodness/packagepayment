@@ -110,7 +110,7 @@ nav {
 .navbar {
   position: fixed;
   width: 100%;
-  background: rgba(255, 255, 255, 0.829);
+  background: rgb(255, 255, 255);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(200, 200, 200, 0.2);
 }
@@ -134,6 +134,7 @@ nav {
   border-radius: 0.5em;
   margin-left: 1em;
   /* font: bold; */
+  padding: 0.4em 1em !important;
 
   &:hover {
     background-color: #393c411a;
@@ -192,9 +193,6 @@ nav {
 /* galaxy Text Logo Style */
 
 #galaxy-logo {
-  font-family: "galaxy";
-  font-weight: normal;
-  font-style: normal;
   padding-right: 1em;
 }
 
@@ -445,6 +443,10 @@ nav {
   .main-nav {
     display: none;
   } /* keep it minimal on mobile */
+
+  .nav-link {
+    margin-top: 1em !important;
+  }
 }
 
 .nav-link.active {

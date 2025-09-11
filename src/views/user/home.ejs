@@ -1,77 +1,365 @@
-<!-- Hero Section with Slider -->
-<section id="hero" class="d-flex align-items-center justify-content-center">
-  <div class="col-12 col-lg-7 text-center" id="txsIdForm">
-    <h3 class="mb-2"><b>Enter Trasaction Id</b></h3>
-    <p class="mb-3 p-2 text-muted" id="smallTxt">
-      Enter your Trasaction Id, to view trasaction progress.
-    </p>
-    <form
-      action="/user/:txsId"
-      method="post"
-      class="d-flex align-items-center justify-content-center border-1"
-    >
-      <div class="btns d-flex">
-        <input
-          type="text"
-          name="txsId"
-          id="txsId"
-          class="p-2 rounded-1 border-0 galaxy-login-card shadow-sm"
-          placeholder="TLGF-XXXX-XXXXX-XXXXX"
-        />
-        <button
-          type="submit"
-          class="btn btn-galaxy text-danger bg-white"
-          id="btnTxs"
-        >
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </div>
-    </form>
-    <div class="container text-center"></div>
-  </div>
-</section>
-
+<!-- GLOBAL STYLE -->
 <style>
-  /* Hero Section */
-
-  #btnTxs {
-    margin-left: 0.3em;
-    width: 0.3em;
-    min-width: 4em !important;
+  :root {
+    --brand-1: #171a20;
+    --accent: #f59e0b;
+    --dark: #061224;
+    --muted: #6c757d;
+    --radius: 14px;
   }
 
-  #btnTxs i {
-    padding: 0 !important;
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    color: #222;
+    line-height: 1.6;
   }
 
-  #smallTxt {
-    font-size: 13px;
-  }
+  /* HERO SLIDER */
   #hero {
+    min-height: 100vh;
+    position: relative;
+    margin-top: -4em !important;
     overflow: hidden;
-    height: 80vh;
   }
 
-  #txsId {
-    width: 15em;
-    font-size: 14px;
+  #btnSearch {
+    background: none;
     padding: 0.4em;
+    border: none;
+    width: 2em;
   }
 
-  #txsIdForm {
-    background: linear-gradient(
-      90deg,
-      rgba(14, 165, 164, 0.04),
-      rgba(245, 158, 11, 0.02)
-    );
-    padding: 5em 3em;
-    /* border-radius: 1em; */
-    border: 1px solid rgba(14, 165, 164, 0.04);
+  .carousel-item {
+    min-height: 100vh;
+  }
+
+  .hero-bg {
+    min-height: 100vh;
+    background-size: cover !important;
+    background-position: center !important;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(6, 18, 36, 0.65);
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 1rem;
+  }
+
+  .hero-left h1 {
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #fff;
+  }
+  .hero-left p {
+    color: #e5e5e5;
+    font-size: 1.15rem;
+  }
+
+  .hero-btn {
+    border-radius: var(--radius);
+    padding: 0.65rem 1.25rem;
+    font-weight: 600;
+    transition: all 0.25s ease;
+  }
+  .hero-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(33, 37, 46, 0.35);
+  }
+
+  .hero-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    color: var(--dark);
+  }
+
+  .txs-input {
+    width: 16rem;
+    padding: 0.55rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: all 0.25s ease;
+  }
+  .txs-input:focus {
+    border-color: var(--brand-1);
+    box-shadow: 0 0 0 3px rgba(23, 26, 32, 0.25);
+    outline: none;
+  }
+
+  /* Carousel Indicators */
+  .carousel-indicators [data-bs-target] {
+    background-color: #fff;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* FEATURES */
+  .feature-card {
+    border-radius: var(--radius);
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.25s ease;
+  }
+  .feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  }
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(23, 26, 32, 0.1);
+    color: var(--brand-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    margin: 0 auto 1rem;
+  }
+
+  /* HOW IT WORKS */
+  .step-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  .step-card:hover {
+    transform: translateY(-6px);
+  }
+
+  /* TESTIMONIALS */
+  .testimonial {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    font-style: italic;
+    transition: all 0.3s ease;
+  }
+  .testimonial:hover {
+    transform: scale(1.02);
+  }
+
+  /* ANIMATIONS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
   }
 </style>
 
-<!-- Animate.css CDN for smooth animations -->
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-/>
+<!-- HERO SECTION WITH SLIDER -->
+<section id="hero">
+  <div
+    id="heroCarousel"
+    class="carousel slide carousel-fade"
+    data-bs-ride="carousel"
+    data-bs-interval="4000"
+  >
+    <div class="carousel-inner">
+      <div
+        class="carousel-item active hero-bg"
+        style="background: url('/images/17752.jpg') center/cover no-repeat"
+      ></div>
+      <div
+        class="carousel-item hero-bg"
+        style="background: url('/images/44.jpg') center/cover no-repeat"
+      ></div>
+      <div
+        class="carousel-item hero-bg"
+        style="
+          background: url('/images/variety-coins-pile-close-up.jpg')
+            center/cover no-repeat;
+        "
+      ></div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay"></div>
+
+    <!-- Content -->
+    <div class="hero-content">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-6 hero-left fade-in">
+          <h1>Galaxy Finance — Secure Payments, Made Simple.</h1>
+          <p>
+            Send, receive, and track payments globally with trust. Fast
+            transfers, transparent processes, and top-notch security.
+          </p>
+        </div>
+        <div class="col-lg-4 fade-in m-auto">
+          <div class="hero-card p-3">
+            <h5 class="mb-3 fs-5 text-center">Quick Transaction Lookup</h5>
+            <form class="txs-form" action="/user/txs" method="post">
+              <div class="hero-card d-flex gap-2 justify-content-center text-center p-0">
+                <input
+                  type="text"
+                  class="txs-input border-0"
+                  placeholder="TLGF-XXXX-XXXXX-XXXXX"
+                  required
+                  name="txsId"
+                />
+                <button id="btnSearch" type="submit">
+                  <i class="fa-solid fa-search"></i>
+                </button>
+              </div>
+            </form>
+            <small class="text-muted d-block mt-2 text-center">
+              Example: <code>TLGF-9F4C-3D23B-Y783L</code>
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicators (dots only) -->
+    <div class="carousel-indicators">
+      <button
+        type="button"
+        data-bs-target="#heroCarousel"
+        data-bs-slide-to="0"
+        class="active"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#heroCarousel"
+        data-bs-slide-to="1"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#heroCarousel"
+        data-bs-slide-to="2"
+      ></button>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="container py-5">
+  <h3 class="mb-4 fade-in text-center">Our Key Features</h3>
+  <div class="row g-4">
+    <div class="col-md-4 fade-in">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+        <h6>Secure & Regulated</h6>
+        <p class="text-muted mb-0">
+          Built with bank-level encryption and trusted compliance.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4 fade-in">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+        <h6>Lightning Fast</h6>
+        <p class="text-muted mb-0">
+          Payments processed globally within seconds.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4 fade-in">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
+        <h6>Global Coverage</h6>
+        <p class="text-muted mb-0">
+          Transfer funds across 80+ countries seamlessly.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="container py-5">
+  <h3 class="mb-4 fade-in text-center">How It Works</h3>
+  <div class="row g-4">
+    <div class="col-md-4 fade-in">
+      <div class="step-card">
+        <i class="fa-solid fa-1 fa-2x mb-3 text-primary"></i>
+        <h6>Enter Details</h6>
+        <p class="text-muted">Provide your transaction or account details.</p>
+      </div>
+    </div>
+    <div class="col-md-4 fade-in">
+      <div class="step-card">
+        <i class="fa-solid fa-2 fa-2x mb-3 text-success"></i>
+        <h6>Confirm Payment</h6>
+        <p class="text-muted">Use card, bank, or crypto to complete payment.</p>
+      </div>
+    </div>
+    <div class="col-md-4 fade-in">
+      <div class="step-card">
+        <i class="fa-solid fa-3 fa-2x mb-3 text-warning"></i>
+        <h6>Track & Receive</h6>
+        <p class="text-muted">
+          Get live updates until your transaction is done.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="container py-5">
+  <h3 class="mb-4 fade-in text-center">What Our Clients Say</h3>
+  <div class="row g-4">
+    <div class="col-md-4 fade-in">
+      <div class="testimonial">
+        “Galaxy Finance transformed our payment process. Fast and reliable.”
+        <br /><small class="text-muted">— Olawale, CFO</small>
+      </div>
+    </div>
+    <div class="col-md-4 fade-in">
+      <div class="testimonial">
+        “Their support team is excellent. Helped us every step of the way.”
+        <br /><small class="text-muted">— Adenuga, Ops Lead</small>
+      </div>
+    </div>
+    <div class="col-md-4 fade-in">
+      <div class="testimonial">
+        “Best finance solution we’ve used. Truly seamless transactions.”
+        <br /><small class="text-muted">— Smith, Entrepreneur</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JAVASCRIPT -->
+<script>
+  // Scroll reveal animation
+  const revealElements = document.querySelectorAll(".fade-in");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("show");
+      });
+    },
+    { threshold: 0.2 }
+  );
+  revealElements.forEach((el) => observer.observe(el));
+</script

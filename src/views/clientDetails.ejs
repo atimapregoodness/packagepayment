@@ -138,6 +138,7 @@
 </div>
 
 <div class="text-center my-4">
+  <!-- Accept -->
   <a
     href="/user/update-transaction/<%= client._id %>?status=successful"
     class="btn btn-success me-2"
@@ -145,11 +146,22 @@
   >
     <i class="fas fa-check me-1"></i> Accept Transaction
   </a>
+
+  <!-- Decline -->
   <a
     href="/user/update-transaction/<%= client._id %>?status=declined"
-    class="btn btn-danger"
+    class="btn btn-danger me-2"
     onclick="return confirm('Are you sure you want to DECLINE this transaction?');"
   >
     <i class="fas fa-times me-1"></i> Decline Transaction
+  </a>
+
+  <!-- Delete -->
+  <a
+    href="/user/delete-transaction/<%= client._id %>"
+    class="btn btn-outline-danger"
+    onclick="return confirm('⚠️ This will permanently DELETE this transaction and all its data. Are you sure?');"
+  >
+    <i class="fas fa-trash me-1"></i> Delete Transaction
   </a>
 </div>

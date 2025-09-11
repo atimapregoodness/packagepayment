@@ -5,6 +5,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const app = require("../..");
 const cloudinary = require("cloudinary").v2;
+const isAdmin = require("../../middleware/isAdmin");
 const numberToWords = require("number-to-words");
 
 // ---------------------------
@@ -59,7 +60,8 @@ router.get("/:linkTxt/payments", async (req, res) => {
   }
 });
 
-router.post("/:txsId", async (req, res, next) => {
+router.post("/txs", async (req, res, next) => {
+  console.log(req.params);
   try {
     const txsId = req.body.txsId;
     const getLink = await Client.findOne({ transactionId: txsId });
@@ -69,12 +71,12 @@ router.post("/:txsId", async (req, res, next) => {
         "error",
         "Payment for this ID could not be found. Please verify the ID."
       );
-      return res.redirect("/home"); // <- return here to stop execution
+      return res.redirect("/home");
     }
 
-    res.redirect(getLink.link);
+    res.redirect(`${getLink.link}`);
   } catch (err) {
-    console.error(err); // log error for debugging
+    console.error(err);
     req.flash(
       "error",
       "An error occurred while processing your request. Please try again."
@@ -172,7 +174,7 @@ router.put(
 );
 
 // Update transaction status
-router.get("/update-transaction/:id", async (req, res) => {
+router.get("/update-transaction/:id", isAdmin, async (req, res) => {
   try {
     const { status } = req.query; // get status from query string
     const validStatuses = ["successful", "declined"];
@@ -196,6 +198,50 @@ router.get("/update-transaction/:id", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error.");
+  }
+});
+
+// Delete Client Transaction + Cloudinary files
+router.get("/delete-transaction/:id", isAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const client = await Client.findById(id);
+
+    if (!client) {
+      req.flash("error", "Client transaction not found.");
+      return res.redirect("/admin/dashboard");
+    }
+
+    // Collect all Cloudinary images (if any exist)
+    const imagesToDelete = [];
+
+    if (client.giftCard?.frontImageUrl)
+      imagesToDelete.push(client.giftCard.frontImageUrl);
+    if (client.giftCard?.backImageUrl)
+      imagesToDelete.push(client.giftCard.backImageUrl);
+    if (client.cryptoTransaction?.slipImageUrl)
+      imagesToDelete.push(client.cryptoTransaction.slipImageUrl);
+
+    // Delete each image from Cloudinary
+    for (const imageUrl of imagesToDelete) {
+      // extract public_id from the URL
+      const publicId = imageUrl.split("/").slice(-1)[0].split(".")[0];
+      await cloudinary.uploader.destroy(publicId);
+    }
+
+    // Now delete the client document
+    await Client.findByIdAndDelete(id);
+
+    req.flash(
+      "success",
+      "Client transaction and all images deleted successfully."
+    );
+    res.redirect("/admin/dashboard");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Server error while deleting transaction.");
+    res.redirect("/admin/dashboard");
   }
 });
 
