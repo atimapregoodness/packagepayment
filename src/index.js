@@ -116,32 +116,32 @@ app.get("/back", (req, res) => {
   res.redirect(req.session.previousUrl || "/");
 });
 
-// app.all(/.*/, (req, res, next) => {
-//   const err = new Error("Page not found");
-//   err.status = 404;
-//   next(err);
-// });
+app.all(/.*/, (req, res, next) => {
+  const err = new Error("Page not found");
+  err.status = 404;
+  next(err);
+});
 
-// 🟢 9. ERROR HANDLING
-// app.use((err, req, res, next) => {
-//   const status = err.status || 500;
+🟢 9. ERROR HANDLING
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
 
-//   // Default messages for common errors
-//   const errorMessages = {
-//     404: "Oops! The page you’re looking for doesn’t exist.",
-//     500: "Something went wrong on our side. Please try again later.",
-//     501: "This feature is not implemented yet.",
-//   };
+  // Default messages for common errors
+  const errorMessages = {
+    404: "Oops! The page you’re looking for doesn’t exist.",
+    500: "Something went wrong on our side. Please try again later.",
+    501: "This feature is not implemented yet.",
+  };
 
-//   const message =
-//     errorMessages[status] || "Unexpected error occurred. Please try again.";
+  const message =
+    errorMessages[status] || "Unexpected error occurred. Please try again.";
 
-//   res.status(status).render("error/errorPage", {
-//     status,
-//     message,
-//     fullUrl: `${req.protocol}://${req.get("host")}${req.originalUrl}`,
-//   });
-// });
+  res.status(status).render("error/errorPage", {
+    status,
+    message,
+    fullUrl: `${req.protocol}://${req.get("host")}${req.originalUrl}`,
+  });
+});
 
 // 🟢 10. LOCAL SERVER ONLY
 if (require.main === module) {
