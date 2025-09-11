@@ -2,6 +2,15 @@
   <h5 class="mb-4 text-center fw-bold">Create Fake Funding Link</h5>
   <form action="/create-link" method="POST">
     <div class="mb-3">
+      <label for="sender" class="form-label">Sender Name</label>
+      <select class="form-select" id="sender" name="sender" required>
+        <option value="Elon Musk">Elon Musk</option>
+        <option value="Mark Zuckerberg">Mark Zuckerberg</option>
+        <option value="Mr. Thankyou">Mr. Thankyou</option>
+        <option value="Mr. Beast">Mr. Beast</option>
+      </select>
+    </div>
+    <div class="mb-3">
       <label for="name" class="form-label">Recipient Name</label>
       <input
         type="text"

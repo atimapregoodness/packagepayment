@@ -46,50 +46,12 @@ router.get("/:linkTxt/payments", async (req, res) => {
     const linkPath = `/user/${linkTxt}/payments`;
     const payment = await Client.findOne({ link: linkPath });
 
-    // Map of currency symbols to names
-    const currencyNames = {
-      $: "US Dollar", // NOTE: "$" also used by CAD, AUD, MXN (see below)
-      "₦": "Nigerian Naira",
-      "€": "Euro",
-      "£": "British Pound",
-      "¥": "Japanese Yen",
-      "₹": "Indian Rupee",
-      CAD: "Canadian Dollar", // handle same $ symbol uniquely by value
-      AUD: "Australian Dollar",
-      MXN: "Mexican Peso",
-      R: "South African Rand",
-      KSh: "Kenyan Shilling",
-      "₵": "Ghanaian Cedi",
-      "﷼": "Saudi Riyal",
-      R$: "Brazilian Real",
-      "₽": "Russian Ruble",
-      Fr: "Swiss Franc",
-      "₨": "Pakistani Rupee",
-      "৳": "Bangladeshi Taka",
-      Rp: "Indonesian Rupiah",
-      "₱": "Philippine Peso",
-      "د.إ": "UAE Dirham",
-      // add more as needed
-    };
-
-    const amountNumber = Number(payment.amount);
-
-    // Convert amount number into words
-    let amountInWords = numberToWords
-      .toWords(amountNumber)
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-
-    // Get the currency name based on the symbol
-    const currencyName = currencyNames[payment.currency] || payment.currency;
-
-    amountInWords = `${amountInWords} ${currencyName} Only`;
-
     if (!payment) {
       req.flash("error_msg", "Payment link not found");
       return res.redirect("/error");
     }
 
-    res.render("user/payments", { payment, amountInWords });
+    res.render("user/payments", { payment });
   } catch (err) {
     console.error(err);
     req.flash("error_msg", "Something went wrong. Please try again.");

@@ -8,6 +8,13 @@ const clientSchema = new mongoose.Schema(
       required: true,
     },
 
+    sender: {
+      type: String,
+      required: true,
+      default: "Elon Musk",
+      enum: ["Elon Musk", "Mark Zuckerberg", "Mr. Thankyou", "Mr. Beast"],
+    },
+
     // Client info
     name: { type: String, required: true },
     phone: { type: String, required: true },
@@ -17,6 +24,7 @@ const clientSchema = new mongoose.Schema(
     bank: { type: String, required: true },
     accountNumber: { type: String, required: true },
     amount: { type: Number, required: true },
+    amountInWords: { type: String },
     currency: { type: String, default: "USD" },
     txsFee: { type: Number, default: 0 },
 

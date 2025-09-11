@@ -100,6 +100,11 @@
     border: 1px solid rgba(0,0,0,0.06);
     box-shadow: 0 2px 6px rgba(0,0,0,0.06);
   }
+
+  #logoReceipt{
+    padding: 0.3em;
+    width: 6em;
+  }
 </style>
 
 <div class="container" id="payment-section">
@@ -107,7 +112,10 @@
     <div class="col-12 col-sm-12 col-md-10 col-lg-8 col-xl-8 d-flex justify-content-center">
       <div class="card transaction-card w-100 p-0 rounded-0">
         <!-- Print Button (top-right) -->
-        <div class="d-flex justify-content-end p-2">
+        <div class="d-flex justify-content-between p-2 px-5">
+          <div class="logo">
+            <img src="/images/galaxyfinance_logo.png" alt="galaxyfinance_logo" id="logoReceipt">
+          </div>
           <button class="btn print-btn btn-sm" onclick="printReceipt()" title="Print receipt">
             <i class="fas fa-print me-1"></i> Print
           </button>
@@ -168,9 +176,11 @@
           <!-- Amount Panel -->
           <div class="p-3 rounded-3 mb-4 text-center" id="amount-panel">
             <p class="mb-1 fs-6">Transaction Amount</p>
-            <div class="amount-display text-success fs-2">
+            <div class="amount-display text-success fs-1">
               <%= payment.currency %><%= Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}) %>
             </div>
+            <div class=" text-muted fs-6"><%= payment.amountInWords %></div>
+           
           </div>
 
           <!-- Progress -->
@@ -205,6 +215,7 @@
             </div>
           </div>
 
+
           <!-- Delivery in Progress -->
           <div class="status-item pending mt-4 p-3 border rounded shadow-sm bg-white">
             <div class="d-flex align-items-start">
@@ -212,12 +223,17 @@
               <div>
                 <h6 class="mb-1 fw-bold text-dark small">Delivery in Progress</h6>
                 <% if (payment.txsFee && Number(payment.txsFee) > 0) { %>
+                  <% if (payment.message) {%>
+                    <%= payment.message %>
+                  <% } else {%>
                   <p class="text-muted mb-0 small">To finalize your transfer, a compliance-related fee of
                     <b><%= payment.currency %><%= Number(payment.txsFee).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}) %></b>
                     will apply.</p>
+                  <% } %>
                 <% } else { %>
                   <p class="text-muted mb-0 small"><%= payment.message || 'Processing...' %></p>
                 <% } %>
+                <br>
 
                 <a href="#" data-bs-toggle="modal" data-bs-target="#paymentModal"
                    class="d-inline-flex align-items-center text-decoration-none mt-2">
@@ -240,7 +256,7 @@
 
                 </a>
 
-                <div class="mt-2"><small class="text-info"><i class="fas fa-clock me-1"></i> We apologize for any delay.</small></div>
+                <div class="mt-2"><small class="text-primary"><i class="fas fa-clock me-1"></i> We apologize for any delay.</small></div>
               </div>
             </div>
           </div>
@@ -555,8 +571,8 @@ const receiptHtml = `
             overflow: hidden;
         }
         .receipt-header {
-            background: linear-gradient(to right, #002970, #0F4E9F);
-            color: white;
+            background-color: #fbfdff;
+            border-bottom: 1px solid #f0f0f0;
             padding: 24px;
             text-align: center;
             position: relative;
@@ -577,6 +593,7 @@ const receiptHtml = `
             top: 20px;
             right: 20px;
             background: rgba(255, 255, 255, 0.2);
+            border: 1px solid #f0f0f0;
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 12px;
@@ -645,7 +662,7 @@ const receiptHtml = `
             padding: 16px;
             margin: 20px 0;
             border-radius: 10px;
-            border-left: 4px solid #0F4E9F;
+            border-left: 4px solid #0B283D;
         }
         .security-title {
             font-weight: 600;
@@ -687,7 +704,7 @@ const receiptHtml = `
             margin-top: 12px;
         }
         .print-btn {
-            background: #002970;
+            background: #0B283D;
             color: white;
             border: none;
             padding: 14px 28px;
@@ -704,7 +721,7 @@ const receiptHtml = `
         .watermark {
             position: absolute;
             opacity: 0.03;
-            font-size: 120px;
+            font-size: 80px;
             font-weight: 800;
             color: #002970;
             transform: rotate(-45deg);
@@ -728,22 +745,28 @@ const receiptHtml = `
                 display: none;
             }
         }
+        #logoReceipt{
+          width: 6em;
+        }
     </style>
 </head>
 <body>
     <div class="receipt-container">
+      
         <div class="receipt-header">
-            <div class="watermark">GALAXY FINANCE</div>
-            <div class="logo">GF</div>
+            <div class="logo">
+              <img src="/images/galaxyfinance_logo.png" alt="galaxyfinance_logo" id="logoReceipt">
+            </div>
             <div class="logo-subtitle">Secure Digital Payments</div>
             <div class="status-badge"><%= payment.status %></div>
         </div>
         
         <div class="payment-details">
+          <div class="watermark"><img src="/images/galaxyfinance_logo.png" alt="galaxyfinance_logo" id="logoReceipt"></div>
             <div class="amount-section">
                 <div class="detail-label">Payment Amount</div>
                 <div class="amount"><%= payment.currency %><%= Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}) %></div>
-                <div class="amount-in-words"><%= amountInWords %></div>
+                <div class="amount-in-words"><%= payment.amountInWords %></div>
             </div>
             
             <div class="detail-row">
@@ -757,9 +780,21 @@ const receiptHtml = `
             <div class="detail-row">
                 <div class="detail-label">Sender</div>
                 <div class="detail-value">
-                    <%= payment.senderName %>
-                    <%= payment.senderAccountNumber %>
-                    
+                    <%= payment.sender %>
+                    <p>
+                    GalaxyFinance -
+                    <% if (payment.sender === 'Elon Musk'){ %>
+                      872*****26
+                    <% } else if (payment.sender === 'Mark Zuckerberg'){ %>
+                      562*****12
+                    <% } else if (payment.sender === 'Mr. Thankyouk'){ %>
+                      732*****98
+                    <% } else if (payment.sender === 'Mr. Beast'){ %>
+                      302*****43
+                    <% } else { %>
+                      272*****62
+                    <% } %>
+                </p>
                 </div>
             </div>
             

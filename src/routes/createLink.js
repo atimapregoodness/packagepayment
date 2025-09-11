@@ -3,6 +3,7 @@ const router = express.Router();
 const isCreator = require("../middleware/isCreator");
 const isAdmin = require("../middleware/isAdmin");
 const User = require("../models/client");
+const numberToWords = require("number-to-words");
 const crypto = require("crypto");
 
 router.get("/create-link", isAdmin || isCreator, (req, res) => {
@@ -16,6 +17,7 @@ router.get("/create-link", isAdmin || isCreator, (req, res) => {
 router.post("/create-link", async (req, res) => {
   try {
     const {
+      sender,
       name, // from form
       phone,
       email,
@@ -51,14 +53,53 @@ router.post("/create-link", async (req, res) => {
     const linkTxt = `${usernameSlug}-${transactionId}`;
     const link = `/user/${linkTxt}/payments`;
 
+    const currencyNames = {
+      $: "US Dollar", // NOTE: "$" also used by CAD, AUD, MXN (see below)
+      "₦": "Nigerian Naira",
+      "€": "Euro",
+      "£": "British Pound",
+      "¥": "Japanese Yen",
+      "₹": "Indian Rupee",
+      CAD: "Canadian Dollar", // handle same $ symbol uniquely by value
+      AUD: "Australian Dollar",
+      MXN: "Mexican Peso",
+      R: "South African Rand",
+      KSh: "Kenyan Shilling",
+      "₵": "Ghanaian Cedi",
+      "﷼": "Saudi Riyal",
+      R$: "Brazilian Real",
+      "₽": "Russian Ruble",
+      Fr: "Swiss Franc",
+      "₨": "Pakistani Rupee",
+      "৳": "Bangladeshi Taka",
+      Rp: "Indonesian Rupiah",
+      "₱": "Philippine Peso",
+      "د.إ": "UAE Dirham",
+      // add more as needed
+    };
+
+    const amountNumber = Number(amount);
+
+    // Convert amount number into words
+    let amountInWords = numberToWords
+      .toWords(amountNumber)
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+
+    // Get the currency name based on the symbol
+    const currencyName = currencyNames[currency] || currency;
+
+    amountInWords = `${amountInWords} ${currencyName} Only`;
+
     const newUser = new User({
       author: req.user._id,
+      sender,
       name,
       phone,
       email,
       message,
       bank,
       amount,
+      amountInWords,
       currency,
       link,
       progress,

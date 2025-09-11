@@ -14,8 +14,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: Inter, "Helvetica Neue", Arial, system-ui, -apple-system,
-    Segoe UI, Roboto, sans-serif;
+  font-family: "Montserrat";
   color: var(--text-light);
   scroll-behavior: smooth;
   scroll-snap-type: y proximity; /* vertical snap like galaxy sections */
@@ -24,13 +23,22 @@ body {
 * {
   padding: 0;
   box-sizing: border-box;
+  font-family: "Montserrat";
   margin: 0;
-  font-family: "Montserrat", Arial, sans-serif;
 }
 
 body {
   background: #f4f4f4;
   min-height: 100vh;
+}
+
+#galaxyLogo {
+  width: 12em;
+}
+
+#galaxySmallLogo {
+  width: 8em;
+  margin-top: -0.5em;
 }
 
 /* #galaxy-logo {
@@ -107,10 +115,6 @@ nav {
   border-bottom: 1px solid rgba(200, 200, 200, 0.2);
 }
 
-.navbar-brand img {
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
-}
-
 #paymentTxt {
   font-size: 17px;
 }
@@ -125,11 +129,11 @@ nav {
 }
 
 .nav-link {
-  color: #222 !important;
+  /* color: #222 !important; */
   font-weight: 500;
   border-radius: 0.5em;
   margin-left: 1em;
-  font: bold;
+  /* font: bold; */
 
   &:hover {
     background-color: #393c411a;
@@ -151,7 +155,7 @@ nav {
 }
 
 .nav-link.position-relative {
-  color: #222 !important;
+  /* color: #222 !important; */
 }
 .btn-galaxy {
   background: #393c41;
@@ -186,12 +190,6 @@ nav {
 }
 
 /* galaxy Text Logo Style */
-@font-face {
-  font-family: "galaxy";
-  src: url("/fonts/galaxy.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
 
 #galaxy-logo {
   font-family: "galaxy";
@@ -671,7 +669,6 @@ nav {
 
 #galaxyBd {
   border: none !important;
-  font-family: "galaxy";
   font-weight: normal;
   font-style: normal;
   padding-right: 1em;
