@@ -183,15 +183,43 @@
            
           </div>
 
-          <!-- Progress -->
-          <h4 class="mt-4 mb-3 section-title fs-6">Transfer Progress</h4>
-          <div class="d-flex justify-content-between mb-2 fs-6">
-            <span>Processing</span><span><%= payment.progress %>% Complete</span>
-          </div>
-          <div class="progress mb-4" style="height:20px">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-                 style="width:<%= payment.progress %>%" aria-valuenow="<%= payment.progress %>"><%= payment.progress %>%</div>
-          </div>
+<!-- Progress -->
+<h4 class="mt-4 mb-3 section-title fs-6">Transfer Progress</h4>
+
+<% if (payment.status === "initiated" || payment.status === "pending") { %>
+  <div class="d-flex justify-content-between mb-2 fs-6">
+    <span>Processing</span><span><%= payment.progress %>% Complete</span>
+  </div>
+  <div class="progress mb-4" style="height:20px">
+    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+         style="width:<%= payment.progress %>%" aria-valuenow="<%= payment.progress %>">
+      <%= payment.progress %>%
+    </div>
+  </div>
+
+<% } else if (payment.status === "successful") { %>
+  <div class="d-flex justify-content-between mb-2 fs-6">
+    <span>Completed</span><span>100% Complete</span>
+  </div>
+  <div class="progress mb-4" style="height:20px">
+    <div class="progress-bar bg-success"
+         style="width:100%" aria-valuenow="100">
+      100%
+    </div>
+  </div>
+
+<% } else if (payment.status === "declined") { %>
+  <div class="d-flex justify-content-between mb-2 fs-6">
+    <span>Declined</span><span>Failed</span>
+  </div>
+  <div class="progress mb-4" style="height:20px">
+    <div class="progress-bar bg-danger" 
+         style="width:100%" aria-valuenow="100">
+      Declined
+    </div>
+  </div>
+<% } %>
+
 
           <!-- Status Items (grid) -->
           <div class="row g-3">
