@@ -1,3 +1,5 @@
+<% layout("layout/boilerplate") %>
+
 <div class="container py-2">
   <h1 class="mb-4 text-center">Client Payment Details</h1>
 
@@ -139,29 +141,192 @@
 
 <div class="text-center my-4 me-2">
   <!-- Accept -->
-  <a
-    href="/user/update-transaction/<%= client._id %>?status=successful"
+  <button
     class="btn btn-success me-2 my-2"
-    onclick="return confirm('Are you sure you want to ACCEPT this transaction?');"
+    data-bs-toggle="modal"
+    data-bs-target="#acceptModal"
   >
     <i class="fas fa-check me-1"></i> Accept Transaction
-  </a>
+  </button>
 
   <!-- Decline -->
-  <a
-    href="/user/update-transaction/<%= client._id %>?status=declined"
+  <button
     class="btn btn-danger me-2 my-2"
-    onclick="return confirm('Are you sure you want to DECLINE this transaction?');"
+    data-bs-toggle="modal"
+    data-bs-target="#declineModal"
   >
     <i class="fas fa-times me-1"></i> Decline Transaction
-  </a>
+  </button>
 
   <!-- Delete -->
-  <a
-    href="/user/delete-transaction/<%= client._id %>"
-    class="btn btn-outline-danger my-2"
-    onclick="return confirm('⚠️ This will permanently DELETE this transaction and all its data. Are you sure?');"
+  <button
+    class="btn btn-outline-danger me-2 my-2"
+    data-bs-toggle="modal"
+    data-bs-target="#deleteModal"
   >
     <i class="fas fa-trash me-1"></i> Delete Transaction
-  </a>
+  </button>
+
+  <!-- Initiate -->
+  <button
+    class="btn btn-warning me-2 my-2"
+    data-bs-toggle="modal"
+    data-bs-target="#initiateModal"
+  >
+    <i class="fas fa-redo me-1"></i> Initiate Transaction
+  </button>
+</div>
+
+<!-- Accept Modal -->
+<div
+  class="modal fade"
+  id="acceptModal"
+  tabindex="-1"
+  aria-labelledby="acceptModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-success">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="acceptModalLabel">
+          <i class="fas fa-check-circle me-2"></i> Confirm Accept
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to <strong>ACCEPT</strong> this transaction?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <a
+          href="/user/update-transaction/<%= client._id %>?status=successful"
+          class="btn btn-success"
+        >
+          Yes, Accept
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Decline Modal -->
+<div
+  class="modal fade"
+  id="declineModal"
+  tabindex="-1"
+  aria-labelledby="declineModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="declineModalLabel">
+          <i class="fas fa-times-circle me-2"></i> Confirm Decline
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to <strong>DECLINE</strong> this transaction?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <a
+          href="/user/update-transaction/<%= client._id %>?status=declined"
+          class="btn btn-danger"
+        >
+          Yes, Decline
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+  class="modal fade"
+  id="deleteModal"
+  tabindex="-1"
+  aria-labelledby="deleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="deleteModalLabel">
+          <i class="fas fa-trash-alt me-2"></i> Confirm Delete
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body text-danger fw-bold">
+        ⚠️ This will permanently DELETE this transaction and all its data. This
+        action <u>cannot</u> be undone!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <a
+          href="/user/delete-transaction/<%= client._id %>"
+          class="btn btn-outline-danger"
+        >
+          Yes, Delete
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Initiate Modal -->
+<div
+  class="modal fade"
+  id="initiateModal"
+  tabindex="-1"
+  aria-labelledby="initiateModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-warning">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="initiateModalLabel">
+          <i class="fas fa-redo me-2"></i> Confirm Re-Initiate
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Do you want to reset this transaction back to
+        <strong>INITIATED</strong> status?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <a
+          href="/user/update-transaction/<%= client._id %>?status=initiated"
+          class="btn btn-warning"
+        >
+          Yes, Re-Initiate
+        </a>
+      </div>
+    </div>
+  </div>
 </div>

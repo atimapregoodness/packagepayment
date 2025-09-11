@@ -1,3 +1,4 @@
+<% layout("layout/boilerplate") %>
 <style>
   /* ---------- Layout / Card ---------- */
   .transaction-card { border-radius: 14px; box-shadow: 0 8px 28px rgba(16,24,40,0.06); }
@@ -187,38 +188,43 @@
 <h4 class="mt-4 mb-3 section-title fs-6">Transfer Progress</h4>
 
 <% if (payment.status === "initiated" || payment.status === "pending") { %>
-  <div class="d-flex justify-content-between mb-2 fs-6">
-    <span>Processing</span><span><%= payment.progress %>% Complete</span>
+  <div class="d-flex justify-content-between mb-2 fs-6 fw-semibold text-primary">
+    <span><i class="fas fa-spinner fa-spin me-2"></i> Processing</span>
+    <span><%= payment.progress %>% Complete</span>
   </div>
-  <div class="progress mb-4" style="height:20px">
-    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
-         style="width:<%= payment.progress %>%" aria-valuenow="<%= payment.progress %>">
+  <div class="progress mb-4 shadow-sm rounded-3" style="height:22px">
+    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info glowing-bar"
+         style="width:<%= payment.progress %>%" 
+         aria-valuenow="<%= payment.progress %>">
       <%= payment.progress %>%
     </div>
   </div>
 
 <% } else if (payment.status === "successful") { %>
-  <div class="d-flex justify-content-between mb-2 fs-6">
-    <span>Completed</span><span>100% Complete</span>
+  <div class="d-flex justify-content-between mb-2 fs-6 fw-semibold text-success">
+    <span><i class="fas fa-check-circle me-2"></i> Completed</span>
+    <span>100% Complete</span>
   </div>
-  <div class="progress mb-4" style="height:20px">
-    <div class="progress-bar bg-success"
+  <div class="progress mb-4 shadow-sm rounded-3" style="height:22px">
+    <div class="progress-bar bg-success glowing-success"
          style="width:100%" aria-valuenow="100">
-      100%
+      🎉 100%
     </div>
   </div>
 
 <% } else if (payment.status === "declined") { %>
-  <div class="d-flex justify-content-between mb-2 fs-6">
-    <span>Declined</span><span>Failed</span>
+  <div class="d-flex justify-content-between mb-2 fs-6 fw-semibold text-danger">
+    <span><i class="fas fa-times-circle me-2"></i> Declined</span>
+    <span>Failed</span>
   </div>
-  <div class="progress mb-4" style="height:20px">
-    <div class="progress-bar bg-danger" 
+  <div class="progress mb-4 shadow-sm rounded-3" style="height:22px">
+    <div class="progress-bar bg-danger glowing-danger" 
          style="width:100%" aria-valuenow="100">
-      Declined
+      ❌ Declined
     </div>
   </div>
 <% } %>
+
 
 
           <!-- Status Items (grid) -->

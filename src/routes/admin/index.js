@@ -16,7 +16,7 @@ router.get("/dashboard", isAdmin, async (req, res) => {
     const links = userWithLinks.userLinks;
     console.log(links);
 
-    res.render("admin/home", { links });
+    res.render("admin/home", { links, title: "Admin Dashbaord" });
   } catch (err) {
     console.error(err);
     res.status(500).render("error/errorPage", { err });
