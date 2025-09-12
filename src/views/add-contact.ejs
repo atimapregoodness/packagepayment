@@ -1,0 +1,104 @@
+<% layout("layout/boilerplate") %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-5">
+      <div class="card shadow-sm rounded-3 border-0 p-4">
+        <h3 class="text-center mb-4 fw-bold">Edit Contact Info</h3>
+        <form
+          action="/add-contact"
+          method="POST"
+          class="needs-validation"
+          novalidate
+        >
+          <!-- WhatsApp -->
+          <div class="mb-3">
+            <label for="whatsapp" class="form-label">WhatsApp</label>
+            <input
+              type="text"
+              class="form-control"
+              id="whatsapp"
+              name="whatsapp"
+              value="<%= admin.contact.whatsapp %>"
+              placeholder="enter whatsapp link"
+              required
+            />
+            <div class="invalid-feedback">
+              Please enter a valid WhatsApp number.
+            </div>
+          </div>
+
+          <!-- Telegram -->
+          <div class="mb-3">
+            <label for="telegram" class="form-label">Telegram</label>
+            <input
+              type="text"
+              class="form-control"
+              id="telegram"
+              name="telegram"
+              value="<%= admin.contact.telegram %>"
+              placeholder="enter telegram link"
+              required
+            />
+            <div class="invalid-feedback">
+              Please enter a valid Telegram username.
+            </div>
+          </div>
+
+          <!-- Phone Number 1 -->
+          <div class="mb-3">
+            <label for="phoneNo1" class="form-label">Phone Number 1</label>
+            <input
+              type="text"
+              class="form-control"
+              id="phoneNo1"
+              name="phoneNo1"
+              value="<%= admin.contact.phoneNo1 %>"
+              placeholder="+1234567890"
+            />
+          </div>
+
+          <!-- Phone Number 2 -->
+          <div class="mb-3">
+            <label for="phoneNo2" class="form-label">Phone Number 2</label>
+            <input
+              type="text"
+              class="form-control"
+              id="phoneNo2"
+              name="phoneNo2"
+              value="<%= admin.contact.phoneNo2 %>"
+              placeholder="+1234567890"
+            />
+          </div>
+
+          <div class="d-grid mt-3">
+            <button type="submit" class="btn btn-primary fw-bold">
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Bootstrap form validation
+  (function () {
+    "use strict";
+    const forms = document.querySelectorAll(".needs-validation");
+    Array.from(forms).forEach((form) => {
+      form.addEventListener(
+        "submit",
+        function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+</script>

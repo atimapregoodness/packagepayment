@@ -1,3 +1,4 @@
+const { link } = require("joi");
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
 
@@ -11,7 +12,7 @@ const adminSchema = new Schema({
   },
   username: {
     type: String,
-    required: true
+    required: true,
   },
   userLinks: [
     {
@@ -19,6 +20,12 @@ const adminSchema = new Schema({
       ref: "Client",
     },
   ],
+
+  contact: {
+    whatsapp: { type: String, trim: true, default: "" },
+    telegram: { type: String, trim: true, default: "" },
+  },
+
   isAdmin: {
     type: Boolean,
     default: false,

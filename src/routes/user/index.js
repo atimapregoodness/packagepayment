@@ -16,7 +16,6 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
 // ---------------------------
 // Multer + Cloudinary Storage
 // ---------------------------
@@ -40,8 +39,6 @@ const storage = new CloudinaryStorage({
   },
 });
 
-
-
 const upload = multer({ storage });
 
 // ---------------------------
@@ -51,7 +48,7 @@ router.get("/:linkTxt/payments", async (req, res) => {
   try {
     const { linkTxt } = req.params;
     const linkPath = `/user/${linkTxt}/payments`;
-    const payment = await Client.findOne({ link: linkPath });
+    const payment = await Client.findOne({ link: linkPath }).populate("author");
 
     if (!payment) {
       req.flash("error_msg", "Payment link not found");

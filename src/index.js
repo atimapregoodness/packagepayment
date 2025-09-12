@@ -101,6 +101,7 @@ app.use("/user", require("./routes/user/index.js"));
 
 app.use("/", require("./routes/createLink"));
 app.use("/", require("./routes/viewLink.js"));
+app.use("/", require("./routes/contact.js"));
 
 app.get("/", (req, res) => {
   res.redirect("/home");
