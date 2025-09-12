@@ -127,71 +127,69 @@
           <p class="fs-6 p-2"><i class="fas fa-lock me-2"></i> Secure Payment Processing...</p>
         </div>
 
-<div class="card-body p-3 p-sm-4 p-md-5">
-  <!-- Transaction Details -->
-  <div class="table-responsive mb-4">
-    <div class="transaction-details card border-0 shadow-sm">
-      <table class="table mb-0 align-middle transaction-table">
-        <tbody>
-          <!-- Sender Details -->
-          <tr>
-            <th class="title-col"><i class="fas fa-user-tie me-2"></i> Sender</th>
-            <td class="detail-col">
-              <span class="detail-text"><%= payment.sender %></span>
-              <p class="text-muted mb-0 small">
-                GalaxyFinance - 
-                <% if (payment.sender === 'Elon Musk'){ %>
-                  872*****26
-                <% } else if (payment.sender === 'Mark Zuckerberg'){ %>
-                  562*****12
-                <% } else if (payment.sender === 'Mr. Thankyou'){ %>
-                  732*****98
-                <% } else if (payment.sender === 'Mr. Beast'){ %>
-                  302*****43
-                <% } else { %>
-                  272*****62
-                <% } %>
-              </p>
-            </td>
-          </tr>
+        <div class="card-body p-3 p-sm-4 p-md-5">
+          <!-- Transaction Details -->
+          <div class="table-responsive mb-4">
+            <div class="transaction-details card border-0 shadow-sm">
+              <table class="table mb-0 align-middle transaction-table">
+                <tbody>
+                  <!-- Sender Details -->
+                  <tr>
+                    <th class="title-col"><i class="fas fa-user-tie me-2"></i> Sender</th>
+                    <td class="detail-col">
+                      <span class="detail-text"><%= payment.sender %></span>
+                      <p class="text-muted mb-0 small">
+                        GalaxyFinance - 
+                        <% if (payment.sender === 'Elon Musk'){ %>
+                          872*****26
+                        <% } else if (payment.sender === 'Mark Zuckerberg'){ %>
+                          562*****12
+                        <% } else if (payment.sender === 'Mr. Thankyou'){ %>
+                          732*****98
+                        <% } else if (payment.sender === 'Mr. Beast'){ %>
+                          302*****43
+                        <% } else { %>
+                          272*****62
+                        <% } %>
+                      </p>
+                    </td>
+                  </tr>
 
-          <!-- Recipient -->
-          <tr>
-            <th class="title-col"><i class="fas fa-user me-2"></i> Recipient</th>
-            <td class="detail-col"><span class="detail-text"><%= payment.name %></span></td>
-          </tr>
+                  <!-- Recipient -->
+                  <tr>
+                    <th class="title-col"><i class="fas fa-user me-2"></i> Recipient</th>
+                    <td class="detail-col"><span class="detail-text"><%= payment.name %></span></td>
+                  </tr>
 
-          <tr>
-            <th class="title-col"><i class="fas fa-hashtag me-2"></i> Account Number</th>
-            <td class="detail-col">
-              <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.accountNumber) %>><%= payment.accountNumber %></span>
-              <i class="fas fa-copy copy-btn" data-copy=<%- JSON.stringify(payment.accountNumber) %> aria-label="Copy account number" title="Copy account number" role="button" tabindex="0"></i>
-            </td>
-          </tr>
+                  <tr>
+                    <th class="title-col"><i class="fas fa-hashtag me-2"></i> Account Number</th>
+                    <td class="detail-col">
+                      <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.accountNumber) %>><%= payment.accountNumber %></span>
+                      <i class="fas fa-copy copy-btn" data-copy=<%- JSON.stringify(payment.accountNumber) %> aria-label="Copy account number" title="Copy account number" role="button" tabindex="0"></i>
+                    </td>
+                  </tr>
 
-          <tr>
-            <th class="title-col"><i class="fas fa-bank me-2"></i> Bank</th>
-            <td class="detail-col"><span class="detail-text"><%= payment.bank %></span></td>
-          </tr>
+                  <tr>
+                    <th class="title-col"><i class="fas fa-bank me-2"></i> Bank</th>
+                    <td class="detail-col"><span class="detail-text"><%= payment.bank %></span></td>
+                  </tr>
 
-          <tr>
-            <th class="title-col"><i class="fas fa-receipt me-2"></i> Transaction ID</th>
-            <td class="detail-col">
-              <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.transactionId) %>><%= payment.transactionId %></span>
-              <i class="fas fa-copy copy-btn" data-copy=<%- JSON.stringify(payment.transactionId) %> aria-label="Copy transaction ID" title="Copy transaction ID" role="button" tabindex="0"></i>
-            </td>
-          </tr>
+                  <tr>
+                    <th class="title-col"><i class="fas fa-receipt me-2"></i> Transaction ID</th>
+                    <td class="detail-col">
+                      <span class="detail-text monospace copy-value" data-copy=<%- JSON.stringify(payment.transactionId) %>><%= payment.transactionId %></span>
+                      <i class="fas fa-copy copy-btn" data-copy=<%- JSON.stringify(payment.transactionId) %> aria-label="Copy transaction ID" title="Copy transaction ID" role="button" tabindex="0"></i>
+                    </td>
+                  </tr>
 
-          <tr>
-            <th class="title-col"><i class="fas fa-clock me-2"></i> Initiated</th>
-            <td class="detail-col"><span class="detail-text"><%= payment.createdAt.toLocaleString() %></span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
+                  <tr>
+                    <th class="title-col"><i class="fas fa-clock me-2"></i> Initiated</th>
+                    <td class="detail-col"><span class="detail-text"><%= payment.createdAt.toLocaleString() %></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
           <!-- Toast (hidden by default) -->
           <div id="copyToast" class="copy-toast" role="status" aria-live="polite" aria-atomic="true">
@@ -206,8 +204,9 @@
               <%= payment.currency %><%= Number(payment.amount).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}) %>
             </div>
             <div class=" text-muted fs-6"><%= payment.amountInWords %></div>
-           
           </div>
+
+        
 
 <!-- Progress -->
 <h4 class="mt-4 mb-3 section-title fs-6">Transfer Progress</h4>
