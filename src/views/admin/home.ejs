@@ -23,7 +23,7 @@
               <span class="text-muted fw-bold me-2">Telegram:</span>
               <% if(admin.contact.telegram) { %>
               <a
-                href="<%= admin.contact.telegram %>"
+                href="https://t.me/<%= admin.contact.telegram.replace(/\D/g,'') %>"
                 class="text-primary text-decoration-none"
                 target="_blank"
                 rel="noopener noreferrer"

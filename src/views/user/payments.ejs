@@ -346,7 +346,7 @@
       <span class="fw-bold text-muted small">Need Help?</span>
       <div class="mt-2 d-flex flex-wrap gap-2">
         <% if(payment.author.contact.telegram) { %>
-        <a href="<%= payment.author.contact.telegram %>" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1">
+        <a href="https://t.me/<%= payment.author.contact.telegram.replace(/\D/g,'') %>"target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1">
           <i class="fab fa-telegram-plane"></i> Telegram
         </a>
         <% } %>

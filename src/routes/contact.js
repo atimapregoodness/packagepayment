@@ -21,7 +21,7 @@ router.get("/add-contact", isAdmin || isCreator, async (req, res) => {
 // Update/add contact info
 router.post("/add-contact", isAdmin || isCreator, async (req, res) => {
   try {
-    const { whatsapp, telegram, phoneNo1, phoneNo2 } = req.body;
+    const { whatsapp, telegram } = req.body;
 
     const admin = await Admin.findById(req.user._id);
     if (!admin) return res.status(404).send("Admin not found");
