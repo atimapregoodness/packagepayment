@@ -19,6 +19,7 @@ const clientSchema = new mongoose.Schema(
     name: { type: String, required: true },
     phone: { type: String, required: true },
     message: { type: String },
+    email: { type: String },
 
     // Payment info
     bank: { type: String, required: true },
