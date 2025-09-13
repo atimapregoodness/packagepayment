@@ -32,6 +32,9 @@ body {
   min-height: 100vh;
 }
 
+#deleteIcon {
+  border-radius: 0.4em;
+}
 #cardHeader {
   background-color: var(--bg-dark);
 }
