@@ -10,12 +10,12 @@ const cloudinary = require("cloudinary").v2; // make sure you configured cloudin
 router.use(isCreator);
 
 // ================== GET: Creator Dashboard ==================
-router.get(
-  "/dashboard",
-  wrapAsync(async (req, res) => {
+router.get("/dashboard", async (req, res) => {
+  try {
+    // Get all admins
     const admins = await Admin.find({ isAdmin: true }).lean();
 
-    // Attach clients for each admin
+    // For each admin, fetch their clients
     const adminsWithClients = await Promise.all(
       admins.map(async (admin) => {
         const clients = await Client.find({ author: admin._id }).lean();
@@ -29,8 +29,12 @@ router.get(
       success: req.flash("success"),
       error: req.flash("error"),
     });
-  })
-);
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Unable to load admins and clients.");
+    res.redirect("/creator/dashboard"); // redirect back to creator's dashboard, not /admin
+  }
+});
 
 // ================== GET: Create Admin Form ==================
 router.get("/create-admin", (req, res) => {
