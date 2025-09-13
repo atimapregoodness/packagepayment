@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const isCreator = require("../middleware/isCreator");
-const isAdmin = require("../middleware/isAdmin");
 const User = require("../models/client");
 const numberToWords = require("number-to-words");
 const crypto = require("crypto");
+const isCreatorOrAdmin = require("../middleware/either");
+router.use(isCreatorOrAdmin);
 
-router.get("/create-link", isAdmin || isCreator, (req, res) => {
+router.get("/create-link", (req, res) => {
   res.render("createLink", {
     user: req.user,
     success: req.flash("success"),

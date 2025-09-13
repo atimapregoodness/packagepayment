@@ -3,10 +3,9 @@ const express = require("express");
 const router = express.Router();
 const Admin = require("../models/admin"); // Adjust path if needed
 const isAdmin = require("../middleware/isAdmin");
-const isCreator = require("../middleware/isCreator");
 
 // Show contact info edit form
-router.get("/add-contact", isAdmin || isCreator, async (req, res) => {
+router.get("/add-contact", isAdmin, async (req, res) => {
   try {
     const admin = await Admin.findById(req.user._id); // Assuming admin is logged in
     if (!admin) return res.status(404).send("Admin not found");
@@ -19,7 +18,7 @@ router.get("/add-contact", isAdmin || isCreator, async (req, res) => {
 });
 
 // Update/add contact info
-router.post("/add-contact", isAdmin || isCreator, async (req, res) => {
+router.post("/add-contact", isAdmin, async (req, res) => {
   try {
     const { whatsapp, telegram } = req.body;
 

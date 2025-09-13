@@ -32,6 +32,9 @@ body {
   min-height: 100vh;
 }
 
+#cardHeader {
+  background-color: var(--bg-dark);
+}
 #galaxyLogo {
   width: 12em;
 }

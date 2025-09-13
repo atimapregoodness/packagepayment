@@ -120,6 +120,8 @@ app.get("/back", (req, res) => {
 app.all(/.*/, (req, res, next) => {
   const err = new Error("Page not found");
   err.status = 404;
+  console.log(err);
+
   next(err);
 });
 
@@ -135,6 +137,8 @@ app.use((err, req, res, next) => {
 
   const message =
     errorMessages[status] || "Unexpected error occurred. Please try again.";
+
+  console.log(err);
 
   res.status(status).render("error/errorPage", {
     status,

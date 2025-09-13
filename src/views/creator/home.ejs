@@ -1,2 +1,65 @@
 <% layout("layout/boilerplate") %>
-<h1>Creator</h1>
+
+<div class="container mt-5">
+  <h2 class="mb-4">All Admins & Their Clients</h2>
+
+  <% if (admins.length > 0) { %> <% admins.forEach((admin, index) => { %>
+  <div class="card mb-4 shadow-sm border-0">
+    <div
+      class="card-header text-white d-flex justify-content-between align-items-center"
+      id="cardHeader"
+    >
+      <span><i class="fas fa-user-shield me-2"></i> <%= admin.username %></span>
+      <span class="badge bg-primary"><%= admin.email %></span>
+    </div>
+    <div class="card-body">
+      <% if (admin.clients && admin.clients.length > 0) { %>
+      <!-- Dropdown Button -->
+      <button
+        class="btn btn-sm btn-outline-dark mb-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#clients<%= index %>"
+        aria-expanded="false"
+        aria-controls="clients<%= index %>"
+      >
+        View Clients (<%= admin.clients.length %>)
+      </button>
+
+      <!-- Collapsible Clients List -->
+      <div class="collapse" id="clients<%= index %>">
+        <ul class="list-group">
+          <% admin.clients.forEach(client => { %>
+          <li class="list-group-item">
+            <strong><%= client.name %></strong> - <%= client.email || "No email"
+            %><br />
+            <small>
+              Phone: <%= client.phone %> | Bank: <%= client.bank %> | Amount:
+              <%= client.amount %> <%= client.currency %> | Status:
+              <span
+                class="badge <% if (client.status === 'successful') { %> bg-success <% } else if (client.status === 'declined') { %> bg-danger <% } else { %> bg-warning text-dark <% } %>"
+              >
+                <%= client.status %>
+              </span>
+              | Link:
+              <a href="<%= client.link %>"><%= client.link %></a> |
+              <a
+                href="/link-info/<%= client.transactionId %>"
+                class="btn btn-warning"
+              >
+                <i class="fas fa-info-circle me-1"></i> Updates
+              </a>
+            </small>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+      <% } else { %>
+      <p class="text-muted">No clients assigned to this admin yet.</p>
+      <% } %>
+    </div>
+  </div>
+  <% }) %> <% } else { %>
+  <p class="text-muted">No admins created yet.</p>
+  <% } %>
+</div>
