@@ -34,6 +34,11 @@ body {
 
 #deleteIcon {
   border-radius: 0.4em;
+  cursor: pointer;
+}
+#restrictBtn {
+  border-radius: 0.4em;
+  cursor: pointer;
 }
 #cardHeader {
   background-color: var(--bg-dark);

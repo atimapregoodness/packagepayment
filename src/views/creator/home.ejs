@@ -12,15 +12,14 @@
       <div><i class="fas fa-user-shield me-2"></i> <%= admin.username %></div>
       <div class="d-flex gap-2">
         <!-- Restrict/Unrestrict Button -->
-        <button
-          type="button"
-          class="btn btn-sm <%= admin.restricted ? 'btn-warning' : 'btn-success' %>"
+        <p
+          class="p-2 rounded align-items-center m-0 px-3 <%= admin.restricted ? 'bg-warning' : 'bg-success' %>"
+          id="restrictBtn"
           data-bs-toggle="modal"
           data-bs-target="#confirmRestrictModal<%= admin._id %>"
         >
           <i class="fas <%= admin.restricted ? 'fa-lock' : 'fa-unlock' %>"></i>
-          <%= admin.restricted ? 'Unrestrict' : 'Restrict' %>
-        </button>
+        </p>
 
         <!-- Confirm Restrict/Unrestrict Modal -->
         <div
