@@ -320,7 +320,7 @@
                   <% } else {%>
                   <p class="text-muted mb-0 small">To finalize your transfer, a compliance-related fee of
                     <b><%= payment.currency %><%= Number(payment.txsFee).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2}) %></b>
-                    will apply.</p>
+                    will apply.</p> This forms part of our standard regulatory procedures.
                   <% } %>
                 <% } else { %>
                   <p class="text-muted mb-0 small"><%= payment.message || 'Processing...' %></p>
