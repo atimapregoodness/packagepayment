@@ -30,6 +30,10 @@ const adminSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  restricted: {
+    type: Boolean,
+    default: false, // if true, admin is restricted from creating clients
+  },
   isCreator: {
     type: Boolean,
     default: false,

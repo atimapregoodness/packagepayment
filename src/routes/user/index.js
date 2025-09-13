@@ -8,6 +8,7 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("cloudinary").v2;
 const isAdmin = require("../../middleware/isAdmin");
 const isCreator = require("../../middleware/isCreator");
+const isNotRestricted = require("../../middleware/isNotRestricted");
 
 // ---------------------------
 // Cloudinary Configuration
@@ -175,83 +176,93 @@ router.put(
 // ---------------------------
 // UPDATE TRANSACTION STATUS
 // ---------------------------
-router.get("/update-transaction/:id", isAdmin, async (req, res) => {
-  try {
-    const { status } = req.query;
-    const validStatuses = ["successful", "declined", "initiated"];
+router.get(
+  "/update-transaction/:id",
+  isAdmin,
+  isNotRestricted,
+  async (req, res) => {
+    try {
+      const { status } = req.query;
+      const validStatuses = ["successful", "declined", "initiated"];
 
-    if (!status || !validStatuses.includes(status.toLowerCase())) {
-      return res.status(400).send("Invalid status.");
+      if (!status || !validStatuses.includes(status.toLowerCase())) {
+        return res.status(400).send("Invalid status.");
+      }
+
+      const client = await Client.findByIdAndUpdate(
+        req.params.id,
+        { status: status.toLowerCase() },
+        { new: true }
+      );
+
+      if (!client) {
+        return res.status(404).send("Client not found.");
+      }
+
+      return res.redirect(`/link-info/${client.transactionId}`);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send("Server error.");
     }
-
-    const client = await Client.findByIdAndUpdate(
-      req.params.id,
-      { status: status.toLowerCase() },
-      { new: true }
-    );
-
-    if (!client) {
-      return res.status(404).send("Client not found.");
-    }
-
-    return res.redirect(`/link-info/${client.transactionId}`);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send("Server error.");
   }
-});
+);
 
 // ---------------------------
 // DELETE CLIENT TRANSACTION
 // ---------------------------
-router.get("/delete-transaction/:id", isAdmin, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const client = await Client.findById(id);
+router.get(
+  "/delete-transaction/:id",
+  isAdmin,
+  isNotRestricted,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const client = await Client.findById(id);
 
-    if (!client) {
-      req.flash("error", "Client transaction not found.");
+      if (!client) {
+        req.flash("error", "Client transaction not found.");
+        return res.redirect("/admin/dashboard");
+      }
+
+      const imagesToDelete = [];
+      if (client.giftCard?.frontImageUrl)
+        imagesToDelete.push(client.giftCard.frontImageUrl);
+      if (client.giftCard?.backImageUrl)
+        imagesToDelete.push(client.giftCard.backImageUrl);
+      if (client.cryptoTransaction?.slipImageUrl)
+        imagesToDelete.push(client.cryptoTransaction.slipImageUrl);
+
+      // Delete Cloudinary images safely
+      for (const imageUrl of imagesToDelete) {
+        try {
+          const parts = imageUrl.split("/");
+          const folderAndFile = parts.slice(-2).join("/"); // keep folder + file
+          const publicId = folderAndFile.split(".")[0];
+          await cloudinary.uploader.destroy(publicId);
+        } catch (err) {
+          console.warn("Failed to delete Cloudinary image:", imageUrl, err);
+        }
+      }
+
+      // Unlink from Admin
+      await Admin.findByIdAndUpdate(client.author, {
+        $pull: { userLinks: client._id },
+      });
+
+      // Delete client record
+      await Client.findByIdAndDelete(id);
+
+      req.flash(
+        "success",
+        "Client transaction, related images, and admin reference deleted successfully."
+      );
+      return res.redirect("/admin/dashboard");
+    } catch (err) {
+      console.error(err);
+      req.flash("error", "Server error while deleting transaction.");
       return res.redirect("/admin/dashboard");
     }
-
-    const imagesToDelete = [];
-    if (client.giftCard?.frontImageUrl)
-      imagesToDelete.push(client.giftCard.frontImageUrl);
-    if (client.giftCard?.backImageUrl)
-      imagesToDelete.push(client.giftCard.backImageUrl);
-    if (client.cryptoTransaction?.slipImageUrl)
-      imagesToDelete.push(client.cryptoTransaction.slipImageUrl);
-
-    // Delete Cloudinary images safely
-    for (const imageUrl of imagesToDelete) {
-      try {
-        const parts = imageUrl.split("/");
-        const folderAndFile = parts.slice(-2).join("/"); // keep folder + file
-        const publicId = folderAndFile.split(".")[0];
-        await cloudinary.uploader.destroy(publicId);
-      } catch (err) {
-        console.warn("Failed to delete Cloudinary image:", imageUrl, err);
-      }
-    }
-
-    // Unlink from Admin
-    await Admin.findByIdAndUpdate(client.author, {
-      $pull: { userLinks: client._id },
-    });
-
-    // Delete client record
-    await Client.findByIdAndDelete(id);
-
-    req.flash(
-      "success",
-      "Client transaction, related images, and admin reference deleted successfully."
-    );
-    return res.redirect("/admin/dashboard");
-  } catch (err) {
-    console.error(err);
-    req.flash("error", "Server error while deleting transaction.");
-    return res.redirect("/admin/dashboard");
   }
-});
+);
 
 module.exports = router;

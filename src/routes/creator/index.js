@@ -120,4 +120,30 @@ router.post(
   })
 );
 
+router.post("/dashboard/:id/restrict", async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.params.id);
+
+    if (!admin || !admin.isAdmin) {
+      req.flash("error", "Admin not found");
+      return res.redirect("/creator/dashboard");
+    }
+
+    admin.restricted = !admin.restricted; // toggle state
+    await admin.save();
+
+    req.flash(
+      "success",
+      `Admin ${admin.username} is now ${
+        admin.restricted ? "restricted" : "unrestricted"
+      }.`
+    );
+    res.redirect("/creator/dashboard");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Error updating admin restriction.");
+    res.redirect("/creator/dashboard");
+  }
+});
+
 module.exports = router;

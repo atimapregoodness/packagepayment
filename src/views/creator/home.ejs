@@ -9,19 +9,84 @@
     <div
       class="card-header bg-dark text-white d-flex justify-content-between align-items-center"
     >
-      <div>
-        <i class="fas fa-user-shield me-2"></i> <%= admin.username %>
-        <span class="badge bg-primary ms-2"><%= admin.email %></span>
+      <div><i class="fas fa-user-shield me-2"></i> <%= admin.username %></div>
+      <div class="d-flex gap-2">
+        <!-- Restrict/Unrestrict Button -->
+        <button
+          type="button"
+          class="btn btn-sm <%= admin.restricted ? 'btn-warning' : 'btn-success' %>"
+          data-bs-toggle="modal"
+          data-bs-target="#confirmRestrictModal<%= admin._id %>"
+        >
+          <i class="fas <%= admin.restricted ? 'fa-lock' : 'fa-unlock' %>"></i>
+          <%= admin.restricted ? 'Unrestrict' : 'Restrict' %>
+        </button>
+
+        <!-- Confirm Restrict/Unrestrict Modal -->
+        <div
+          class="modal fade"
+          id="confirmRestrictModal<%= admin._id %>"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div
+                class="modal-header <%= admin.restricted ? 'bg-success' : 'bg-warning' %> text-white"
+              >
+                <h5 class="modal-title">
+                  <%= admin.restricted ? 'Unrestrict Admin' : 'Restrict Admin'
+                  %>
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p class="fw-bold text-center text-dark">
+                  Are you sure you want to <%= admin.restricted ? 'unrestrict' :
+                  'restrict' %>
+                  <strong><%= admin.username %></strong>?
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+                <form
+                  action="/creator/dashboard/<%= admin._id %>/restrict"
+                  method="POST"
+                >
+                  <button
+                    type="submit"
+                    class="btn <%= admin.restricted ? 'btn-success' : 'btn-warning' %>"
+                  >
+                    Yes, <%= admin.restricted ? 'Unrestrict' : 'Restrict' %>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delete Button -->
+        <p
+          type="button"
+          id="deleteIcon"
+          class="d-flex bg-danger p-2 rounded align-items-center m-0 px-3"
+          data-bs-toggle="modal"
+          data-bs-target="#confirmDeleteModal<%= admin._id %>"
+        >
+          <i class="fas fa-trash me-1 text-center"></i>
+        </p>
       </div>
-      <p
-        type="button"
-        id="deleteIcon"
-        class="d-flex bg-danger p-2 rouded align-items-center m-0 px-3"
-        data-bs-toggle="modal"
-        data-bs-target="#confirmDeleteModal<%= admin._id %>"
-      >
-        <i class="fas fa-trash me-1 text-center"></i>
-      </p>
     </div>
 
     <!-- Card Body -->

@@ -4,9 +4,10 @@ const User = require("../models/client");
 const numberToWords = require("number-to-words");
 const crypto = require("crypto");
 const isCreatorOrAdmin = require("../middleware/either");
+const isNotRestricted = require("../middleware/isNotRestricted");
 router.use(isCreatorOrAdmin);
 
-router.get("/create-link", (req, res) => {
+router.get("/create-link", isNotRestricted, (req, res) => {
   res.render("createLink", {
     user: req.user,
     success: req.flash("success"),
