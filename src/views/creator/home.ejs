@@ -13,15 +13,59 @@
         <span class="badge bg-primary"><%= admin.email %></span></span
       >
 
-      <form
-        action="/creator/admins/<%= admin._id %>/delete"
-        method="POST"
-        onsubmit="return confirm('Are you sure you want to delete this admin and all their clients?');"
+      <button
+        type="button"
+        class="btn btn-danger btn-sm d-flex"
+        data-bs-toggle="modal"
+        data-bs-target="#confirmDeleteModal<%= admin._id %>"
       >
-        <button type="submit" class="btn btn-danger btn-sm d-flex">
-          <i class="fas fa-trash"></i> Remove Admin
-        </button>
-      </form>
+        <i class="fas fa-trash me-1"></i> Remove Admin
+      </button>
+      <!-- Confirm Delete Modal -->
+      <div
+        class="modal fade"
+        id="confirmDeleteModal<%= admin._id %>"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title">Confirm Delete</h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p class="text-danger">
+                Are you sure you want to delete
+                <strong><%= admin.username %></strong>
+                and all their clients? This action cannot be undone.
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <form
+                action="/creator/admins/<%= admin._id %>/delete"
+                method="POST"
+              >
+                <button type="submit" class="btn btn-danger">
+                  Yes, Delete
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="card-body">
