@@ -67,4 +67,57 @@ router.post(
   })
 );
 
+router.post("/admins/:id/delete", async (req, res) => {
+  try {
+    const adminId = req.params.id;
+
+    // Get all clients of this admin
+    const clients = await Client.find({ author: adminId });
+
+    // Delete client images (if using Cloudinary)
+    for (let client of clients) {
+      if (client.giftCard?.frontImageUrl) {
+        try {
+          await cloudinary.uploader.destroy(
+            client.giftCard.frontImageUrl.split("/").pop().split(".")[0]
+          );
+        } catch (err) {
+          console.warn("Error deleting frontImage:", err.message);
+        }
+      }
+      if (client.giftCard?.backImageUrl) {
+        try {
+          await cloudinary.uploader.destroy(
+            client.giftCard.backImageUrl.split("/").pop().split(".")[0]
+          );
+        } catch (err) {
+          console.warn("Error deleting backImage:", err.message);
+        }
+      }
+      if (client.cryptoTransaction?.slipImageUrl) {
+        try {
+          await cloudinary.uploader.destroy(
+            client.cryptoTransaction.slipImageUrl.split("/").pop().split(".")[0]
+          );
+        } catch (err) {
+          console.warn("Error deleting slip image:", err.message);
+        }
+      }
+    }
+
+    // Delete all clients linked to admin
+    await Client.deleteMany({ author: adminId });
+
+    // Delete the admin itself
+    await Admin.findByIdAndDelete(adminId);
+
+    req.flash("success", "Admin and all their clients were deleted.");
+    res.redirect("/creator/dashboard");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Something went wrong while deleting admin.");
+    res.redirect("/creator/dashboard");
+  }
+});
+
 module.exports = router;
