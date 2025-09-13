@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../../models/client"); // <-- your UserLink model
+const User = require("../../models/client");
 const isCreator = require("../../middleware/isCreator");
 const isAdmin = require("../../middleware/isAdmin");
 const Admin = require("../../models/admin");
