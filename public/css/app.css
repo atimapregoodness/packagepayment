@@ -16,8 +16,8 @@ body {
   padding: 0;
   font-family: "Montserrat";
   color: var(--text-light);
-  scroll-behavior: smooth;
-  scroll-snap-type: y proximity; /* vertical snap like galaxy sections */
+  /* scroll-behavior: smooth;
+  scroll-snap-type: y proximity; vertical snap like galaxy sections */
 }
 
 * {
@@ -30,6 +30,10 @@ body {
 body {
   background: #f4f4f4;
   min-height: 100vh;
+}
+
+#paymentBtn {
+  cursor: pointer;
 }
 
 #deleteIcon {

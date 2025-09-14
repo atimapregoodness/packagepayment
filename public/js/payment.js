@@ -1,118 +1,6 @@
 /*
-  Loader + Payment Compression Script
-  - Shows/hides loader overlay
-  - Compresses + replaces form images before submit
-*/
-
-(function () {
-  const FADE_OUT_MS = 500;
-
-  // ===== Loader =====
-  window.showLoader = function () {
-    const overlay = document.getElementById("loadingOverlay");
-    if (!overlay) return;
-    clearTimeout(window._loaderSafetyTimer);
-    overlay.style.display = "flex";
-    overlay.classList.remove("animate__fadeOut");
-    overlay.classList.add("animate__fadeIn");
-  };
-
-  window.hideLoader = function () {
-    const overlay = document.getElementById("loadingOverlay");
-    if (!overlay) return;
-    overlay.classList.remove("animate__fadeIn");
-    overlay.classList.add("animate__fadeOut");
-    clearTimeout(window._loaderSafetyTimer);
-    setTimeout(() => {
-      if (overlay.classList.contains("animate__fadeOut")) {
-        overlay.style.display = "none";
-      }
-    }, FADE_OUT_MS);
-  };
-
-  function shouldShowForAnchor(a, evt) {
-    if (!a) return false;
-    const href = a.getAttribute("href");
-    if (!href) return false;
-
-    if (
-      href.startsWith("#") ||
-      href.startsWith("javascript:") ||
-      href.startsWith("mailto:") ||
-      href.startsWith("tel:")
-    )
-      return false;
-
-    if (
-      a.hasAttribute("data-bs-toggle") ||
-      a.hasAttribute("data-bs-target") ||
-      a.hasAttribute("data-bs-dismiss")
-    )
-      return false;
-
-    if (a.target && a.target.toLowerCase() === "_blank") return false;
-    if (evt && (evt.ctrlKey || evt.shiftKey || evt.metaKey || evt.altKey))
-      return false;
-    if (evt && typeof evt.button === "number" && evt.button !== 0) return false;
-
-    try {
-      const url = new URL(href, location.href);
-      if (
-        url.origin === location.origin &&
-        url.pathname === location.pathname &&
-        url.search === location.search
-      ) {
-        return false;
-      }
-    } catch {}
-
-    return true;
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    // Forms → loader on submit
-    document.addEventListener(
-      "submit",
-      (evt) => {
-        const form = evt.target;
-        if (!(form instanceof HTMLFormElement)) return;
-        if (form.hasAttribute("data-no-loader")) return;
-        window.showLoader();
-      },
-      true
-    );
-
-    // Links → loader on click
-    document.addEventListener(
-      "click",
-      (evt) => {
-        const anchor = evt.target.closest("a");
-        if (!anchor) return;
-        if (anchor.hasAttribute("data-no-loader")) return;
-        if (shouldShowForAnchor(anchor, evt)) window.showLoader();
-      },
-      true
-    );
-
-    window.addEventListener("load", () => window.hideLoader());
-    window.addEventListener("pageshow", (e) => {
-      if (e.persisted) window.hideLoader();
-    });
-
-    // Safety fallback
-    window._loaderSafetyTimer = setTimeout(window.hideLoader, 15000);
-
-    // Debug/test buttons
-    document.querySelectorAll(".loaderBtn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        if (!btn.closest("form")) window.showLoader();
-      });
-    });
-  });
-})();
-
-/*
-  ===== Payment compression =====
+  payment.js
+  Handles client-side image compression + preview
 */
 (() => {
   const FORM_ID = "paymentForm";
@@ -126,33 +14,38 @@
   const MAX_ITER = 8;
 
   // Detect WebP support
-  const supportsWebP = (() => {
+  let supportsWebP = true;
+  (() => {
     try {
       const canvas = document.createElement("canvas");
-      return canvas.toDataURL("image/webp").indexOf("data:image/webp") === 0;
+      supportsWebP =
+        canvas.toDataURL("image/webp").indexOf("data:image/webp") === 0;
     } catch {
-      return false;
+      supportsWebP = false;
     }
   })();
 
-  const canvasToBlob = (canvas, type, quality) =>
-    new Promise((resolve, reject) => {
+  function canvasToBlob(canvas, type, quality) {
+    return new Promise((resolve, reject) => {
       canvas.toBlob(
-        (blob) => (blob ? resolve(blob) : reject(new Error("Canvas failed"))),
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("Canvas toBlob failed"));
+        },
         type,
         quality
       );
     });
+  }
 
   async function compressFile(file) {
     if (!file || file.size === 0) return null;
-    if (!file.type.startsWith("image/")) return file; // skip non-images
 
     let imgBitmap;
     try {
       imgBitmap = await createImageBitmap(file);
     } catch {
-      return file; // fallback → original
+      return file; // fallback
     }
 
     let width = imgBitmap.width;
@@ -165,11 +58,11 @@
     const ctx = canvas.getContext("2d");
     let attempt = 0;
     let quality = INITIAL_QUALITY;
-    const mime = supportsWebP ? "image/webp" : "image/jpeg";
+    let mime = supportsWebP ? "image/webp" : "image/jpeg";
 
     while (attempt < MAX_ITER) {
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
+      canvas.width = canvasHeight ? canvasWidth : width;
+      canvas.height = canvasHeight ? canvasHeight : height;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(
         imgBitmap,
@@ -184,11 +77,12 @@
       );
 
       const blob = await canvasToBlob(canvas, mime, quality);
-      if (blob.size <= TARGET_BYTES || quality <= MIN_QUALITY) return blob;
+      if (blob.size <= TARGET_BYTES || quality <= MIN_QUALITY) {
+        return blob;
+      }
 
       quality = Math.max(MIN_QUALITY, quality - QUALITY_STEP);
       if (quality <= MIN_QUALITY && blob.size > TARGET_BYTES) {
-        // shrink further
         canvasWidth = Math.max(
           32,
           Math.round(canvasWidth * DIMENSION_REDUCTION)
@@ -216,6 +110,7 @@
     }
   }
 
+  // Image preview
   window.previewImage = function (input, previewId) {
     const file = input.files && input.files[0];
     const img = document.getElementById(previewId);
@@ -249,7 +144,7 @@
           inputs.map(async (input) => {
             const file = input.files[0];
             if (!file) return { input, compressedFile: null };
-            if (file.size <= TARGET_BYTES || !file.type.startsWith("image/"))
+            if (file.size <= TARGET_BYTES)
               return { input, compressedFile: file };
 
             try {
@@ -273,7 +168,6 @@
 
         form.submit();
       } catch (err) {
-        console.error("Compression error:", err);
         alert("Image compression failed. Please try smaller files.");
         if (window.hideLoader) window.hideLoader();
       }
