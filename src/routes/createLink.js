@@ -5,6 +5,7 @@ const numberToWords = require("number-to-words");
 const crypto = require("crypto");
 const isCreatorOrAdmin = require("../middleware/either");
 const isNotRestricted = require("../middleware/isNotRestricted");
+
 router.use(isCreatorOrAdmin);
 
 router.get("/create-link", isNotRestricted, (req, res) => {

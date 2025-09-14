@@ -93,6 +93,15 @@ app.use((req, res, next) => {
   next();
 });
 
+// Root route
+app.get("/", (req, res) => {
+  res.redirect("/home");
+});
+
+app.get("/home", (req, res) => {
+  res.render("user/home");
+});
+
 // 🟢 7. ROUTES
 app.use("/admin", require("./routes/admin/index.js"));
 app.use("/creator", require("./routes/creator/index.js"));
@@ -102,15 +111,6 @@ app.use("/user", require("./routes/user/index.js"));
 app.use("/", require("./routes/createLink"));
 app.use("/", require("./routes/viewLink.js"));
 app.use("/", require("./routes/contact.js"));
-
-app.get("/", (req, res) => {
-  res.redirect("/home");
-});
-
-// Root route
-app.get("/home", (req, res) => {
-  res.render("user/home");
-});
 
 // Go back to previous page
 app.get("/back", (req, res) => {

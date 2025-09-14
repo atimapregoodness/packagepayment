@@ -4,6 +4,7 @@ const isCreator = require("../middleware/isCreator");
 const isAdmin = require("../middleware/isAdmin");
 const Client = require("../models/client");
 const isCreatorOrAdmin = require("../middleware/either");
+
 router.use(isCreatorOrAdmin);
 
 router.get("/link-info/:transactionId", async (req, res) => {

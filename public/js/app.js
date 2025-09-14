@@ -1,16 +1,19 @@
 (function () {
   const FADE_OUT_MS = 500; // matches animate.css fadeOut timing
 
-  // Expose globally
+  // Show loader overlay
   window.showLoader = function showLoader() {
     const overlay = document.getElementById("loadingOverlay");
     if (!overlay) return;
+
     clearTimeout(window._loaderSafetyTimer);
+
     overlay.style.display = "flex";
     overlay.classList.remove("animate__fadeOut");
     overlay.classList.add("animate__fadeIn");
   };
 
+  // Hide loader overlay
   window.hideLoader = function hideLoader(force) {
     const overlay = document.getElementById("loadingOverlay");
     if (!overlay) return;
@@ -27,18 +30,18 @@
     }, FADE_OUT_MS);
   };
 
-  // Helper: should this anchor show the loader?
+  // Decide if a link click should trigger loader
   function shouldShowForAnchor(a, evt) {
     if (!a) return false;
     const href = a.getAttribute("href");
     if (!href) return false;
 
-    // skip pseudo links
+    // Skip pseudo/protocol links
     if (href.startsWith("#")) return false;
     if (href.startsWith("javascript:")) return false;
     if (href.startsWith("mailto:") || href.startsWith("tel:")) return false;
 
-    // skip bootstrap data attributes
+    // Skip Bootstrap data attributes
     if (
       a.hasAttribute("data-bs-toggle") ||
       a.hasAttribute("data-bs-target") ||
@@ -46,17 +49,17 @@
     )
       return false;
 
-    // skip if opening in new tab
+    // Skip if opening in new tab
     if (a.target && a.target.toLowerCase() === "_blank") return false;
 
-    // skip with modifier keys
+    // Skip with modifier keys
     if (evt && (evt.ctrlKey || evt.shiftKey || evt.metaKey || evt.altKey))
       return false;
 
-    // skip non-left clicks
+    // Skip non-left clicks
     if (evt && typeof evt.button === "number" && evt.button !== 0) return false;
 
-    // skip same-page hash changes
+    // Skip same-page hash
     try {
       const url = new URL(href, location.href);
       if (
@@ -67,26 +70,27 @@
         return false;
       }
     } catch (err) {
-      // ignore parsing errors
+      // Ignore bad URLs
     }
 
     return true;
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Forms → auto show loader on submit
+    // Forms → show loader on submit until next page
     document.addEventListener(
       "submit",
       function (evt) {
         const form = evt.target;
         if (!(form instanceof HTMLFormElement)) return;
         if (form.hasAttribute("data-no-loader")) return;
+
         window.showLoader();
       },
       true
     );
 
-    // Links → auto show loader on click
+    // Links → show loader on click until next page
     document.addEventListener(
       "click",
       function (evt) {
@@ -102,15 +106,23 @@
       true
     );
 
-    // Hide loader after page load
+    // On first load → hide loader after full load
     window.addEventListener("load", function () {
       window.hideLoader();
     });
 
-    // Handle back/forward cache
-    window.addEventListener("pageshow", function () {
-      window.hideLoader();
+    // Handle back/forward cache restores
+    window.addEventListener("pageshow", function (event) {
+      // If page is loaded from bfcache, hide loader immediately
+      if (event.persisted) {
+        window.hideLoader();
+      }
     });
+
+    // Keep loader safe (max timeout in case page takes too long)
+    window._loaderSafetyTimer = setTimeout(() => {
+      window.hideLoader(true);
+    }, 15000);
 
     // Manual trigger for demo/test buttons
     document.querySelectorAll(".loaderBtn").forEach((btn) => {
