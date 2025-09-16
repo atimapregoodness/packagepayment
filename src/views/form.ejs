@@ -1,0 +1,86 @@
+<% layout("layout/boilerplate") %>
+
+<div
+  class="container"
+  style="max-width: 600px; margin: 40px auto; font-family: Arial, sans-serif"
+>
+  <h2 style="margin-bottom: 20px; color: #0b2e6f">Send Email</h2>
+
+  <form action="/sendmail" method="POST">
+    <!-- Recipient Email -->
+    <div style="margin-bottom: 12px">
+      <label for="to">To (email address)</label><br />
+      <input
+        type="email"
+        id="to"
+        name="to"
+        required
+        style="width: 100%; padding: 8px"
+      />
+    </div>
+
+    <!-- Recipient Name -->
+    <div style="margin-bottom: 12px">
+      <label for="toName">Recipient Name</label><br />
+      <input
+        type="text"
+        id="toName"
+        name="toName"
+        placeholder="Optional"
+        style="width: 100%; padding: 8px"
+      />
+    </div>
+
+    <!-- Subject -->
+    <div style="margin-bottom: 12px">
+      <label for="subject">Subject</label><br />
+      <input
+        type="text"
+        id="subject"
+        name="subject"
+        required
+        style="width: 100%; padding: 8px"
+      />
+    </div>
+
+    <!-- Message -->
+    <div style="margin-bottom: 12px">
+      <label for="body">Message</label><br />
+      <textarea
+        id="body"
+        name="body"
+        rows="6"
+        style="width: 100%; padding: 8px"
+        placeholder="Write your message here..."
+      ></textarea>
+    </div>
+
+    <!-- Checkbox for Disclaimer -->
+    <div style="margin-bottom: 12px">
+      <input
+        type="checkbox"
+        id="includeDisclaimer"
+        name="includeDisclaimer"
+        value="true"
+      />
+      <label for="includeDisclaimer">Include Disclaimer</label>
+    </div>
+
+    <!-- Submit -->
+    <div>
+      <button
+        type="submit"
+        style="
+          padding: 10px 20px;
+          background: #0b2e6f;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        "
+      >
+        Send Email
+      </button>
+    </div>
+  </form>
+</div>

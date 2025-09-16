@@ -107,6 +107,7 @@ app.use("/admin", require("./routes/admin/index.js"));
 app.use("/creator", require("./routes/creator/index.js"));
 app.use("/auth", require("./routes/auth"));
 app.use("/user", require("./routes/user/index.js"));
+app.use("/sendmail", require("./routes/email"));
 
 app.use("/", require("./routes/createLink"));
 app.use("/", require("./routes/viewLink.js"));
@@ -123,6 +124,21 @@ app.all(/.*/, (req, res, next) => {
   console.log(err);
 
   next(err);
+});
+
+app.use((req, res, next) => {
+  const _render = res.render;
+  res.render = function (view, options = {}, callback) {
+    // if options is a function (callback passed in place of options)
+    if (typeof options === "function") {
+      callback = options;
+      options = {};
+    }
+    // ensure async: true is passed to the view engine
+    options = Object.assign({}, options, { async: true });
+    return _render.call(this, view, options, callback);
+  };
+  next();
 });
 
 app.use((err, req, res, next) => {

@@ -334,6 +334,8 @@ router.put("/:linkTxt/payments/success", async (req, res) => {
   }
 });
 // UPDATE TRANSACTION STATUS
+// Allowed transaction statuses
+const VALID_STATUSES = ["initiated", "pending", "successful", "declined"];
 router.get(
   "/update-transaction/:id",
   isAdmin,

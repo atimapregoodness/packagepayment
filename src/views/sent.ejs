@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Email Sent</title>
+  </head>
+  <body>
+    <img src="<%= logoUrl %>" alt="<%= siteName %>" style="height: 48px" />
+    <h2>Email Sent Successfully ✅</h2>
+    <p><%= message || "Your email has been sent." %></p>
+    <p>
+      <small>
+        Message ID: <%= info && info.messageId ? info.messageId : 'n/a' %>
+      </small>
+    </p>
+    <p>Sent to: <%= to %></p>
+  </body>
+</html>

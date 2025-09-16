@@ -1,54 +1,48 @@
-<!-- Floating Flash Messages -->
+<% if (success && success.length) { %>
 <div
-  class="flash-container position-fixed top-0 start-50 translate-middle-x p-3"
-  style="z-index: 1055; max-width: 400px; width: 100%"
+  class="alert alert-success alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
+  role="alert"
 >
-  <% if (typeof success !== 'undefined' && success.length) { %>
-  <div
-    class="alert alert-success alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
-    role="alert"
-  >
-    <i class="fa-solid fa-circle-check me-2 mt-1"></i>
-    <div class="flex-grow-1"><%= success.join("<br />") %></div>
-    <button
-      type="button"
-      class="btn-close ms-2"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-  </div>
-  <% } %> <% if (typeof error !== 'undefined' && error.length) { %>
-  <div
-    class="alert alert-danger alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
-    role="alert"
-  >
-    <i class="fa-solid fa-triangle-exclamation me-2 mt-1"></i>
-    <div class="flex-grow-1"><%= error.join("<br />") %></div>
-    <button
-      type="button"
-      class="btn-close ms-2"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-  </div>
-  <% } %> <% if (typeof info !== 'undefined' && info.length) { %>
-  <div
-    class="alert alert-info alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
-    role="alert"
-  >
-    <i class="fa-solid fa-circle-info me-2 mt-1"></i>
-    <div class="flex-grow-1"><%= info.join("<br />") %></div>
-    <button
-      type="button"
-      class="btn-close ms-2"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-  </div>
-  <% } %>
+  <i class="fa-solid fa-circle-check me-2 mt-1"></i>
+  <div class="flex-grow-1"><%- success.join("<br />") %></div>
+  <button
+    type="button"
+    class="btn-close ms-2"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
 </div>
+<% } %> <% if (error && error.length) { %>
+<div
+  class="alert alert-danger alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
+  role="alert"
+>
+  <i class="fa-solid fa-triangle-exclamation me-2 mt-1"></i>
+  <div class="flex-grow-1"><%- error.join("<br />") %></div>
+  <button
+    type="button"
+    class="btn-close ms-2"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+<% } %> <% if (info && info.length) { %>
+<div
+  class="alert alert-info alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
+  role="alert"
+>
+  <i class="fa-solid fa-circle-info me-2 mt-1"></i>
+  <div class="flex-grow-1"><%- info.join("<br />") %></div>
+  <button
+    type="button"
+    class="btn-close ms-2"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+<% } %>
 
-<!-- Slide Down Animation -->
+<!-- Styles -->
 <style>
   .slide-down {
     animation: slideDown 0.6s ease-out;
@@ -72,7 +66,6 @@
 
   .alert i {
     font-size: 1.2rem;
-    padding-left: 0.5em;
   }
 
   .btn-close {
@@ -93,6 +86,18 @@
     background: linear-gradient(135deg, #d1ecf1, #bee5eb);
     color: #0c5460;
   }
+
+  /* Optional: fade-out effect */
+  .fade-out {
+    animation: fadeOut 0.5s forwards;
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      transform: translateY(-20%);
+    }
+  }
 </style>
 
 <!-- Auto Dismiss Script -->
@@ -101,8 +106,11 @@
     const alerts = document.querySelectorAll(".alert");
     alerts.forEach((alert) => {
       setTimeout(() => {
-        const bsAlert = new bootstrap.Alert(alert);
-        bsAlert.close();
+        alert.classList.add("fade-out");
+        setTimeout(() => {
+          const bsAlert = new bootstrap.Alert(alert);
+          bsAlert.close();
+        }, 500);
       }, 5000); // auto-dismiss after 5s
     });
   });
