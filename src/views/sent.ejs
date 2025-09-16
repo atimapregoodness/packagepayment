@@ -1,17 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Email Sent</title>
-  </head>
-  <body>
-    <img src="<%= logoUrl %>" alt="<%= siteName %>" style="height: 48px" />
-    <h2>Email Sent Successfully ✅</h2>
-    <p><%= message || "Your email has been sent." %></p>
-    <p>
-      <small>
-        Message ID: <%= info && info.messageId ? info.messageId : 'n/a' %>
-      </small>
+<% layout("layout/boilerplate") %>
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div
+    class="text-center p-5 rounded shadow bg-white"
+    style="max-width: 400px; width: 100%"
+  >
+    <!-- Heading -->
+    <h2 class="mb-4 text-success">
+      Email Sent Successfully <i class="fa-solid fa-circle-check"></i>
+    </h2>
+
+    <!-- Message -->
+    <p class="mb-5 fs-5 text-muted">
+      <%= message || "Your email has been sent." %>
     </p>
-    <p>Sent to: <%= to %></p>
-  </body>
-</html>
+
+    <!-- Back Button -->
+    <a href="/back" class="btn btn-primary btn-sm">
+      <i class="fa-solid fa-arrow-left me-2"></i> Go Back
+    </a>
+  </div>
+</div>

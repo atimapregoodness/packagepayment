@@ -7,6 +7,7 @@ const path = require("path");
 const Email = require("../models/email");
 const isMailer = require("../middleware/isMailer");
 const sanitizeHtml = require("sanitize-html"); // optional
+const Mail = require("nodemailer/lib/mailer");
 
 // protect all routes in this file to mailers only
 router.use(isMailer);
@@ -356,7 +357,8 @@ router.post("/", async (req, res) => {
     }
 
     req.flash("success", `Successfully sent email to: ${to}`);
-    return res.redirect("/sendmail");
+    // return res.redirect("/sendmail");
+    res.render("sent", { message: `Mail Successfuly sent to: ${to}` });
   } catch (err) {
     console.error("❌ Send error:", err);
 
