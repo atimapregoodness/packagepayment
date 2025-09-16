@@ -9,22 +9,45 @@
   rel="stylesheet"
 />
 
-<div class="container" style="max-width: 650px; margin: 50px auto">
-  <div class="card border-0 rounded-3">
+<div class="container" style="max-width: 700px; margin: 50px auto">
+  <div class="card border-0 shadow-sm rounded-4">
     <div
       class="card-header text-white text-center py-3"
-      style="background-color: #171a20"
+      style="background-color: #0b2e6f"
     >
       <h3 class="mb-0">
-        <i class="fa-solid fa-envelope-circle-check me-2"></i> Send Email
+        <i class="fa-solid fa-envelope-circle-check me-2"></i> Send Secure Email
       </h3>
       <p class="mb-0 small text-light">
-        Secure financial communication with <strong><%= siteName %></strong>
+        Professional financial communication with
+        <strong><%= siteName %></strong>
       </p>
     </div>
 
     <div class="card-body p-4">
+      <% /* Flash messages area (if res.locals.* used in app) */ %> <% if (error
+      && error.length) { %>
+      <div class="alert alert-danger">
+        <% error.forEach(e => { %>
+        <div><%= e %></div>
+        <% }) %>
+      </div>
+      <% } %> <% if (success && success.length) { %>
+      <div class="alert alert-success">
+        <% success.forEach(s => { %>
+        <div><%= s %></div>
+        <% }) %>
+      </div>
+      <% } %> <% if (info && info.length) { %>
+      <div class="alert alert-info">
+        <% info.forEach(i => { %>
+        <div><%= i %></div>
+        <% }) %>
+      </div>
+      <% } %>
+
       <form
+        id="emailForm"
         action="/sendmail"
         method="POST"
         class="needs-validation"
@@ -33,7 +56,7 @@
         <!-- Recipient Email -->
         <div class="mb-3">
           <label for="to" class="form-label fw-semibold">
-            <i class="fa-solid fa-at me-1 text-primary"></i> To (email address)
+            <i class="fa-solid fa-at me-1 text-warning"></i> To (Email Address)
           </label>
           <input
             type="email"
@@ -48,7 +71,7 @@
         <!-- Recipient Name -->
         <div class="mb-3">
           <label for="toName" class="form-label fw-semibold">
-            <i class="fa-solid fa-user me-1 text-primary"></i> Recipient Name
+            <i class="fa-solid fa-user me-1 text-warning"></i> Recipient Name
           </label>
           <input
             type="text"
@@ -62,14 +85,14 @@
         <!-- Subject -->
         <div class="mb-3">
           <label for="subject" class="form-label fw-semibold">
-            <i class="fa-solid fa-heading me-1 text-primary"></i> Subject
+            <i class="fa-solid fa-heading me-1 text-warning"></i> Subject
           </label>
           <input
             type="text"
             class="form-control"
             id="subject"
             name="subject"
-            placeholder="Enter subject"
+            placeholder="Enter email subject"
             required
           />
         </div>
@@ -77,15 +100,101 @@
         <!-- Message -->
         <div class="mb-3">
           <label for="body" class="form-label fw-semibold">
-            <i class="fa-solid fa-message me-1 text-primary"></i> Message
+            <i class="fa-solid fa-message me-1 text-warning"></i> Message
           </label>
           <textarea
             class="form-control"
             id="body"
             name="body"
-            rows="6"
+            rows="8"
             placeholder="Write your message here..."
+            required
           ></textarea>
+
+          <div id="detectorUI" class="mt-2" aria-live="polite">
+            <div
+              id="riskBar"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 8px;
+              "
+            >
+              <div style="flex: 0 0 160px">
+                <div
+                  style="
+                    background: #e9ecef;
+                    border-radius: 8px;
+                    height: 12px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    id="riskFill"
+                    style="width: 0%; height: 100%; background: #5cb85c"
+                  ></div>
+                </div>
+                <div
+                  id="riskScore"
+                  style="font-size: 12px; color: #666; margin-top: 6px"
+                >
+                  Score: 0
+                </div>
+              </div>
+              <div style="flex: 1">
+                <div id="riskLabel" style="font-weight: 600; color: #333">
+                  Status: Clean
+                </div>
+                <div id="riskHint" style="font-size: 13px; color: #666">
+                  Live content analysis — edits update results automatically.
+                </div>
+              </div>
+            </div>
+
+            <div id="reasonsBox" style="margin-top: 10px; display: none">
+              <strong style="font-size: 13px">Detected issues:</strong>
+              <ul id="reasonsList" style="margin-top: 6px; color: #444"></ul>
+            </div>
+
+            <div id="flaggedWords" style="margin-top: 10px; display: none">
+              <strong style="font-size: 13px">Flagged words/phrases:</strong>
+              <div
+                id="flaggedList"
+                style="
+                  margin-top: 6px;
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 6px;
+                "
+              ></div>
+              <div style="margin-top: 8px">
+                <button
+                  type="button"
+                  id="applySuggestions"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  Apply suggested fixes
+                </button>
+                <button
+                  type="button"
+                  id="showPreview"
+                  class="btn btn-sm btn-outline-secondary ms-2"
+                >
+                  Preview plain text
+                </button>
+              </div>
+            </div>
+
+            <div
+              id="spamWarning"
+              class="form-text text-danger mt-2"
+              style="display: none"
+            >
+              ⚠️ This message may be flagged by spam filters. Edit content or
+              apply suggested fixes.
+            </div>
+          </div>
         </div>
 
         <!-- Checkbox for Disclaimer -->
@@ -105,7 +214,7 @@
 
         <!-- Submit -->
         <div class="d-grid">
-          <button type="submit" class="btn btn-primary btn-sm">
+          <button type="submit" class="btn btn-warning btn-sm" id="sendBtn">
             <i class="fa-solid fa-paper-plane me-2"></i> Send Email
           </button>
         </div>
@@ -117,3 +226,440 @@
     </div>
   </div>
 </div>
+
+<!-- SUGGESTIONS MODAL -->
+<div
+  class="modal fade"
+  id="suggestionModal"
+  tabindex="-1"
+  aria-labelledby="suggestionModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="suggestionModalLabel">Suggested fixes</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="small text-muted">
+          Review suggested replacements. Accept to apply them into the message.
+        </p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <h6 class="mb-1">Original</h6>
+            <pre
+              id="origPreview"
+              style="
+                white-space: pre-wrap;
+                background: #f8f9fa;
+                padding: 12px;
+                border-radius: 6px;
+              "
+            ></pre>
+          </div>
+          <div class="col-md-6">
+            <h6 class="mb-1">Suggested</h6>
+            <pre
+              id="suggestedPreview"
+              style="
+                white-space: pre-wrap;
+                background: #fff7e6;
+                padding: 12px;
+                border-radius: 6px;
+              "
+            ></pre>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          id="rejectSuggestions"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+        <button type="button" id="acceptSuggestions" class="btn btn-primary">
+          Apply suggestions
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div
+  class="modal fade"
+  id="previewModal"
+  tabindex="-1"
+  aria-labelledby="previewModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">Plain-text preview</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <pre
+          id="plainPreview"
+          style="
+            white-space: pre-wrap;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+          "
+        ></pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // DOM references
+    const bodyInput = document.getElementById("body");
+    const subjectInput = document.getElementById("subject");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const riskFill = document.getElementById("riskFill");
+    const riskScore = document.getElementById("riskScore");
+    const riskLabel = document.getElementById("riskLabel");
+    const riskHint = document.getElementById("riskHint");
+
+    const reasonsBox = document.getElementById("reasonsBox");
+    const reasonsList = document.getElementById("reasonsList");
+    const flaggedWords = document.getElementById("flaggedWords");
+    const flaggedList = document.getElementById("flaggedList");
+    const spamWarning = document.getElementById("spamWarning");
+
+    const applyBtn = document.getElementById("applySuggestions");
+    const showPreviewBtn = document.getElementById("showPreview");
+
+    // Modal instances
+    const suggestionModalEl = document.getElementById("suggestionModal");
+    const suggestionModal = new bootstrap.Modal(suggestionModalEl);
+    const previewModalEl = document.getElementById("previewModal");
+    const previewModal = new bootstrap.Modal(previewModalEl);
+
+    const origPreview = document.getElementById("origPreview");
+    const suggestedPreview = document.getElementById("suggestedPreview");
+    const plainPreview = document.getElementById("plainPreview");
+    const acceptSuggestions = document.getElementById("acceptSuggestions");
+
+    // Spam/suspicious word lists
+    const spamWords = [
+      "congratulations",
+      "winner",
+      "free",
+      "prize",
+      "claim now",
+      "urgent",
+      "act now",
+      "offer",
+      "money",
+      "lottery",
+      "cash",
+      "bonus",
+      "click here",
+      "limited time",
+      "risk-free",
+      "guarantee",
+      "earn money",
+    ];
+    const suspiciousPhrases = [
+      "wire transfer",
+      "send money",
+      "bank account",
+      "provide your",
+      "password",
+      "verify your account",
+      "confirm your",
+      "credit card",
+      "shipping address",
+    ];
+    const suggestionsMap = {
+      congratulations: "your transaction has been processed",
+      winner: "recipient",
+      free: "no charge",
+      prize: "award",
+      "claim now": "view details",
+      urgent: "important",
+      "act now": "please review",
+      "click here": "view details",
+      offer: "notification",
+      money: "amount",
+      cash: "funds",
+    };
+
+    const suggestionKeys = Object.keys(suggestionsMap).sort(
+      (a, b) => b.length - a.length
+    );
+
+    let lastAnalysis = null;
+    let lastSuggestedText = "";
+
+    // Utility
+    function debounce(fn, wait = 300) {
+      let timer;
+      return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), wait);
+      };
+    }
+    function sanitizeText(str = "") {
+      return String(str)
+        .replace(/<\/?[^>]+(>|$)/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    // Analysis engine
+    function analyzeContent(subject, body) {
+      const raw = `${subject} ${body}`.trim();
+      const low = raw.toLowerCase();
+      let score = 0;
+      const reasons = [];
+
+      spamWords.forEach((w) => {
+        if (low.includes(w)) {
+          score += 10;
+          reasons.push({ type: "spam word", value: w });
+        }
+      });
+      suspiciousPhrases.forEach((p) => {
+        if (low.includes(p)) {
+          score += 15;
+          reasons.push({ type: "suspicious phrase", value: p });
+        }
+      });
+
+      const urls = raw.match(/https?:\/\/[^\s]+/gi) || [];
+      if (urls.length) {
+        score += Math.min(25, urls.length * 10);
+        reasons.push({ type: "link", value: urls.slice(0, 3) });
+      }
+      const emails =
+        raw.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi) || [];
+      if (emails.length) {
+        score += Math.min(16, emails.length * 8);
+        reasons.push({ type: "email", value: emails.slice(0, 3) });
+      }
+      const phones = raw.match(/(?:\+?\d[\d\s\-().]{6,}\d)/g) || [];
+      if (phones.length) {
+        score += Math.min(16, phones.length * 8);
+        reasons.push({ type: "phone", value: phones.slice(0, 3) });
+      }
+
+      const letters = raw.replace(/[^A-Za-z]/g, "");
+      const uppers = (raw.match(/[A-Z]/g) || []).length;
+      if (letters.length) {
+        const ratio = uppers / letters.length;
+        if (ratio > 0.45) {
+          score += 12;
+          reasons.push({
+            type: "shouting",
+            value: `${Math.round(ratio * 100)}% uppercase`,
+          });
+        }
+      }
+
+      const exclaims = (raw.match(/!/g) || []).length;
+      const questions = (raw.match(/\?/g) || []).length;
+      if (exclaims > 2) {
+        score += Math.min(15, exclaims * 4);
+        reasons.push({ type: "exclamations", value: exclaims });
+      }
+      if (questions > 4) {
+        score += 8;
+        reasons.push({ type: "questionMarks", value: questions });
+      }
+
+      const cleanBodyLen = sanitizeText(body).length;
+      if (cleanBodyLen > 0 && cleanBodyLen < 18) {
+        score += 10;
+        reasons.push({ type: "tooShort", value: cleanBodyLen });
+      }
+
+      const symbolRatio = raw.length
+        ? raw.replace(/[A-Za-z0-9\s]/g, "").length / raw.length
+        : 0;
+      if (symbolRatio > 0.18) {
+        score += Math.min(15, Math.round(symbolRatio * 100));
+        reasons.push({
+          type: "symbols",
+          value: `${Math.round(symbolRatio * 100)}%`,
+        });
+      }
+
+      if (!subject || subject.trim().length < 3) {
+        score += 6;
+        reasons.push({ type: "subjectShort", value: subject || "" });
+      }
+
+      score = Math.max(0, Math.min(100, Math.round(score)));
+      let verdict = "clean";
+      if (score >= 55) verdict = "spam";
+      else if (score >= 25) verdict = "suspicious";
+      return { score, verdict, reasons };
+    }
+
+    function setRiskUI(score, verdict) {
+      riskFill.style.width = score + "%";
+      riskScore.textContent = `Score: ${score}`;
+      if (score < 25) {
+        riskFill.style.background = "#5cb85c";
+        riskLabel.textContent = "Status: Clean";
+        riskHint.textContent = "Low risk";
+        spamWarning.style.display = "none";
+        sendBtn.disabled = false;
+      } else if (score < 55) {
+        riskFill.style.background = "#f0ad4e";
+        riskLabel.textContent = "Status: Suspicious";
+        riskHint.textContent = "Possible issues";
+        spamWarning.style.display = "block";
+        sendBtn.disabled = false;
+      } else {
+        riskFill.style.background = "#d9534f";
+        riskLabel.textContent = "Status: Spam";
+        riskHint.textContent = "High risk";
+        spamWarning.style.display = "block";
+        sendBtn.disabled = true;
+      }
+    }
+
+    function renderReasons(reasons) {
+      if (!reasons || reasons.length === 0) {
+        reasonsBox.style.display = "none";
+        reasonsList.innerHTML = "";
+        return;
+      }
+      reasonsBox.style.display = "block";
+      reasonsList.innerHTML = reasons
+        .map(
+          (r) =>
+            `<li>${r.type}${
+              r.value
+                ? ": " + (Array.isArray(r.value) ? r.value.join(", ") : r.value)
+                : ""
+            }</li>`
+        )
+        .join("");
+    }
+
+    function renderFlagged(reasons) {
+      flaggedList.innerHTML = "";
+      const flagged = reasons
+        .filter((r) => r.type === "spam word" || r.type === "suspicious phrase")
+        .map((r) => r.value);
+      if (flagged.length === 0) {
+        flaggedWords.style.display = "none";
+        return;
+      }
+      flaggedWords.style.display = "block";
+      flagged.forEach((tok) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn btn-sm btn-outline-danger";
+        btn.style.pointerEvents = "none";
+        btn.style.margin = "2px";
+        btn.textContent = tok;
+        flaggedList.appendChild(btn);
+      });
+    }
+
+    function analyzeAndRender() {
+      const subject = subjectInput.value || "";
+      const body = bodyInput.value || "";
+      const result = analyzeContent(subject, body);
+      lastAnalysis = result;
+      setRiskUI(result.score, result.verdict);
+      renderReasons(result.reasons);
+      renderFlagged(result.reasons);
+    }
+
+    const debouncedAnalyze = debounce(analyzeAndRender, 300);
+    bodyInput.addEventListener("input", debouncedAnalyze);
+    subjectInput.addEventListener("input", debouncedAnalyze);
+
+    function buildSuggestedText(orig) {
+      let text = orig;
+      suggestionKeys.forEach((key) => {
+        const replacement = suggestionsMap[key];
+        const esc = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const pattern = new RegExp(`\\b${esc}\\b`, "gi");
+        text = text.replace(pattern, (m) =>
+          m[0] === m[0].toUpperCase()
+            ? replacement.charAt(0).toUpperCase() + replacement.slice(1)
+            : replacement
+        );
+      });
+      return text;
+    }
+
+    applyBtn.addEventListener("click", () => {
+      const orig = bodyInput.value || "";
+      if (!orig.trim()) {
+        alert("Message is empty");
+        return;
+      }
+      const suggested = buildSuggestedText(orig);
+      origPreview.textContent = orig;
+      suggestedPreview.textContent = suggested;
+      lastSuggestedText = suggested;
+      acceptSuggestions.disabled = orig === suggested;
+      suggestionModal.show();
+    });
+
+    acceptSuggestions.addEventListener("click", () => {
+      if (!lastSuggestedText) return;
+      bodyInput.value = lastSuggestedText;
+      suggestionModal.hide();
+      analyzeAndRender();
+      bodyInput.focus();
+    });
+
+    showPreviewBtn.addEventListener("click", () => {
+      plainPreview.textContent =
+        sanitizeText(bodyInput.value || "") || "(empty)";
+      previewModal.show();
+    });
+
+    // submit guard
+    document.getElementById("emailForm").addEventListener("submit", (e) => {
+      bodyInput.value = sanitizeText(bodyInput.value || "");
+      analyzeAndRender();
+      if (lastAnalysis.verdict === "spam") {
+        e.preventDefault();
+        alert("Blocked: content looks like spam");
+        return;
+      }
+      if (lastAnalysis.verdict === "suspicious") {
+        if (!confirm("Message flagged as suspicious. Proceed?")) {
+          e.preventDefault();
+          return;
+        }
+      }
+    });
+
+    analyzeAndRender(); // initial run
+  });
+</script>
