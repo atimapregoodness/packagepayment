@@ -75,6 +75,76 @@
           </div>
         </div>
 
+        <!-- Mailer Privileges Button -->
+        <p
+          class="p-2 rounded align-items-center m-0 px-3 <% if (admin.isMailer) { %> bg-success <% } else { %> bg-warning <% } %>"
+          id="mailerBtn"
+          data-bs-toggle="modal"
+          data-bs-target="#confirmMailerModal<%= admin._id %>"
+        >
+          <i
+            class="fas <% if (admin.isMailer) { %> fa-envelope <% } else { %> fa-envelope-open <% } %>"
+          ></i>
+        </p>
+
+        <!-- Confirm Mailer Privileges Modal -->
+        <div
+          class="modal fade"
+          id="confirmMailerModal<%= admin._id %>"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div
+                class="modal-header <% if (admin.isMailer) { %> bg-danger <% } else { %> bg-success <% } %> text-white"
+              >
+                <h5 class="modal-title">
+                  <% if (admin.isMailer) { %> Remove Mailer Privileges <% } else
+                  { %> Grant Mailer Privileges <% } %>
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p class="fw-bold text-center text-dark">
+                  Are you sure you want to <% if (admin.isMailer) { %> remove
+                  Mailer privileges from <% } else { %> grant Mailer privileges
+                  to <% } %>
+                  <strong><%= admin.username %></strong>?
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+                <form
+                  action="/creator/dashboard/<%= admin._id %>/toggle-mailer"
+                  method="POST"
+                >
+                  <% if (admin.isMailer) { %>
+                  <button type="submit" class="btn btn-danger">
+                    Yes, Remove
+                  </button>
+                  <% } else { %>
+                  <button type="submit" class="btn btn-success">
+                    Yes, Grant
+                  </button>
+                  <% } %>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Delete Button -->
         <p
           type="button"

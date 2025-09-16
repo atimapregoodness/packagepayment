@@ -146,4 +146,34 @@ router.post("/dashboard/:id/restrict", async (req, res) => {
   }
 });
 
+// ✅ Route to grant Mailer role
+router.post("/dashboard/:id/toggle-mailer", async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Find the user first
+    const user = await Admin.findById(userId);
+    if (!user) {
+      req.flash("error", "User not found.");
+      return res.redirect("/creator/dashboard");
+    }
+
+    // Toggle the isMailer field
+    user.isMailer = !user.isMailer;
+    await user.save();
+
+    req.flash(
+      "success",
+      `${user.email} is now ${
+        user.isMailer ? "a Mailer ✅" : "no longer a Mailer ❌"
+      }`
+    );
+    res.redirect("/creator/dashboard");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Something went wrong.");
+    res.redirect("/creator/dashboard");
+  }
+});
+
 module.exports = router;

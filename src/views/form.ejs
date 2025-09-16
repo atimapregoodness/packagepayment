@@ -1,86 +1,119 @@
 <% layout("layout/boilerplate") %>
 
-<div
-  class="container"
-  style="max-width: 600px; margin: 40px auto; font-family: Arial, sans-serif"
->
-  <h2 style="margin-bottom: 20px; color: #0b2e6f">Send Email</h2>
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  rel="stylesheet"
+/>
 
-  <form action="/sendmail" method="POST">
-    <!-- Recipient Email -->
-    <div style="margin-bottom: 12px">
-      <label for="to">To (email address)</label><br />
-      <input
-        type="email"
-        id="to"
-        name="to"
-        required
-        style="width: 100%; padding: 8px"
-      />
+<div class="container" style="max-width: 650px; margin: 50px auto">
+  <div class="card border-0 rounded-3">
+    <div
+      class="card-header text-white text-center py-3"
+      style="background-color: #171a20"
+    >
+      <h3 class="mb-0">
+        <i class="fa-solid fa-envelope-circle-check me-2"></i> Send Email
+      </h3>
+      <p class="mb-0 small text-light">
+        Secure financial communication with <strong><%= siteName %></strong>
+      </p>
     </div>
 
-    <!-- Recipient Name -->
-    <div style="margin-bottom: 12px">
-      <label for="toName">Recipient Name</label><br />
-      <input
-        type="text"
-        id="toName"
-        name="toName"
-        placeholder="Optional"
-        style="width: 100%; padding: 8px"
-      />
-    </div>
-
-    <!-- Subject -->
-    <div style="margin-bottom: 12px">
-      <label for="subject">Subject</label><br />
-      <input
-        type="text"
-        id="subject"
-        name="subject"
-        required
-        style="width: 100%; padding: 8px"
-      />
-    </div>
-
-    <!-- Message -->
-    <div style="margin-bottom: 12px">
-      <label for="body">Message</label><br />
-      <textarea
-        id="body"
-        name="body"
-        rows="6"
-        style="width: 100%; padding: 8px"
-        placeholder="Write your message here..."
-      ></textarea>
-    </div>
-
-    <!-- Checkbox for Disclaimer -->
-    <div style="margin-bottom: 12px">
-      <input
-        type="checkbox"
-        id="includeDisclaimer"
-        name="includeDisclaimer"
-        value="true"
-      />
-      <label for="includeDisclaimer">Include Disclaimer</label>
-    </div>
-
-    <!-- Submit -->
-    <div>
-      <button
-        type="submit"
-        style="
-          padding: 10px 20px;
-          background: #0b2e6f;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        "
+    <div class="card-body p-4">
+      <form
+        action="/sendmail"
+        method="POST"
+        class="needs-validation"
+        novalidate
       >
-        Send Email
-      </button>
+        <!-- Recipient Email -->
+        <div class="mb-3">
+          <label for="to" class="form-label fw-semibold">
+            <i class="fa-solid fa-at me-1 text-primary"></i> To (email address)
+          </label>
+          <input
+            type="email"
+            class="form-control"
+            id="to"
+            name="to"
+            placeholder="customer@example.com"
+            required
+          />
+        </div>
+
+        <!-- Recipient Name -->
+        <div class="mb-3">
+          <label for="toName" class="form-label fw-semibold">
+            <i class="fa-solid fa-user me-1 text-primary"></i> Recipient Name
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="toName"
+            name="toName"
+            placeholder="Optional"
+          />
+        </div>
+
+        <!-- Subject -->
+        <div class="mb-3">
+          <label for="subject" class="form-label fw-semibold">
+            <i class="fa-solid fa-heading me-1 text-primary"></i> Subject
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="subject"
+            name="subject"
+            placeholder="Enter subject"
+            required
+          />
+        </div>
+
+        <!-- Message -->
+        <div class="mb-3">
+          <label for="body" class="form-label fw-semibold">
+            <i class="fa-solid fa-message me-1 text-primary"></i> Message
+          </label>
+          <textarea
+            class="form-control"
+            id="body"
+            name="body"
+            rows="6"
+            placeholder="Write your message here..."
+          ></textarea>
+        </div>
+
+        <!-- Checkbox for Disclaimer -->
+        <div class="form-check mb-3">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="includeDisclaimer"
+            name="includeDisclaimer"
+            value="true"
+          />
+          <label class="form-check-label" for="includeDisclaimer">
+            <i class="fa-solid fa-shield-halved me-1 text-success"></i>
+            Include Disclaimer
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-paper-plane me-2"></i> Send Email
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
+
+    <div class="card-footer text-center small text-muted py-3">
+      Powered by <strong><%= siteName %></strong>
+    </div>
+  </div>
 </div>

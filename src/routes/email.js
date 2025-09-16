@@ -5,10 +5,13 @@ const nodemailer = require("nodemailer");
 const ejs = require("ejs");
 const path = require("path");
 const Email = require("../models/email");
+const isMailer = require("../middleware/isMailer");
+
+router.use(isMailer);
 
 // === Load .env variables ===
 const SITE_NAME = process.env.SITE_NAME || "Galaxy Finance";
-const LOGO_URL = process.env.LOGO_URL || "/static/logo.png";
+const LOGO_URL = process.env.LOGO_URL || "/images/banner.png";
 const SITE_URL = process.env.SITE_URL || "https://galaxyfnc.xyz";
 const FROM_EMAIL = process.env.FROM_EMAIL || process.env.SMTP_USER;
 const FROM_NAME = process.env.FROM_NAME || SITE_NAME;
@@ -54,9 +57,9 @@ transporter
 // === GET: compose form ===
 router.get("/", (req, res) => {
   return res.render("form", {
-    error: [],
-    success: [],
-    info: [],
+    error: req.flash("error"),
+    success: req.flash("success"),
+    info: req.flash("info"),
     siteName: SITE_NAME,
     logoUrl: LOGO_URL,
   });
@@ -71,22 +74,12 @@ router.post("/", async (req, res) => {
 
     // Validate inputs
     if (!to || !subject) {
-      return res.status(400).render("form", {
-        error: ["Recipient email and subject are required."],
-        success: [],
-        info: [],
-        siteName: SITE_NAME,
-        logoUrl: LOGO_URL,
-      });
+      req.flash("error", "Recipient email and subject are required.");
+      return res.redirect("/sendmail");
     }
     if (!isValidEmail(to)) {
-      return res.status(400).render("form", {
-        error: ["Invalid recipient email address."],
-        success: [],
-        info: [],
-        siteName: SITE_NAME,
-        logoUrl: LOGO_URL,
-      });
+      req.flash("error", "Invalid recipient email address.");
+      return res.redirect("/sendmail");
     }
 
     // Save "pending" record
@@ -139,17 +132,9 @@ router.post("/", async (req, res) => {
       };
       await emailDoc.save();
     }
-    req.flash(`Succesfully Sent Email to: ${to}`);
 
-    return res.redirect("/sendmail", {
-      error: [],
-      info,
-      siteName: SITE_NAME,
-      logoUrl: LOGO_URL,
-      message: body || "", // <-- FIX: pass message so EJS can use it
-      subject,
-      to,
-    });
+    req.flash("success", `Successfully sent email to: ${to}`);
+    return res.redirect("/sendmail");
   } catch (err) {
     console.error("❌ Send error:", err);
 
@@ -174,13 +159,8 @@ router.post("/", async (req, res) => {
       userMessage = `Failed to send email: ${err.message}`;
     }
 
-    return res.status(500).render("form", {
-      error: [userMessage],
-      success: [],
-      info: [],
-      siteName: SITE_NAME,
-      logoUrl: LOGO_URL,
-    });
+    req.flash("error", userMessage);
+    return res.redirect("/sendmail");
   }
 });
 

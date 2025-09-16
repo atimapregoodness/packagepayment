@@ -32,6 +32,10 @@ body {
   min-height: 100vh;
 }
 
+#mailerBtn {
+  cursor: pointer;
+}
+
 #paymentBtn {
   cursor: pointer;
 }
