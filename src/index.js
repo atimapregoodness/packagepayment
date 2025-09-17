@@ -58,7 +58,7 @@ app.use(flash());
 app.use(methodOverride("_method"));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(inject);
+app.use(inject());
 
 // 🟢 4. STATIC FILES
 app.use(express.static(path.join(__dirname, "../public")));
