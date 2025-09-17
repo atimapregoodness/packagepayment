@@ -19,8 +19,6 @@ const MongoStore = require("connect-mongo");
 const serverless = require("serverless-http");
 const ejsMate = require("ejs-mate");
 const app = express();
-const { inject } = require("@vercel/analytics");
-
 // Wrap app for serverless deployment (Vercel, Netlify, etc.)
 module.exports.handler = serverless(app);
 
@@ -58,7 +56,6 @@ app.use(flash());
 app.use(methodOverride("_method"));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(inject());
 
 // 🟢 4. STATIC FILES
 app.use(express.static(path.join(__dirname, "../public")));
