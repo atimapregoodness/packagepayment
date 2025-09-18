@@ -17,6 +17,7 @@ const expressLayouts = require("express-ejs-layouts");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const serverless = require("serverless-http");
+const mongoSanitize = require("express-mongo-sanitize");
 const ejsMate = require("ejs-mate");
 const app = express();
 // Wrap app for serverless deployment (Vercel, Netlify, etc.)
@@ -56,6 +57,12 @@ app.use(flash());
 app.use(methodOverride("_method"));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(
+  mongoSanitize({
+    replaceWith: "_",
+  })
+);
 
 // 🟢 4. STATIC FILES
 app.use(express.static(path.join(__dirname, "../public")));
