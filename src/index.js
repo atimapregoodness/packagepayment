@@ -106,7 +106,7 @@ app.use((req, res, next) => {
 const hostname =
   process.env.HOSTNAME && /^https?:\/\//.test(process.env.HOSTNAME)
     ? process.env.HOSTNAME
-    : "http://localhost:3000"; // Fallback for local development
+    : "http://galaxyfnc.xyz"; // Fallback for local development
 
 // Static URLs for the sitemap
 const staticUrls = [
