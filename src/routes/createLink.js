@@ -134,64 +134,66 @@ router.post("/create-link", async (req, res) => {
       const formattedAmount = new Intl.NumberFormat().format(amountNumber);
 
       const htmlBody = `
-  <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #ffffff; background: #171a20; padding:0; border-radius:8px; overflow:hidden;">
+  <div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #000000; background: #ffffff; padding:0; border-radius:8px; overflow:hidden;">
 
     <!-- Header / Banner -->
-    <div class="email-header" style="text-align: center;background: #171a20; padding: 0, margine: 0">
+    <div style="text-align: center; background: #ffffff;">
       <img 
         src="https://galaxyfnc.xyz/images/banner.png" 
         alt="Galaxy Finance" 
-        style="max-width: 380px; width: 100%; height: auto; display: block; margin: 0 auto;" 
+        style="max-width: 100%; width: 100%; height: auto; display: block; margin: 0 auto;" 
       />
     </div>
 
     <!-- Email Body -->
-    <div style="padding:20px;">
-      <h2 style="color: #ffffff; margin-top:0;">Pending Transaction Notice</h2>
-      <p style="color:#ffffff;">Dear <strong>${name}</strong>,</p>
+    <div style="padding:30px;">
+      <h2 style="color: #000000; margin-top:0; font-weight:600; text-align:center;">Pending Transaction Notice</h2>
       
-      <p style="color:#ffffff;">
+      <p style="color:#333333; font-size:15px;">Dear <strong>${name}</strong>,</p>
+      
+      <p style="color:#333333; font-size:15px;">
         We would like to inform you that your recent transaction is currently 
-        <strong style="color:#f1c40f;">pending</strong>.
+        <strong style="color:#cc0000;">pending</strong>.
       </p>
 
-      <h3 style="margin-top:20px; color:#ffffff;">Transaction Details</h3>
-      <table style="border-collapse: collapse; width: 100%; max-width: 600px; background:#34495e; color:#ffffff;">
+      <h3 style="margin-top:20px; color:#111111; font-weight:500;">Transaction Details</h3>
+      <table style="border-collapse: collapse; width: 100%; max-width: 600px; background:#f9f9f9; color:#000000; border:1px solid #ddd;">
         <tr>
-          <td style="padding: 8px; border: 1px solid #555; color:#ffffff;"><strong>Amount:</strong></td>
-          <td style="padding: 8px; border: 1px solid #555; color:#ffffff;">${currency}${formattedAmount} (${amountInWords})</td>
+          <td style="padding: 10px; border: 1px solid #ddd; font-weight:500;">Amount:</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">${currency}${formattedAmount} (${amountInWords})</td>
         </tr>
         <tr>
-          <td style="padding: 8px; border: 1px solid #555; color:#ffffff;"><strong>Transaction ID:</strong></td>
-          <td style="padding: 8px; border: 1px solid #555; color:#ffffff;">${transactionId}</td>
+          <td style="padding: 10px; border: 1px solid #ddd; font-weight:500;">Transaction ID:</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">${transactionId}</td>
         </tr>
         <tr>
-          <td style="padding: 8px; border: 1px solid #555; color:#ffffff;"><strong>Date:</strong></td>
-          <td style="padding: 8px; border: 1px solid #555; color:#ffffff;">${new Date().toLocaleDateString()}</td>
+          <td style="padding: 10px; border: 1px solid #ddd; font-weight:500;">Date:</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">${new Date().toLocaleDateString()}</td>
         </tr>
       </table>
 
-      <p style="margin-top:20px; color:#ffffff;">
-        This transaction is being processed.
-        You will receive another notification once it has been completed.
+      <p style="margin-top:20px; color:#333333; font-size:15px;">
+        This transaction is being processed. You will receive another notification once it has been completed.
       </p>
 
-      <p style="text-align:center;">
+      <p style="text-align:center; margin:30px 0;">
         <a href="https://galaxyfnc.xyz${link}" 
-        style="background:#3498db; color:#ffffff; padding:12px 20px; text-decoration:none; border-radius:5px; display:inline-block; font-weight:bold;">
-          View Transaction Status
+        style="background:#000000; color:#ffffff; padding:12px 24px; text-decoration:none; border-radius:4px; display:inline-block; font-weight:bold; letter-spacing:0.5px;">
+          VIEW STATUS
         </a>
       </p>
 
-      <p style="color:#ffffff;">
+      <p style="color:#555555; font-size:14px;">
         If you did not authorize this transaction or have any questions, please contact our support team immediately at 
-        <a href="mailto:support@galaxyfinance.com" style="color:#1abc9c;">support@galaxyfinance.com</a>.
+        <a href="mailto:support@galaxyfinance.com" style="color:#cc0000; text-decoration:none;">support@galaxyfinance.com</a>.
       </p>
 
-      <p style="margin-top:30px; color:#ffffff;">Thank you for choosing <strong>Galaxy Finance</strong>.</p>
+      <p style="margin-top:40px; color:#000000; font-size:14px; text-align:center;">
+        Thank you for choosing <strong>Galaxy Finance</strong>.
+      </p>
     </div>
   </div>
-  `;
+`;
 
       await transporter.sendMail({
         from: `"Galaxy Finance" <${process.env.FROM_EMAIL}>`,
