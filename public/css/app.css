@@ -697,6 +697,10 @@ nav {
   transition: transform 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
 }
 
+#alert {
+  z-index: 2000;
+}
+
 /* Uppercase, spaced labels */
 .footer-galaxy .brand-name {
   margin-top: 0.5rem;

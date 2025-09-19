@@ -20,7 +20,7 @@ const FROM_NAME = process.env.FROM_NAME || SITE_NAME;
 
 const SUSPICIOUS_THRESHOLD = Number(process.env.SUSPICIOUS_THRESHOLD || 25);
 const SPAM_THRESHOLD = Number(process.env.SPAM_THRESHOLD || 55);
-
+   
 // === Email validator (basic) ===
 function isValidEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

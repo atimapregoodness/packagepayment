@@ -89,32 +89,40 @@ app.set("views", path.join(__dirname, "views"));
 // app.set("layout", "layout/boilerplate");
 
 // 🟢 6. GLOBAL VARIABLES
+// 🟢 6. GLOBAL VARIABLES
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  res.locals.info = req.flash("info");
-  res.locals.warning = req.flash("warning");
+  res.locals.moment = moment;
   res.locals.currentPage = req.originalUrl;
   res.locals.fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
-  res.locals.moment = moment;
 
+  // ✅ Always assign arrays, even if empty (prevents "not showing" issues)
+  res.locals.success = req.flash("success") || [];
+  res.locals.error = req.flash("error") || [];
+  res.locals.info = req.flash("info") || [];
+  res.locals.warning = req.flash("warning") || [];
+
+  // ✅ Keep track of previous URL
   if (req.session) {
     req.session.previousUrl = req.session.currentUrl || req.headers.referer;
     req.session.currentUrl = req.originalUrl;
   }
-
   res.locals.previousUrl = req.session?.previousUrl || "/";
-  next();
-});
 
-// Root route
-app.get("/", (req, res) => {
-  res.redirect("/home");
+  next();
 });
 
 app.get("/home", (req, res) => {
   res.render("user/home");
+});
+
+app.get("/", (req, res) => {
+  res.redirect("/home");
+});
+
+// Go back to previous page
+app.get("/back", (req, res) => {
+  res.redirect(req.session.previousUrl || "/");
 });
 
 // 🟢 7. ROUTES
@@ -127,11 +135,6 @@ app.use("/sendmail", require("./routes/email"));
 app.use("/", require("./routes/createLink"));
 app.use("/", require("./routes/viewLink.js"));
 app.use("/", require("./routes/contact.js"));
-
-// Go back to previous page
-app.get("/back", (req, res) => {
-  res.redirect(req.session.previousUrl || "/");
-});
 
 // 🟢 8. 404 HANDLER
 app.all(/.*/, (req, res, next) => {

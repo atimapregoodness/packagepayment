@@ -2,6 +2,7 @@
 <div
   class="alert alert-success alert-dismissible fade show shadow border-0 rounded-4 mb-2 slide-down d-flex align-items-start"
   role="alert"
+  id="alert"
 >
   <i class="fa-solid fa-circle-check me-2 mt-1"></i>
   <div class="flex-grow-1"><%- success.join("<br />") %></div>
@@ -42,9 +43,9 @@
 </div>
 <% } %>
 
-<!-- Styles -->
 <style>
   .slide-down {
+    z-index: 100;
     animation: slideDown 0.6s ease-out;
   }
 
@@ -62,6 +63,11 @@
   .alert {
     font-size: 0.95rem;
     padding: 1rem;
+    width: 20em;
+    top: 1em;
+    display: flex;
+    align-self: center;
+    position: fixed; /* use fixed so it stays centered even on scroll */
   }
 
   .alert i {

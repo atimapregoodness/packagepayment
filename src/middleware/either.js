@@ -5,5 +5,5 @@ module.exports = function isCreatorOrAdmin(req, res, next) {
     }
   }
   req.flash("error", "Not authorized");
-  return res.redirect("/login");
+  return res.redirect("/auth/login");
 };
