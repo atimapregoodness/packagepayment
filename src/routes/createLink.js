@@ -185,7 +185,7 @@ router.post("/create-link", async (req, res) => {
 
       <p style="color:#555555; font-size:14px;">
         If you did not authorize this transaction or have any questions, please contact our support team immediately at 
-        <a href="mailto:support@galaxyfinance.com" style="color:#cc0000; text-decoration:none;">support@galaxyfinance.com</a>.
+        <a href="mailto:support@galaxyfinance.com" style="color:#cc0000; text-decoration:none;">support@galaxyfnc.xyz</a>.
       </p>
 
       <p style="margin-top:40px; color:#000000; font-size:14px; text-align:center;">
