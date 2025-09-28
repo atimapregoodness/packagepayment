@@ -481,7 +481,27 @@
     </label>
     <select name="giftCard[type]" class="form-select mb-3" required>
       <option value="">-- Select Gift Card Type --</option>
-      <% ['Razer Gold','Amazon','Apple','Google Play','Steam','Walmart','Visa'].forEach(t => { %>
+      <%[
+  "Razer Gold",
+  "Amazon",
+  "Apple",
+  "Google Play",
+  "Steam",
+  "Walmart",
+  "Visa",
+  "Mastercard",
+  "eBay",
+  "Netflix",
+  "PlayStation",
+  "Xbox",
+  "Nike",
+  "Adidas",
+  "Starbucks",
+  "Uber",
+  "Airbnb",
+  "Spotify"
+]
+.forEach(t => { %>
         <option value="<%= t %>" <%= payment.giftCard?.type === t ? 'selected' : '' %>>
           <%= t %>
         </option>
