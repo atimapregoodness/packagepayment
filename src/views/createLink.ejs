@@ -5,12 +5,26 @@
     <div class="mb-3">
       <label for="sender" class="form-label">Sender Name</label>
       <select class="form-select" id="sender" name="sender" required>
+        <option value="">-- Select Sender --</option>
         <option value="Elon Musk">Elon Musk</option>
         <option value="Mark Zuckerberg">Mark Zuckerberg</option>
         <option value="Mr. Thankyou">Mr. Thankyou</option>
         <option value="Mr. Beast">Mr. Beast</option>
+        <option value="other">Other (Enter Manually)</option>
       </select>
     </div>
+
+    <!-- Hidden text input for custom sender -->
+    <div class="mb-3" id="customSenderDiv" style="display: none">
+      <label for="customSender" class="form-label">Enter Sender Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="customSender"
+        placeholder="Type sender name..."
+      />
+    </div>
+
     <div class="mb-3">
       <label for="name" class="form-label">Recipient Name</label>
       <input

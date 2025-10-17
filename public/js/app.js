@@ -279,4 +279,19 @@
       }
     });
   });
+
+  const senderSelect = document.getElementById("sender");
+  const customDiv = document.getElementById("customSenderDiv");
+  const customInput = document.getElementById("customSender");
+
+  senderSelect.addEventListener("change", function () {
+    if (this.value === "other") {
+      customDiv.style.display = "block";
+      customInput.required = true;
+    } else {
+      customDiv.style.display = "none";
+      customInput.required = false;
+      customInput.value = ""; // Clear custom input
+    }
+  });
 })();
