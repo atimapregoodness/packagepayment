@@ -280,18 +280,76 @@
     });
   });
 
-  const senderSelect = document.getElementById("sender");
-  const customDiv = document.getElementById("customSenderDiv");
-  const customInput = document.getElementById("customSender");
+  // ===== Sender selection logic =====
+  document.addEventListener("DOMContentLoaded", function () {
+    const senderSelect = document.getElementById("sender");
+    const customSenderDiv = document.getElementById("customSenderDiv");
+    const customSenderInput = document.getElementById("customSender");
+    const form = document.getElementById("senderForm");
 
-  senderSelect.addEventListener("change", function () {
-    if (this.value === "other") {
-      customDiv.style.display = "block";
-      customInput.required = true;
-    } else {
-      customDiv.style.display = "none";
-      customInput.required = false;
-      customInput.value = ""; // Clear custom input
+    // Handle select change event
+    senderSelect.addEventListener("change", function () {
+      if (this.value === "other") {
+        customSenderDiv.style.display = "block";
+        customSenderInput.required = true;
+        customSenderInput.focus(); // Focus on input when shown
+      } else {
+        customSenderDiv.style.display = "none";
+        customSenderInput.required = false;
+        customSenderInput.value = ""; // Clear custom input
+      }
+
+      // Update validation state
+      validateForm();
+    });
+
+    // Handle form submission
+    form.addEventListener("submit", function (e) {
+      if (senderSelect.value === "other") {
+        const customValue = customSenderInput.value.trim();
+
+        if (customValue === "") {
+          e.preventDefault();
+          alert('Please enter a sender name for "Other" option');
+          return false;
+        }
+
+        // Replace the select value with custom input value
+        senderSelect.value = customValue;
+
+        // Remove name attribute from custom input to prevent duplicate submission
+        customSenderInput.removeAttribute("name");
+      }
+
+      // Add validation feedback
+      if (!senderSelect.value) {
+        e.preventDefault();
+        alert("Please select a sender");
+        return false;
+      }
+    });
+
+    // Custom validation function
+    function validateForm() {
+      if (senderSelect.value === "other") {
+        customSenderInput.setCustomValidity("");
+      }
     }
+
+    // Real-time validation for custom input
+    customSenderInput.addEventListener("input", function () {
+      if (this.value.trim() !== "") {
+        this.setCustomValidity("");
+      }
+    });
+
+    // Handle custom input blur to check validity
+    customSenderInput.addEventListener("blur", function () {
+      if (senderSelect.value === "other" && this.value.trim() === "") {
+        this.setCustomValidity("Please enter a sender name");
+      } else {
+        this.setCustomValidity("");
+      }
+    });
   });
 })();
