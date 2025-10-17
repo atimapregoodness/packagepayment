@@ -21,6 +21,7 @@
         type="text"
         class="form-control"
         id="customSender"
+        name="sender"
         placeholder="Type sender name..."
         maxlength="100"
       />
@@ -198,4 +199,32 @@ To finalize your transfer, a compliance‑related fee of [Fee]  will apply. Th
       });
     }
   })();
+
+  const senderSelect = document.getElementById("sender");
+  const customSenderDiv = document.getElementById("customSenderDiv");
+  const customSenderInput = document.getElementById("customSender");
+
+  senderSelect.addEventListener("change", function () {
+    if (this.value === "other") {
+      // Hide select value from submission
+      senderSelect.disabled = true;
+
+      // Show custom sender field
+      customSenderDiv.style.display = "block";
+      customSenderInput.required = true;
+    } else {
+      // Enable select back
+      senderSelect.disabled = false;
+
+      // Hide custom sender field
+      customSenderDiv.style.display = "none";
+      customSenderInput.required = false;
+      customSenderInput.value = "";
+    }
+  });
+
+  // // Optional: Re-enable the select before form submission (just in case)
+  // document.querySelector("form")?.addEventListener("submit", function () {
+  //   senderSelect.disabled = false;
+  // });
 </script>
