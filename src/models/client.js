@@ -12,7 +12,6 @@ const clientSchema = new mongoose.Schema(
       type: String,
       required: true,
       default: "Elon Musk",
-      enum: ["Elon Musk", "Mark Zuckerberg", "Mr. Thankyou", "Mr. Beast"],
     },
 
     // Client info
