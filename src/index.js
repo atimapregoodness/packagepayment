@@ -130,8 +130,14 @@ app.get("/sitemap.xml", async (req, res) => {
   }
 });
 
-/* 🟢 8. ROUTES */
-app.get("/home", (req, res) => res.render("user/home"));
+/* 🟢 8. RcomplianceOUTES */
+app.get("/home", (req, res) => res.render("pages/home"));
+app.get("/contact", (req, res) => res.render("pages/contact"));
+app.get("/about", (req, res) => res.render("pages/about"));
+app.get("/compliance", (req, res) => res.render("pages/compliance"));
+app.get("/services", (req, res) => res.render("pages/services"));
+app.get("/faqs", (req, res) => res.render("pages/faqs"));
+
 app.get("/", (req, res) => res.redirect("/home"));
 app.get("/back", (req, res) => res.redirect(req.session.previousUrl || "/"));
 

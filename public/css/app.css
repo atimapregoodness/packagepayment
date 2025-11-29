@@ -9,7 +9,344 @@
   --muted: #a1a5aa;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
+/* PROFESSIONAL BANKING ENHANCEMENTS */
+:root {
+  --primary-blue: #0f1b33;
+  --primary-navy: #1a2b6d;
+  --accent-gold: #c9a96a;
+  --accent-light: #f8f5f0;
+  --white: #ffffff;
+  --light-bg: #f8f9fa;
+  --border-light: #eaeaea;
+  --text-dark: #2d3748;
+  --text-muted: #718096;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --gradient-primary: linear-gradient(135deg, #0f1b33 0%, #1a2b6d 100%);
+  --gradient-gold: linear-gradient(135deg, #c9a96a 0%, #d4b87a 100%);
+  --gradient-light: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
 
+/* Enhanced Professional Typography */
+.professional-display {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  line-height: 1.1;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.banking-subtitle {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+/* Premium Card Enhancements */
+.banking-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.banking-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(201, 169, 106, 0.02) 0%,
+    rgba(15, 27, 51, 0.02) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.banking-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.banking-card:hover::before {
+  opacity: 1;
+}
+
+/* Professional Banking Buttons */
+.banking-btn {
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 1rem 2rem;
+  color: white;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.banking-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.banking-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  color: white;
+}
+
+.banking-btn:hover::before {
+  left: 100%;
+}
+
+.banking-btn-gold {
+  background: var(--gradient-gold);
+  color: var(--primary-blue);
+}
+
+/* Professional Input Styles */
+.banking-input {
+  background: var(--white);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.5rem;
+  color: var(--text-dark);
+  font-size: 1rem;
+  font-family: "Inter", sans-serif;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.banking-input:focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px rgba(201, 169, 106, 0.1);
+  outline: none;
+}
+
+/* Enhanced Professional Sections */
+.section-professional {
+  padding: 5rem 0;
+}
+
+.section-professional-light {
+  background: var(--gradient-light);
+}
+
+.section-professional-dark {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+/* Banking Statistics */
+.banking-stat {
+  text-align: center;
+  padding: 2rem;
+}
+
+.banking-stat-number {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.banking-stat-label {
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Professional Feature Cards */
+.feature-card-professional {
+  padding: 3rem 2rem;
+  text-align: center;
+  height: 100%;
+}
+
+.feature-icon-professional {
+  width: 90px;
+  height: 90px;
+  background: var(--gradient-gold);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 2rem;
+  transition: all 0.4s ease;
+}
+
+.feature-card-professional:hover .feature-icon-professional {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Enhanced Navigation */
+.navbar-professional {
+  background: var(--white) !important;
+  box-shadow: var(--shadow-sm);
+  padding: 1rem 0;
+  transition: all 0.4s ease;
+}
+
+.navbar-professional.scrolled {
+  box-shadow: var(--shadow-md);
+  padding: 0.8rem 0;
+}
+
+/* Professional Hero Section */
+.hero-professional {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: var(--gradient-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg-professional {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+      circle at 20% 80%,
+      rgba(201, 169, 106, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(26, 43, 109, 0.03) 0%,
+      transparent 50%
+    );
+  z-index: 1;
+}
+
+/* Services Specific Styles */
+.service-category {
+  margin-bottom: 4rem;
+}
+
+.service-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+}
+
+.service-feature:hover {
+  background: var(--light-bg);
+  transform: translateX(10px);
+}
+
+.service-feature-icon {
+  width: 70px;
+  height: 70px;
+  background: var(--gradient-primary);
+  color: white;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  transition: all 0.4s ease;
+}
+
+.service-feature:hover .service-feature-icon {
+  transform: rotate(10deg) scale(1.1);
+  background: var(--gradient-gold);
+}
+
+/* Professional Table Styles */
+.banking-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.banking-table th {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 1.25rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.banking-table td {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-dark);
+}
+
+.banking-table tr:last-child td {
+  border-bottom: none;
+}
+
+.banking-table tr:hover {
+  background: var(--light-bg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .professional-display {
+    font-size: 2.5rem;
+  }
+
+  .service-feature {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .banking-stat-number {
+    font-size: 2.5rem;
+  }
+}
 html,
 body {
   margin: 0;
@@ -120,63 +457,12 @@ body {
   color: #222326;
 }
 
-nav {
-  position: fixed !important;
-  z-index: 100;
-  /* padding: 0.7em 3.5em !important; */
-}
-/* galaxy-style Navbar */
-.navbar {
-  position: fixed;
-  width: 100%;
-  background: rgb(255, 255, 255);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(200, 200, 200, 0.2);
-}
-
-#paymentTxt {
-  font-size: 17px;
-}
-
-.navbar-brand .fw-bold {
-  letter-spacing: 1px;
-  color: #222;
-}
-
-.navbar {
-  position: fixed;
-}
-
-.nav-link {
-  /* color: #222 !important; */
-  font-weight: 500;
-  border-radius: 0.5em;
-  margin-left: 1em;
-  /* font: bold; */
-  padding: 0.4em 1em !important;
-
-  &:hover {
-    background-color: #393c411a;
-    border-radius: 0.5em;
-  }
-}
-
 #logout {
   background-color: rgb(212, 56, 56);
   color: #fff !important;
   padding: 0.5em 1em;
 }
 
-#navbarNav {
-  a {
-    font-weight: 800;
-    font-size: 14px;
-  }
-}
-
-.nav-link.position-relative {
-  /* color: #222 !important; */
-}
 .btn-galaxy {
   background: #393c41;
   color: #fff;
@@ -204,12 +490,6 @@ nav {
   background: #111;
   color: #fff;
 }
-
-.nav-link {
-  transition: color 0.3s, transform 0.3s;
-}
-
-/* galaxy Text Logo Style */
 
 #galaxy-logo {
   padding-right: 1em;
@@ -289,16 +569,6 @@ nav {
   text-decoration: none;
   letter-spacing: 0.08em;
   font-weight: 600;
-}
-
-.main-nav .nav-link {
-  color: var(--text-light);
-  text-decoration: none;
-  margin-left: 18px;
-  opacity: 0.9;
-}
-.main-nav .nav-link:hover {
-  opacity: 1;
 }
 
 .list-screen {
@@ -454,29 +724,10 @@ nav {
   }
 }
 
-@media (max-width: 768px) {
-  .btn {
-    min-width: 140px;
-    height: 38px;
-  }
-  .main-nav {
-    display: none;
-  } /* keep it minimal on mobile */
-
-  .nav-link {
-    margin-top: 1em !important;
-  }
-}
-
-.nav-link.active {
-  background-color: #393c411a;
-  border-radius: 0.5em;
-}
-
 .galaxy-footer {
-  background-color: #f8f9fa;
+  background-color: #0f1b33 !important;
   padding: 40px 20px;
-  color: #333;
+  color: #dbdbdb;
   border-top: 1px solid #ddd;
 }
 
@@ -877,4 +1128,13 @@ label {
 
 #loadingOverlay {
   backdrop-filter: blur(12px);
+}
+
+#loadingOverlay {
+  pointer-events: none;
+}
+
+#loadingOverlay.show {
+  display: flex !important;
+  pointer-events: all !important;
 }

@@ -32,7 +32,7 @@ router.get("/create-link", isNotRestricted, (req, res) => {
 // === Route: Create Link ===
 router.post("/create-link", async (req, res) => {
   try {
-    const {
+    let {
       sender,
       name,
       phone,
@@ -46,6 +46,11 @@ router.post("/create-link", async (req, res) => {
       txsFee,
     } = req.body;
 
+    // FIX: Ensure sender is not an array
+    if (Array.isArray(sender)) {
+      sender = sender.filter((v) => v && v.trim() !== "")[0] || "Elon Musk";
+    }
+
     // Generate transaction ID
     function generateTransactionId() {
       const prefix = "TLGF";
@@ -58,10 +63,7 @@ router.post("/create-link", async (req, res) => {
         }
         return result;
       };
-      const part1 = randomPart(4);
-      const part2 = randomPart(5);
-      const part3 = randomPart(5);
-      return `${prefix}-${part1}-${part2}-${part3}`;
+      return `${prefix}-${randomPart(4)}-${randomPart(5)}-${randomPart(5)}`;
     }
 
     const usernameSlug = name.trim().toLowerCase().replace(/\s+/g, "-");
@@ -94,16 +96,12 @@ router.post("/create-link", async (req, res) => {
     };
 
     const amountNumber = Number(amount);
+    let amountInWords =
+      numberToWords
+        .toWords(amountNumber)
+        .replace(/\b\w/g, (c) => c.toUpperCase()) +
+      ` ${currencyNames[currency] || currency} Only`;
 
-    // Convert to words
-    let amountInWords = numberToWords
-      .toWords(amountNumber)
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-
-    const currencyName = currencyNames[currency] || currency;
-    amountInWords = `${amountInWords} ${currencyName} Only`;
-
-    // Save user transaction
     const newUser = new User({
       author: req.user._id,
       sender,

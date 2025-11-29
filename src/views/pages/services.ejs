@@ -1,0 +1,830 @@
+<% layout("layout/boilerplate") %>
+
+<!-- PROFESSIONAL SERVICES PAGE STYLES -->
+<style>
+  :root {
+    --primary-blue: #0f1b33;
+    --primary-navy: #1a2b6d;
+    --accent-gold: #c9a96a;
+    --accent-light: #f8f5f0;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --border-light: #eaeaea;
+    --text-dark: #2d3748;
+    --text-muted: #718096;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+    --gradient-primary: linear-gradient(135deg, #0f1b33 0%, #1a2b6d 100%);
+    --gradient-gold: linear-gradient(135deg, #c9a96a 0%, #d4b87a 100%);
+    --gradient-light: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  }
+
+  .services-hero {
+    background: var(--gradient-light);
+    padding: 140px 0 80px;
+    margin-top: -2em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .services-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at 20% 80%,
+        rgba(201, 169, 106, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 20%,
+        rgba(26, 43, 109, 0.03) 0%,
+        transparent 50%
+      );
+    z-index: 1;
+  }
+
+  .services-hero .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .professional-display {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .banking-subtitle {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .banking-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .banking-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(201, 169, 106, 0.02) 0%,
+      rgba(15, 27, 51, 0.02) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .banking-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .banking-card:hover::before {
+    opacity: 1;
+  }
+
+  .service-category-card {
+    padding: 3rem 2.5rem;
+    height: 100%;
+    text-align: center;
+  }
+
+  .service-category-icon {
+    width: 90px;
+    height: 90px;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    margin: 0 auto 1.5rem;
+    transition: all 0.4s ease;
+  }
+
+  .service-category-card:hover .service-category-icon {
+    transform: scale(1.1) rotate(5deg);
+    background: var(--gradient-gold);
+  }
+
+  .banking-btn {
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 1rem 2rem;
+    color: white;
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  .banking-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  .banking-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: white;
+  }
+
+  .banking-btn:hover::before {
+    left: 100%;
+  }
+
+  .banking-btn-gold {
+    background: var(--gradient-gold);
+    color: var(--primary-blue);
+  }
+
+  .section-professional {
+    padding: 5rem 0;
+  }
+
+  .section-professional-light {
+    background: var(--gradient-light);
+  }
+
+  .section-professional-dark {
+    background: var(--gradient-primary);
+    color: white;
+  }
+
+  .banking-stat-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .banking-stat-label {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .solution-card {
+    padding: 2.5rem;
+    height: 100%;
+    border-left: 4px solid var(--accent-gold);
+  }
+
+  .solution-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    transition: all 0.3s ease;
+  }
+
+  .solution-feature:hover {
+    background: var(--light-bg);
+    transform: translateX(10px);
+  }
+
+  .solution-feature i {
+    color: var(--success);
+    font-size: 1.2rem;
+    width: 24px;
+    margin-top: 0.2rem;
+  }
+
+  .pricing-tier {
+    padding: 3rem 2rem;
+    text-align: center;
+    height: 100%;
+    position: relative;
+  }
+
+  .pricing-tier.featured {
+    border: 2px solid var(--accent-gold);
+    transform: scale(1.05);
+    z-index: 2;
+  }
+
+  .pricing-tier.featured::before {
+    content: "Most Popular";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gradient-gold);
+    color: var(--primary-blue);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .industry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .industry-card {
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .industry-card:hover {
+    transform: translateY(-8px);
+  }
+
+  .industry-icon {
+    font-size: 2.5rem;
+    color: var(--accent-gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .banking-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .banking-table th {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .banking-table td {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-dark);
+  }
+
+  .banking-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .banking-table tr:hover {
+    background: var(--light-bg);
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .floating-element {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .services-hero {
+      padding: 120px 0 60px;
+    }
+
+    .professional-display {
+      font-size: 2.5rem;
+    }
+
+    .pricing-tier.featured {
+      transform: scale(1);
+    }
+
+    .banking-stat-number {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+
+<!-- SERVICES HERO -->
+<section class="services-hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 fade-in">
+        <h1 class="professional-display mb-4">
+          Institutional Banking Excellence
+        </h1>
+        <p class="banking-subtitle mb-4">
+          Sophisticated financial solutions engineered for corporations,
+          institutions, and ultra-high-net-worth individuals operating in global
+          capital markets.
+        </p>
+        <div class="d-flex flex-wrap gap-4 mt-4">
+          <div class="d-flex align-items-center">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 40px; height: 40px"
+            >
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div>
+              <div class="fw-medium">Regulatory Compliance</div>
+              <small class="text-muted">Global standards</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 40px; height: 40px"
+            >
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div>
+              <div class="fw-medium">Real-time Execution</div>
+              <small class="text-muted">24/7 markets</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 40px; height: 40px"
+            >
+              <i class="fas fa-globe"></i>
+            </div>
+            <div>
+              <div class="fw-medium">Global Coverage</div>
+              <small class="text-muted">150+ countries</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 offset-lg-1 fade-in">
+        <div class="banking-card p-5 text-center floating-element">
+          <div class="banking-stat-number">24/7</div>
+          <p class="banking-stat-label">Global Markets Coverage</p>
+          <p class="text-muted">
+            Continuous trading execution and institutional support across all
+            major financial centers worldwide with dedicated relationship
+            management.
+          </p>
+          <div class="mt-4 pt-3 border-top">
+            <div class="row text-center">
+              <div class="col-6">
+                <div class="fw-bold text-primary">98.7%</div>
+                <div class="text-muted small">Uptime SLA</div>
+              </div>
+              <div class="col-6">
+                <div class="fw-bold text-primary">< 50ms</div>
+                <div class="text-muted small">Execution Speed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CORPORATE BANKING SECTION -->
+<section id="corporate" class="section-professional-light">
+  <div class="container">
+    <div class="row align-items-center mb-5">
+      <div class="col-lg-6 fade-in">
+        <h2 class="professional-display mb-4">
+          Corporate & Institutional Banking
+        </h2>
+        <p class="banking-subtitle mb-4">
+          Tailored financial architecture for corporations, financial
+          institutions, and public sector entities operating across global
+          markets with sophisticated treasury and capital requirements.
+        </p>
+        <div class="d-flex gap-3 flex-wrap mb-4">
+          <span class="badge banking-btn-gold p-2 px-3">Cash Management</span>
+          <span class="badge banking-btn-gold p-2 px-3">Lending Solutions</span>
+          <span class="badge banking-btn-gold p-2 px-3">Capital Markets</span>
+          <span class="badge banking-btn-gold p-2 px-3"
+            >Transaction Banking</span
+          >
+        </div>
+        <a href="/contact" class="banking-btn">
+          <i class="fas fa-calendar me-2"></i>Schedule Corporate Consultation
+        </a>
+      </div>
+      <div class="col-lg-5 offset-lg-1 fade-in">
+        <div class="banking-card p-5">
+          <h5 class="text-primary mb-4 text-center">Institutional Metrics</h5>
+          <div class="row text-center">
+            <div class="col-6 mb-4">
+              <div class="banking-stat-number">$1.2T</div>
+              <div class="banking-stat-label">Corporate Assets</div>
+            </div>
+            <div class="col-6 mb-4">
+              <div class="banking-stat-number">5,000+</div>
+              <div class="banking-stat-label">Corporate Clients</div>
+            </div>
+            <div class="col-6">
+              <div class="banking-stat-number">48h</div>
+              <div class="banking-stat-label">Average Onboarding</div>
+            </div>
+            <div class="col-6">
+              <div class="banking-stat-number">150+</div>
+              <div class="banking-stat-label">Countries Served</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 fade-in">
+        <div class="banking-card solution-card">
+          <div class="d-flex align-items-center mb-4">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 50px; height: 50px"
+            >
+              <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div>
+              <h4 class="text-primary mb-0">Cash Management Solutions</h4>
+              <small class="text-muted"
+                >Optimized liquidity across global operations</small
+              >
+            </div>
+          </div>
+          <div class="solution-feature">
+            <i class="fas fa-check-circle"></i>
+            <div>
+              <h6 class="mb-1">Multi-Currency Accounts</h6>
+              <p class="text-muted small mb-0">
+                Hold and manage 60+ currencies with real-time conversion and
+                competitive FX rates
+              </p>
+            </div>
+          </div>
+          <div class="solution-feature">
+            <i class="fas fa-check-circle"></i>
+            <div>
+              <h6 class="mb-1">Automated Cash Pooling</h6>
+              <p class="text-muted small mb-0">
+                Optimize liquidity across entities and jurisdictions with
+                zero-balancing structures
+              </p>
+            </div>
+          </div>
+          <div class="solution-feature">
+            <i class="fas fa-check-circle"></i>
+            <div>
+              <h6 class="mb-1">Payment Factories</h6>
+              <p class="text-muted small mb-0">
+                Centralized payment processing with straight-through processing
+                and API integration
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 fade-in">
+        <div class="banking-card solution-card">
+          <div class="d-flex align-items-center mb-4">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 50px; height: 50px"
+            >
+              <i class="fas fa-hand-holding-usd"></i>
+            </div>
+            <div>
+              <h4 class="text-primary mb-0">Corporate Lending</h4>
+              <small class="text-muted"
+                >Structured financing for strategic initiatives</small
+              >
+            </div>
+          </div>
+          <div class="solution-feature">
+            <i class="fas fa-check-circle"></i>
+            <div>
+              <h6 class="mb-1">Syndicated Loans</h6>
+              <p class="text-muted small mb-0">
+                Structured financing for M&A, CAPEX, and strategic corporate
+                initiatives
+              </p>
+            </div>
+          </div>
+          <div class="solution-feature">
+            <i class="fas fa-check-circle"></i>
+            <div>
+              <h6 class="mb-1">Working Capital Facilities</h6>
+              <p class="text-muted small mb-0">
+                Revolving credit, overdraft solutions, and supply chain
+                financing
+              </p>
+            </div>
+          </div>
+          <div class="solution-feature">
+            <i class="fas fa-check-circle"></i>
+            <div>
+              <h6 class="mb-1">Structured Finance</h6>
+              <p class="text-muted small mb-0">
+                Asset-backed lending, project financing, and acquisition finance
+                solutions
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRADE FINANCE SECTION -->
+<section id="trade" class="section-professional-light py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto text-center fade-in">
+        <h2 class="professional-display mb-3">Global Trade Finance</h2>
+        <p class="banking-subtitle mb-5">
+          Comprehensive trade solutions supporting international commerce and
+          complex supply chain operations across 150+ countries with risk
+          mitigation and working capital optimization.
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 fade-in">
+        <div class="banking-card p-4">
+          <h5 class="text-primary mb-3">Trade Services</h5>
+          <table class="banking-table">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Application</th>
+                <th>Benefit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Letters of Credit</strong></td>
+                <td>Import/Export</td>
+                <td class="text-success">24h Processing</td>
+              </tr>
+              <tr>
+                <td><strong>Documentary Collections</strong></td>
+                <td>Secure Settlement</td>
+                <td class="text-success">Global Network</td>
+              </tr>
+              <tr>
+                <td><strong>Supply Chain Finance</strong></td>
+                <td>Working Capital</td>
+                <td class="text-success">Digital Platform</td>
+              </tr>
+              <tr>
+                <td><strong>Export Credit Agency</strong></td>
+                <td>Risk Mitigation</td>
+                <td class="text-success">Government Backed</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-6 fade-in">
+        <div class="banking-card p-4">
+          <h5 class="text-primary mb-3">Trade Capabilities</h5>
+          <div class="solution-feature">
+            <i class="fas fa-ship"></i>
+            <div>
+              <h6 class="mb-1">Commodity Trade Finance</h6>
+              <p class="text-muted small mb-0">
+                Structured financing for energy, metals, agriculture, and soft
+                commodities
+              </p>
+            </div>
+          </div>
+          <div class="solution-feature">
+            <i class="fas fa-warehouse"></i>
+            <div>
+              <h6 class="mb-1">Inventory Financing</h6>
+              <p class="text-muted small mb-0">
+                Working capital against goods in transit, storage, or processing
+              </p>
+            </div>
+          </div>
+          <div class="solution-feature">
+            <i class="fas fa-file-contract"></i>
+            <div>
+              <h6 class="mb-1">Structured Trade</h6>
+              <p class="text-muted small mb-0">
+                Complex cross-border transaction structuring and risk mitigation
+              </p>
+            </div>
+          </div>
+          <div class="solution-feature">
+            <i class="fas fa-exchange-alt"></i>
+            <div>
+              <h6 class="mb-1">Forfaiting & Factoring</h6>
+              <p class="text-muted small mb-0">
+                Receivables financing and non-recourse trade debt purchasing
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRY EXPERTISE -->
+<section class="section-professional">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-8 fade-in">
+        <h2 class="professional-display mb-3">Industry Specialization</h2>
+        <p class="banking-subtitle">
+          Deep sector expertise across key industries with specialized financial
+          solutions tailored to unique operational requirements.
+        </p>
+      </div>
+    </div>
+
+    <div class="industry-grid">
+      <div class="banking-card industry-card fade-in">
+        <div class="industry-icon">
+          <i class="fas fa-oil-well"></i>
+        </div>
+        <h5 class="mb-2">Energy & Resources</h5>
+        <p class="text-muted small">
+          Upstream, midstream, and renewable energy financing with commodity
+          expertise
+        </p>
+      </div>
+      <div class="banking-card industry-card fade-in">
+        <div class="industry-icon">
+          <i class="fas fa-truck-medical"></i>
+        </div>
+        <h5 class="mb-2">Healthcare</h5>
+        <p class="text-muted small">
+          Pharma, biotech, medical devices, and healthcare services financing
+        </p>
+      </div>
+      <div class="banking-card industry-card fade-in">
+        <div class="industry-icon">
+          <i class="fas fa-microchip"></i>
+        </div>
+        <h5 class="mb-2">Technology</h5>
+        <p class="text-muted small">
+          Fintech, software, hardware, and digital infrastructure financing
+        </p>
+      </div>
+      <div class="banking-card industry-card fade-in">
+        <div class="industry-icon">
+          <i class="fas fa-ship"></i>
+        </div>
+        <h5 class="mb-2">Logistics</h5>
+        <p class="text-muted small">
+          Shipping, freight, supply chain, and transportation financing
+        </p>
+      </div>
+      <div class="banking-card industry-card fade-in">
+        <div class="industry-icon">
+          <i class="fas fa-gem"></i>
+        </div>
+        <h5 class="mb-2">Luxury Goods</h5>
+        <p class="text-muted small">
+          High-end retail, luxury brands, and premium consumer goods financing
+        </p>
+      </div>
+      <div class="banking-card industry-card fade-in">
+        <div class="industry-icon">
+          <i class="fas fa-seedling"></i>
+        </div>
+        <h5 class="mb-2">Sustainability</h5>
+        <p class="text-muted small">
+          ESG-focused projects, green financing, and sustainable development
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Enhanced animations for services page
+  const revealElements = document.querySelectorAll(".fade-in");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+  revealElements.forEach((el) => observer.observe(el));
+
+  // Smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute("href"));
+      if (target) {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    });
+  });
+
+  // Add floating animation to elements
+  const floatingElements = document.querySelectorAll(".floating-element");
+  floatingElements.forEach((el, index) => {
+    el.style.animationDelay = `${index * 0.2}s`;
+  });
+
+  // Add active state to navigation when scrolling through sections
+  window.addEventListener("scroll", function () {
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+
+    let current = "";
+    sections.forEach((section) => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
+      if (scrollY >= sectionTop - 100) {
+        current = section.getAttribute("id");
+      }
+    });
+
+    navLinks.forEach((link) => {
+      link.classList.remove("active");
+      if (link.getAttribute("href") === `#${current}`) {
+        link.classList.add("active");
+      }
+    });
+  });
+</script>

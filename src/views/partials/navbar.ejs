@@ -1,13 +1,12 @@
-<!-- Make sure you load Bootstrap Icons in your <head> -->
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
   <div class="container-fluid">
     <div class="first">
       <a
-        class="align-items-center <%= currentPage === '/' ? 'active' : '' %>"
+        class="align-items-center <%= currentPage === '/home' ? 'active' : '' %>"
         href="/home"
       >
         <img
-          src="/images/galaxyfinance_logo.png"
+          src="/images/galaxyfinance_logo.svg"
           id="galaxyLogo"
           alt="galaxyfinance_logo"
         />
@@ -15,7 +14,7 @@
     </div>
 
     <button
-      class="navbar-toggler border-0"
+      class="custom-toggler collapsed"
       type="button"
       data-bs-toggle="collapse"
       data-bs-target="#navbarNav"
@@ -23,73 +22,169 @@
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
-      <span class="navbar-toggler-icon"><i class="bi bi-list fs-1"></i></span>
+      <div class="toggler-lines">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <% if (user) { %> <% if (user.isAdmin || user.isCreator) { %>
+        <!-- Admin/Creator Dropdown -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle <%= currentPage.startsWith('/admin') || currentPage.startsWith('/creator') || currentPage === '/create-link' || currentPage === '/sendmail' ? 'active' : '' %>"
+            href="#"
+            id="adminDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fas fa-user-shield me-1"></i><%= user.isCreator ?
+            'Creator' : 'Admin' %>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+            <!-- Admin Specific Items -->
+            <% if (user.isAdmin) { %>
+            <li>
+              <a
+                class="dropdown-item <%= currentPage === '/admin/dashboard' ? 'active' : '' %>"
+                href="/admin/dashboard"
+              >
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+              </a>
+            </li>
+            <% } %>
+
+            <!-- Creator Specific Items -->
+            <% if (user.isCreator) { %>
+            <li>
+              <a
+                class="dropdown-item <%= currentPage === '/creator/dashboard' ? 'active' : '' %>"
+                href="/creator/dashboard"
+              >
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item <%= currentPage === '/creator/create-admin' ? 'active' : '' %>"
+                href="/creator/create-admin"
+              >
+                <i class="fas fa-user-plus me-2"></i>Create Admin
+              </a>
+            </li>
+            <% } %>
+
+            <!-- Shared Admin/Creator Items -->
+            <li>
+              <a
+                class="dropdown-item <%= currentPage === '/create-link' ? 'active' : '' %>"
+                href="/create-link"
+              >
+                <i class="fas fa-link me-2"></i>Create Link
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item <%= currentPage === '/sendmail' ? 'active' : '' %>"
+                href="/sendmail"
+              >
+                <i class="fas fa-envelope me-2"></i>Send Mail
+              </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a
+                class="dropdown-item text-danger"
+                href="/auth/logout"
+                id="logout"
+              >
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <% } %> <% } %>
         <li class="nav-item">
           <a
             class="nav-link <%= currentPage === '/home' ? 'active' : '' %>"
+            aria-current="<%= currentPage === '/home' ? 'page' : '' %>"
             href="/home"
-            >Home</a
           >
-        </li>
-        <% if (user && user.isAdmin) { %>
-        <li class="nav-item">
-          <a
-            class="nav-link <%= currentPage === '/admin/dashboard' ? 'active' : '' %>"
-            href="/admin/dashboard"
-            >Dashboard</a
-          >
-        </li>
-        <% } %> <% if (user && user.isCreator) { %>
-        <li class="nav-item">
-          <a
-            class="nav-link <%= currentPage === '/creator/dashboard' ? 'active' : '' %>"
-            href="/creator/dashboard"
-            >Dashboard</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link <%= currentPage === '/creator/create-admin' ? 'active' : '' %>"
-            href="/creator/create-admin"
-            >Create Admin</a
-          >
-        </li>
-        <% } %> <% if (user && (user.isAdmin || user.isCreator)) { %>
-        <li class="nav-item">
-          <a
-            class="nav-link <%= currentPage === '/create-link' ? 'active' : '' %>"
-            href="/create-link"
-            >Create Link</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link <%= currentPage === '/sendmail' ? 'active' : '' %>"
-            href="/sendmail"
-            >Send mail</a
-          >
-        </li>
-        <li class="nav-item me-3">
-          <a
-            class="nav-link <%= currentPage === '/auth/logout' ? 'active' : '' %>"
-            href="/auth/logout"
-            id="logout"
-          >
-            <i class="fas fa-sign-out-alt"></i> Logout
+            <i class="fas fa-home me-1"></i>Home
           </a>
         </li>
-        <% } %> <% if (!user) { %>
 
-        <li class="nav-item me-3">
+        <!-- Company Dropdown -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle <%= currentPage === '/about' || currentPage === '/services' || currentPage === '/contact' || currentPage === '/compliance' ? 'active' : '' %>"
+            href="#"
+            id="companyDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fas fa-building me-1"></i>Company
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="companyDropdown">
+            <li>
+              <a
+                class="dropdown-item <%= currentPage === '/about' ? 'active' : '' %>"
+                href="/about"
+              >
+                <i class="fas fa-building me-2"></i>About Us
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item <%= currentPage === '/services' ? 'active' : '' %>"
+                href="/services"
+              >
+                <i class="fas fa-cogs me-2"></i>Our Services
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item <%= currentPage === '/contact' ? 'active' : '' %>"
+                href="/contact"
+              >
+                <i class="fas fa-envelope me-2"></i>Contact Us
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item <%= currentPage === '/compliance' ? 'active' : '' %>"
+                href="/compliance"
+              >
+                <i class="fas fa-shield-alt me-2"></i>Compliance
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link <%= currentPage === '/faqs' ? 'active' : '' %>"
+            aria-current="<%= currentPage === '/faqs' ? 'page' : '' %>"
+            href="/faqs"
+          >
+            <i class="fas fa-question-circle me-1"></i>FAQs
+          </a>
+        </li>
+
+        <% if (!user) { %>
+        <li class="nav-item ms-lg-3">
           <a
             class="nav-link <%= currentPage === '/auth/login' ? 'active' : '' %>"
+            aria-current="<%= currentPage === '/auth/login' ? 'page' : '' %>"
             href="/auth/login"
           >
-            <i class="fa fa-user"></i> Login
+            <i class="fas fa-user me-1"></i> Login
           </a>
         </li>
         <% } %>
@@ -97,3 +192,294 @@
     </div>
   </div>
 </nav>
+
+<style>
+  /* =============================
+   GLOBAL NAVBAR STYLING
+============================= */
+
+  .custom-toggler {
+    width: 40px;
+    height: 35px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+    display: none;
+    margin-right: 1em;
+  }
+
+  .toggler-lines {
+    width: 28px;
+    height: 20px;
+    position: relative;
+  }
+
+  .toggler-lines span {
+    position: absolute;
+
+    height: 3px;
+    width: 100%;
+    background-color: #000; /* Change to match theme */
+    border-radius: 2px;
+    transition: 0.3s ease;
+  }
+
+  /* Top line */
+  .toggler-lines span:nth-child(1) {
+    top: 0;
+    border-radius: 2em;
+  }
+
+  /* Middle */
+  .toggler-lines span:nth-child(2) {
+    top: 50%;
+    border-radius: 2em;
+    transform: translateY(-50%);
+  }
+
+  /* Bottom */
+  .toggler-lines span:nth-child(3) {
+    bottom: 0;
+    border-radius: 2em;
+  }
+
+  /* Animation when button is active (Bootstrap adds .collapsed class OFF) */
+  .custom-toggler:not(.collapsed) .toggler-lines span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  .custom-toggler:not(.collapsed) .toggler-lines span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .custom-toggler:not(.collapsed) .toggler-lines span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+
+  .navbar {
+    background: rgba(
+      255,
+      255,
+      255,
+      0.65
+    ); /* slightly transparent for blur effect */
+    backdrop-filter: blur(15px); /* <-- main blur */
+    -webkit-backdrop-filter: blur(15px); /* for Safari/iOS */
+    padding: 1rem 0;
+    /* z-index: 1000; */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* optional, clean separation */
+  }
+
+  .nav-link {
+    color: rgba(0, 0, 0, 0.9) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin: 0 0.25rem;
+  }
+
+  /* Rotate dropdown arrow
+  .dropdown-toggle::after {
+    transition: 0.3s;
+    color: #0000;
+  }
+  .dropdown-toggle.show::after {
+    transform: rotate(180deg);
+    color: #0000;
+  } */
+
+  /* =============================
+   DROPDOWN DESKTOP
+============================= */
+  .dropdown-menu {
+    background: #ffffff;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    padding: 0.75rem 0;
+    min-width: 240px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    padding: 0.3em;
+    color: #0000 !important;
+  }
+
+  .dropdown-item {
+    color: #2d3748;
+    padding: 0.8rem 1.25rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    transition: 0.25s ease;
+  }
+
+  .dropdown-item:hover,
+  .dropdown-item.active {
+    background: linear-gradient(135deg, #0f1b33, #1a2b6d);
+    color: white;
+  }
+
+  /* =============================
+   FIX FOR ALL DROPDOWNS INSIDE MOBILE MENU
+============================= */
+  .navbar-nav .dropdown-menu {
+    position: absolute;
+    float: none !important;
+    width: 100% !important;
+    border-radius: 12px;
+    margin-top: 0.5rem;
+  }
+
+  .navbar-toggler-icon i {
+    color: #0000 !important;
+    font-size: 1.6rem;
+  }
+
+  /* =============================
+   MOBILE VIEW
+============================= */
+  @media (max-width: 991.98px) {
+    .custom-toggler {
+      display: flex;
+    }
+    .navbar {
+      padding: 0.75rem 0;
+    }
+
+    .navbar-collapse {
+      background: rgba(
+        255,
+        255,
+        255,
+        0.65
+      ); /* slightly transparent for blur effect */
+      backdrop-filter: blur(15px); /* <-- main blur */
+      -webkit-backdrop-filter: blur(15px); /* for Safari/iOS */
+
+      z-index: 1000;
+
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      transition: opacity 0.3s ease, max-height 0.5s ease;
+    }
+
+    .nav-item {
+      width: 100%;
+      padding-top: 0.3em;
+    }
+
+    .nav-link {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      padding: 1rem 1rem !important;
+      border-radius: 12px;
+      margin-bottom: 6px;
+    }
+
+    .dropdown-menu {
+      background: rgba(15, 27, 51, 0.85) !important;
+
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(201, 169, 106, 0.3);
+      padding: 0.5rem;
+      opacity: 1;
+      transform: none;
+      position: static !important;
+    }
+
+    .dropdown-item {
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.9) !important;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin: 4px 0;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(201, 169, 106, 0.35);
+      color: white !important;
+      transform: translateX(5px);
+    }
+
+    .navbar-toggler {
+      border: none;
+      color: #0000 !important;
+    }
+
+    .navbar-toggler-icon i {
+      color: #000000 !important;
+      font-size: 1.6rem;
+    }
+
+    form.d-flex {
+      width: 100%;
+      margin-top: 1rem;
+    }
+  }
+
+  /* EXTRA SMALL */
+  @media (max-width: 576px) {
+    .navbar-toggler {
+      border: none;
+      color: #0000 !important;
+    }
+    .navbar-toggler-icon i {
+      color: #000000 !important;
+      font-size: 1.6rem;
+    }
+    .dropdown-menu {
+      position: static !important;
+    }
+
+    .nav-link,
+    .dropdown-item {
+      font-size: 0.95rem;
+      padding: 0.85rem 1rem !important;
+    }
+
+    #galaxyLogo {
+      height: 34px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Dropdown animations
+    document.querySelectorAll(".dropdown").forEach((drop) => {
+      drop.addEventListener("show.bs.dropdown", () => {
+        const menu = drop.querySelector(".dropdown-menu");
+        menu.style.opacity = "0";
+        menu.style.transform = "translateY(-10px)";
+      });
+
+      drop.addEventListener("shown.bs.dropdown", () => {
+        const menu = drop.querySelector(".dropdown-menu");
+        menu.style.opacity = "1";
+        menu.style.transform = "translateY(0)";
+      });
+    });
+
+    // Collapse animation for mobile
+    const collapse = document.querySelector("#navbarNav");
+    if (collapse) {
+      collapse.addEventListener("show.bs.collapse", () => {
+        collapse.style.opacity = "0";
+        collapse.style.maxHeight = "0";
+      });
+      collapse.addEventListener("shown.bs.collapse", () => {
+        collapse.style.opacity = "1";
+        collapse.style.maxHeight = "100vh"; // Adjust as needed
+      });
+    }
+  });
+</script>

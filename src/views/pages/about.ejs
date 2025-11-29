@@ -1,0 +1,853 @@
+<% layout("layout/boilerplate") %>
+
+<!-- PROFESSIONAL ABOUT PAGE STYLES -->
+<style>
+  :root {
+    --primary-blue: #0f1b33;
+    --primary-navy: #1a2b6d;
+    --accent-gold: #c9a96a;
+    --accent-light: #f8f5f0;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --border-light: #eaeaea;
+    --text-dark: #2d3748;
+    --text-muted: #718096;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+    --gradient-primary: linear-gradient(135deg, #0f1b33 0%, #1a2b6d 100%);
+    --gradient-gold: linear-gradient(135deg, #c9a96a 0%, #d4b87a 100%);
+    --gradient-light: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  }
+
+  .about-hero {
+    background: var(--gradient-light);
+    padding: 140px 0 80px;
+    margin-top: -2em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at 20% 80%,
+        rgba(201, 169, 106, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 20%,
+        rgba(26, 43, 109, 0.03) 0%,
+        transparent 50%
+      );
+    z-index: 1;
+  }
+
+  .about-hero .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .professional-display {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .banking-subtitle {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .banking-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .banking-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(201, 169, 106, 0.02) 0%,
+      rgba(15, 27, 51, 0.02) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .banking-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .banking-card:hover::before {
+    opacity: 1;
+  }
+
+  .banking-stat-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .banking-stat-label {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .section-professional {
+    padding: 5rem 0;
+  }
+
+  .section-professional-light {
+    background: var(--gradient-light);
+  }
+
+  .section-professional-dark {
+    background: var(--gradient-primary);
+    color: white;
+  }
+
+  /* Modern Timeline */
+  .modern-timeline {
+    position: relative;
+    padding: 3rem 0;
+  }
+
+  .modern-timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--gradient-gold);
+    transform: translateX(-50%);
+    border-radius: 3px;
+  }
+
+  .timeline-item {
+    margin-bottom: 4rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .timeline-item:nth-child(odd) {
+    justify-content: flex-start;
+  }
+
+  .timeline-item:nth-child(even) {
+    justify-content: flex-end;
+  }
+
+  .timeline-content {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    width: 45%;
+    border-left: 4px solid var(--accent-gold);
+    transition: all 0.3s ease;
+  }
+
+  .timeline-content:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .timeline-year {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--gradient-primary);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    z-index: 2;
+    box-shadow: var(--shadow-md);
+  }
+
+  .timeline-item:nth-child(odd) .timeline-year {
+    right: -80px;
+  }
+
+  .timeline-item:nth-child(even) .timeline-year {
+    left: -80px;
+  }
+
+  /* Values Section */
+  .value-card {
+    padding: 3rem 2rem;
+    text-align: center;
+    height: 100%;
+  }
+
+  .value-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 1.5rem;
+    transition: all 0.4s ease;
+  }
+
+  .value-card:hover .value-icon {
+    transform: scale(1.1) rotate(5deg);
+    background: var(--gradient-gold);
+  }
+
+  /* Leadership Section */
+  .leadership-card {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    height: 100%;
+  }
+
+  .leader-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    background: var(--gradient-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--accent-gold);
+    border: 3px solid var(--border-light);
+    transition: all 0.3s ease;
+  }
+
+  .leadership-card:hover .leader-image {
+    transform: scale(1.05);
+    border-color: var(--accent-gold);
+  }
+
+  .leader-social {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .social-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--light-bg);
+    color: var(--text-muted);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .social-icon:hover {
+    background: var(--gradient-primary);
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* Animations */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .floating-element {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 992px) {
+    .modern-timeline::before {
+      left: 30px;
+    }
+
+    .timeline-content {
+      width: calc(100% - 100px);
+      margin-left: 100px !important;
+    }
+
+    .timeline-year {
+      left: -80px !important;
+      right: auto !important;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content {
+      margin-left: 100px !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .about-hero {
+      padding: 120px 0 60px;
+    }
+
+    .professional-display {
+      font-size: 2.5rem;
+    }
+
+    .banking-stat-number {
+      font-size: 2.5rem;
+    }
+
+    .timeline-content {
+      width: calc(100% - 80px);
+      margin-left: 80px !important;
+    }
+
+    .timeline-year {
+      left: -60px !important;
+      padding: 0.5rem 1rem;
+    }
+  }
+</style>
+
+<!-- ABOUT HERO -->
+<section class="about-hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 fade-in">
+        <h1 class="professional-display mb-4">
+          Our Legacy of Financial Excellence
+        </h1>
+        <p class="banking-subtitle mb-4">
+          For over eight decades, Galaxy Financial has pioneered global banking
+          innovation, serving the world's most sophisticated institutional
+          clients with unwavering commitment, expertise, and forward-thinking
+          solutions.
+        </p>
+        <div class="d-flex flex-wrap gap-4 mt-4">
+          <div class="d-flex align-items-center">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 40px; height: 40px"
+            >
+              <i class="fas fa-award"></i>
+            </div>
+            <div>
+              <div class="fw-medium">85+ Years of Excellence</div>
+              <small class="text-muted">Established 1938</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 40px; height: 40px"
+            >
+              <i class="fas fa-globe"></i>
+            </div>
+            <div>
+              <div class="fw-medium">48 Global Offices</div>
+              <small class="text-muted">Worldwide presence</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 40px; height: 40px"
+            >
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div>
+              <div class="fw-medium">AAA Credit Rating</div>
+              <small class="text-muted">Highest rating</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 offset-lg-1 fade-in">
+        <div class="banking-card p-5 text-center floating-element">
+          <div class="banking-stat-number">1938</div>
+          <p class="banking-stat-label">Founded in London</p>
+          <p class="text-muted">
+            Established during global financial restructuring with a vision to
+            redefine international banking standards and client service
+            excellence.
+          </p>
+          <div class="mt-4 pt-3 border-top">
+            <div class="row text-center">
+              <div class="col-6">
+                <div class="fw-bold text-primary">1st</div>
+                <div class="text-muted small">Generation</div>
+              </div>
+              <div class="col-6">
+                <div class="fw-bold text-primary">85+</div>
+                <div class="text-muted small">Years Strong</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUR STORY -->
+<section class="section-professional">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 fade-in">
+        <h2 class="professional-display mb-4">Pioneering Global Finance</h2>
+        <p class="banking-subtitle mb-4">
+          From our strategic foundation in post-war London to our current
+          position as a global financial powerhouse, Galaxy Financial has
+          consistently demonstrated resilience, innovation, and an unwavering
+          commitment to client success across economic cycles.
+        </p>
+        <p class="banking-subtitle mb-4">
+          Our journey is characterized by strategic foresight, technological
+          leadership, and deep market understanding that has enabled us to
+          navigate complex global landscapes while delivering exceptional value
+          to our institutional partners.
+        </p>
+        <div class="d-flex gap-3 mt-4">
+          <div class="text-center">
+            <div class="fw-bold text-primary fs-4">150+</div>
+            <div class="text-muted small">Countries Served</div>
+          </div>
+          <div class="text-center">
+            <div class="fw-bold text-primary fs-4">5,000+</div>
+            <div class="text-muted small">Expert Employees</div>
+          </div>
+          <div class="text-center">
+            <div class="fw-bold text-primary fs-4">48</div>
+            <div class="text-muted small">Global Offices</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 offset-lg-1 fade-in">
+        <div class="banking-card p-5">
+          <h5 class="text-primary mb-4 text-center">Institutional Scale</h5>
+          <div class="row text-center">
+            <div class="col-6 mb-4">
+              <div class="banking-stat-number">$2.8T</div>
+              <div class="banking-stat-label">Assets Under Care</div>
+            </div>
+            <div class="col-6 mb-4">
+              <div class="banking-stat-number">150+</div>
+              <div class="banking-stat-label">Markets Served</div>
+            </div>
+            <div class="col-6">
+              <div class="banking-stat-number">5,000+</div>
+              <div class="banking-stat-label">Employees</div>
+            </div>
+            <div class="col-6">
+              <div class="banking-stat-number">48</div>
+              <div class="banking-stat-label">Global Offices</div>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-top text-center">
+            <small class="text-muted">
+              <i class="fas fa-sync-alt me-1"></i>
+              Figures updated quarterly
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section-professional-light">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-8 fade-in">
+        <h2 class="professional-display mb-3">Our Strategic Journey</h2>
+        <p class="banking-subtitle">
+          Eight decades of innovation, expansion, and commitment to redefining
+          global financial services excellence.
+        </p>
+      </div>
+    </div>
+
+    <div class="modern-timeline">
+      <div class="timeline-item fade-in">
+        <div class="timeline-year">1938</div>
+        <div class="timeline-content">
+          <div class="d-flex align-items-center mb-3">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 50px; height: 50px"
+            >
+              <i class="fas fa-landmark"></i>
+            </div>
+            <div>
+              <h5 class="text-primary mb-0">Foundation Era</h5>
+              <small class="text-muted">Global financial restructuring</small>
+            </div>
+          </div>
+          <p class="text-muted mb-0">
+            Established in London with focus on international trade finance and
+            corporate banking during post-war economic transformation.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-year">1960s</div>
+        <div class="timeline-content">
+          <div class="d-flex align-items-center mb-3">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 50px; height: 50px"
+            >
+              <i class="fas fa-rocket"></i>
+            </div>
+            <div>
+              <h5 class="text-primary mb-0">Global Expansion</h5>
+              <small class="text-muted">Strategic international growth</small>
+            </div>
+          </div>
+          <p class="text-muted mb-0">
+            Expanded to New York and Hong Kong financial centers. Pioneered
+            electronic fund transfers and international settlement systems.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-year">1980s</div>
+        <div class="timeline-content">
+          <div class="d-flex align-items-center mb-3">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 50px; height: 50px"
+            >
+              <i class="fas fa-microchip"></i>
+            </div>
+            <div>
+              <h5 class="text-primary mb-0">Technology Innovation</h5>
+              <small class="text-muted">Digital transformation begins</small>
+            </div>
+          </div>
+          <p class="text-muted mb-0">
+            Launched first institutional digital trading platform. Established
+            private wealth management division for ultra-high-net-worth clients.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-year">2000s</div>
+        <div class="timeline-content">
+          <div class="d-flex align-items-center mb-3">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 50px; height: 50px"
+            >
+              <i class="fas fa-globe-americas"></i>
+            </div>
+            <div>
+              <h5 class="text-primary mb-0">Digital Transformation</h5>
+              <small class="text-muted">Global technology leadership</small>
+            </div>
+          </div>
+          <p class="text-muted mb-0">
+            Implemented AI-driven risk management systems. Expanded to emerging
+            markets across Asia and Middle East with localized expertise.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-year">2020s</div>
+        <div class="timeline-content">
+          <div class="d-flex align-items-center mb-3">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 50px; height: 50px"
+            >
+              <i class="fas fa-chess-knight"></i>
+            </div>
+            <div>
+              <h5 class="text-primary mb-0">Future Ready</h5>
+              <small class="text-muted">Next-generation banking</small>
+            </div>
+          </div>
+          <p class="text-muted mb-0">
+            Blockchain integration for institutional settlements. ESG-focused
+            investing platforms. AI-powered treasury and liquidity solutions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUR VALUES -->
+<section class="section-professional">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-8 fade-in">
+        <h2 class="professional-display mb-3">Our Guiding Principles</h2>
+        <p class="banking-subtitle">
+          The foundational values that shape our culture, drive our decisions,
+          and define our commitment to clients and stakeholders.
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4 fade-in">
+        <div class="banking-card value-card">
+          <div class="value-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h4 class="mb-3">Integrity & Trust</h4>
+          <p class="text-muted">
+            Uncompromising ethical standards, transparency, and accountability
+            in all our dealings, building trust that spans generations and
+            market cycles.
+          </p>
+          <div class="mt-4">
+            <small class="text-primary fw-medium">
+              <i class="fas fa-check-circle me-1"></i>
+              Regulatory Excellence
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 fade-in">
+        <div class="banking-card value-card">
+          <div class="value-icon">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <h4 class="mb-3">Innovation & Excellence</h4>
+          <p class="text-muted">
+            Continuously pushing boundaries in financial technology, service
+            delivery, and client solutions to achieve superior outcomes and
+            sustainable growth.
+          </p>
+          <div class="mt-4">
+            <small class="text-primary fw-medium">
+              <i class="fas fa-check-circle me-1"></i>
+              Technology Leadership
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 fade-in">
+        <div class="banking-card value-card">
+          <div class="value-icon">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <h4 class="mb-3">Partnership & Collaboration</h4>
+          <p class="text-muted">
+            Deep, long-term relationships built on mutual understanding, shared
+            objectives, and tailored solutions that drive client success and
+            sustainable value.
+          </p>
+          <div class="mt-4">
+            <small class="text-primary fw-medium">
+              <i class="fas fa-check-circle me-1"></i>
+              Client-Centric Approach
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section class="section-professional-light">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-8 fade-in">
+        <h2 class="professional-display mb-3">Executive Leadership</h2>
+        <p class="banking-subtitle">
+          Experienced leaders driving our global strategy and commitment to
+          institutional banking excellence across markets and services.
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-3 fade-in">
+        <div class="banking-card leadership-card">
+          <div class="leader-image">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h5 class="mb-2">James Rutherford</h5>
+          <p class="text-primary mb-2">Chief Executive Officer</p>
+          <p class="text-muted small mb-3">
+            25+ years in global banking leadership. Former Head of Investment
+            Banking at Global Partners. MBA, Wharton School.
+          </p>
+          <div class="leader-social">
+            <a href="#" class="social-icon">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i class="fas fa-envelope"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 fade-in">
+        <div class="banking-card leadership-card">
+          <div class="leader-image">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h5 class="mb-2">Sarah Chen</h5>
+          <p class="text-primary mb-2">Chief Financial Officer</p>
+          <p class="text-muted small mb-3">
+            Expert in corporate finance, strategic planning, and capital
+            markets. MIT Sloan graduate with 20+ years financial leadership.
+          </p>
+          <div class="leader-social">
+            <a href="#" class="social-icon">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i class="fas fa-envelope"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 fade-in">
+        <div class="banking-card leadership-card">
+          <div class="leader-image">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <h5 class="mb-2">Michael Rodriguez</h5>
+          <p class="text-primary mb-2">Chief Technology Officer</p>
+          <p class="text-muted small mb-3">
+            Fintech innovator with extensive background in AI, blockchain, and
+            digital transformation. Stanford Computer Science PhD.
+          </p>
+          <div class="leader-social">
+            <a href="#" class="social-icon">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i class="fas fa-envelope"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 fade-in">
+        <div class="banking-card leadership-card">
+          <div class="leader-image">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h5 class="mb-2">Elena Petrova</h5>
+          <p class="text-primary mb-2">Head of Global Markets</p>
+          <p class="text-muted small mb-3">
+            20+ years in international banking and emerging markets. Former
+            Managing Director at European Investment Bank.
+          </p>
+          <div class="leader-social">
+            <a href="#" class="social-icon">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i class="fas fa-envelope"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Initialize animations
+  const revealElements = document.querySelectorAll(".fade-in");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+  revealElements.forEach((el) => observer.observe(el));
+
+  // Add floating animation to elements
+  const floatingElements = document.querySelectorAll(".floating-element");
+  floatingElements.forEach((el, index) => {
+    el.style.animationDelay = `${index * 0.2}s`;
+  });
+
+  // Add hover effects for timeline items
+  document.querySelectorAll(".timeline-content").forEach((item) => {
+    item.addEventListener("mouseenter", function () {
+      this.style.transform = "translateY(-8px)";
+      this.style.boxShadow = "var(--shadow-lg)";
+    });
+
+    item.addEventListener("mouseleave", function () {
+      this.style.transform = "translateY(0)";
+      this.style.boxShadow = "var(--shadow-md)";
+    });
+  });
+</script>

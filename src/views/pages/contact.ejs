@@ -1,0 +1,703 @@
+<% layout("layout/boilerplate") %>
+
+<!-- PROFESSIONAL CONTACT PAGE STYLES -->
+<style>
+  :root {
+    --primary-blue: #0f1b33;
+    --primary-navy: #1a2b6d;
+    --accent-gold: #c9a96a;
+    --accent-light: #f8f5f0;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --border-light: #eaeaea;
+    --text-dark: #2d3748;
+    --text-muted: #718096;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+    --gradient-primary: linear-gradient(135deg, #0f1b33 0%, #1a2b6d 100%);
+    --gradient-gold: linear-gradient(135deg, #c9a96a 0%, #d4b87a 100%);
+    --gradient-light: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  }
+
+  .contact-hero {
+    background: var(--gradient-light);
+    padding: 140px 0 80px;
+    margin-top: -2em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at 20% 80%,
+        rgba(201, 169, 106, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 20%,
+        rgba(26, 43, 109, 0.03) 0%,
+        transparent 50%
+      );
+    z-index: 1;
+  }
+
+  .contact-hero .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .professional-display {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .banking-subtitle {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .banking-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .banking-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(201, 169, 106, 0.02) 0%,
+      rgba(15, 27, 51, 0.02) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .banking-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .banking-card:hover::before {
+    opacity: 1;
+  }
+
+  .contact-info-card {
+    padding: 2.5rem;
+    height: 100%;
+    text-align: center;
+  }
+
+  .contact-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-gold);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 1.5rem;
+    transition: all 0.4s ease;
+  }
+
+  .contact-info-card:hover .contact-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .contact-form {
+    padding: 3rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.8rem;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    display: block;
+  }
+
+  .banking-input {
+    background: var(--white);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.5rem;
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-family: "Inter", sans-serif;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  .banking-input:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 106, 0.1);
+    outline: none;
+  }
+
+  .banking-btn {
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 1.2rem 2.5rem;
+    color: white;
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .banking-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  .banking-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: white;
+  }
+
+  .banking-btn:hover::before {
+    left: 100%;
+  }
+
+  .office-card {
+    padding: 2.5rem;
+    height: 100%;
+  }
+
+  .office-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .office-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+  }
+
+  .map-container {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    height: 300px;
+    background: var(--light-bg);
+    position: relative;
+  }
+
+  .map-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .global-presence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .region-card {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .region-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .region-icon {
+    font-size: 2.5rem;
+    color: var(--accent-gold);
+    margin-bottom: 1rem;
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .floating-element {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .contact-hero {
+      padding: 120px 0 60px;
+    }
+
+    .office-header {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .office-icon {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+  }
+</style>
+
+<!-- CONTACT HERO -->
+<section class="contact-hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 fade-in">
+        <h1 class="professional-display mb-4">Connect With Our Global Team</h1>
+        <p class="banking-subtitle mb-4">
+          Experience personalized banking relationships with dedicated
+          specialists ready to address your institutional financial requirements
+          across global markets.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-clock text-accent me-2"></i>
+            <span class="fw-medium">24/7 Client Support</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="fas fa-globe text-accent me-2"></i>
+            <span class="fw-medium">Global Coverage</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="fas fa-shield-alt text-accent me-2"></i>
+            <span class="fw-medium">Secure Communication</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 offset-lg-1 fade-in">
+        <div class="banking-card contact-info-card floating-element">
+          <div class="contact-icon">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h4 class="mb-3">Priority Client Relations</h4>
+          <p class="text-muted mb-3">
+            Dedicated relationship management for institutional clients and
+            private wealth services.
+          </p>
+          <div class="fw-bold text-primary fs-5">+1 (555) 123-GFI1</div>
+          <div class="text-muted small mt-2">
+            Available 24/7 for urgent matters
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT METHODS -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4 fade-in">
+        <div class="banking-card contact-info-card">
+          <div class="contact-icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <h5 class="mb-3">Corporate Banking</h5>
+          <p class="text-muted mb-3">
+            Institutional clients, corporate treasury services, and transaction
+            banking solutions.
+          </p>
+          <div class="text-primary fw-medium">corporate@galaxyfinance.com</div>
+          <div class="text-muted small mt-2">
+            Response within 2 business hours
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 fade-in">
+        <div class="banking-card contact-info-card">
+          <div class="contact-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h5 class="mb-3">Private Wealth</h5>
+          <p class="text-muted mb-3">
+            Ultra-high net worth individuals, family offices, and bespoke wealth
+            management.
+          </p>
+          <div class="text-primary fw-medium">wealth@galaxyfinance.com</div>
+          <div class="text-muted small mt-2">
+            Direct relationship manager access
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 fade-in">
+        <div class="banking-card contact-info-card">
+          <div class="contact-icon">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <h5 class="mb-3">Strategic Partnerships</h5>
+          <p class="text-muted mb-3">
+            Institutional alliances, correspondent banking, and strategic
+            collaborations.
+          </p>
+          <div class="text-primary fw-medium">
+            partnerships@galaxyfinance.com
+          </div>
+          <div class="text-muted small mt-2">Executive-level engagement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT FORM & INFO -->
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 fade-in">
+        <div class="banking-card contact-form">
+          <div class="d-flex align-items-center mb-4">
+            <div
+              class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+              style="width: 50px; height: 50px"
+            >
+              <i class="fas fa-paper-plane"></i>
+            </div>
+            <div>
+              <h3 class="professional-display mb-1">Send a Secure Message</h3>
+              <p class="text-muted mb-0">
+                All inquiries are handled with strict confidentiality
+              </p>
+            </div>
+          </div>
+
+          <form id="professionalContactForm">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Full Name *</label>
+                  <input
+                    type="text"
+                    class="banking-input"
+                    placeholder="Enter your full legal name"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Email Address *</label>
+                  <input
+                    type="email"
+                    class="banking-input"
+                    placeholder="your.email@company.com"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Company / Organization</label>
+                  <input
+                    type="text"
+                    class="banking-input"
+                    placeholder="Your company name"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Job Title</label>
+                  <input
+                    type="text"
+                    class="banking-input"
+                    placeholder="Your position"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Inquiry Type *</label>
+              <select class="banking-input" required>
+                <option value="">Select inquiry category</option>
+                <option value="corporate">Corporate Banking Services</option>
+                <option value="wealth">Private Wealth Management</option>
+                <option value="trade">Trade Finance & Operations</option>
+                <option value="treasury">Treasury Services</option>
+                <option value="partnership">Strategic Partnership</option>
+                <option value="other">Other Financial Services</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Detailed Message *</label>
+              <textarea
+                class="banking-input"
+                rows="6"
+                placeholder="Please provide specific details about your inquiry, including any relevant context or requirements..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="privacyConsent"
+                  required
+                />
+                <label
+                  class="form-check-label text-muted small"
+                  for="privacyConsent"
+                >
+                  I consent to Galaxy Financial collecting and processing my
+                  personal data in accordance with the
+                  <a href="#" class="text-primary">Privacy Policy</a> and
+                  regulatory requirements.
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="banking-btn w-100 py-3">
+              <i class="fas fa-paper-plane me-2"></i>Send Secure Message
+            </button>
+
+            <div class="text-center mt-3">
+              <small class="text-muted">
+                <i class="fas fa-lock me-1"></i>All communications are encrypted
+                and secure
+              </small>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-lg-4 fade-in">
+        <div class="banking-card office-card mb-4">
+          <div class="office-header">
+            <div class="office-icon">
+              <i class="fas fa-landmark"></i>
+            </div>
+            <div>
+              <h4 class="mb-0">Global Headquarters</h4>
+              <small class="text-muted">Primary executive offices</small>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="text-primary mb-2">London, United Kingdom</h6>
+            <p class="text-muted mb-2">
+              One Financial Plaza<br />
+              Canary Wharf<br />
+              London E14 5AB, UK
+            </p>
+            <p class="text-muted mb-0">
+              <i class="fas fa-phone me-1"></i>+44 20 7946 0958<br />
+              <i class="fas fa-clock me-1"></i>Mon-Fri: 8:00 AM - 8:00 PM GMT
+            </p>
+          </div>
+
+          <div class="map-container">
+            <div class="map-placeholder">
+              <div class="text-center">
+                <i class="fas fa-map-marker-alt fa-2x mb-2"></i>
+                <div>Interactive Map</div>
+                <small class="text-muted">London Headquarters</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOBAL OFFICES -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center text-center mb-5">
+      <div class="col-lg-8 fade-in">
+        <h2 class="professional-display mb-3">Our Global Presence</h2>
+        <p class="banking-subtitle">
+          Strategically located offices across major financial centers to serve
+          institutional clients worldwide
+        </p>
+      </div>
+    </div>
+
+    <div class="global-presence-grid">
+      <div class="banking-card region-card fade-in">
+        <div class="region-icon">
+          <i class="fas fa-landmark"></i>
+        </div>
+        <h5>Europe</h5>
+        <p class="text-muted mb-2">8 Financial Centers</p>
+        <div class="text-primary small">
+          London • Zurich • Frankfurt • Paris<br />
+          Milan • Madrid • Amsterdam • Dublin
+        </div>
+      </div>
+
+      <div class="banking-card region-card fade-in">
+        <div class="region-icon">
+          <i class="fas fa-flag-usa"></i>
+        </div>
+        <h5>Americas</h5>
+        <p class="text-muted mb-2">12 Financial Centers</p>
+        <div class="text-primary small">
+          New York • Toronto • Chicago • San Francisco<br />
+          São Paulo • Mexico City • Bogotá • Santiago
+        </div>
+      </div>
+
+      <div class="banking-card region-card fade-in">
+        <div class="region-icon">
+          <i class="fas fa-globe-asia"></i>
+        </div>
+        <h5>Asia Pacific</h5>
+        <p class="text-muted mb-2">15 Financial Centers</p>
+        <div class="text-primary small">
+          Singapore • Hong Kong • Tokyo • Sydney<br />
+          Shanghai • Seoul • Mumbai • Bangkok
+        </div>
+      </div>
+
+      <div class="banking-card region-card fade-in">
+        <div class="region-icon">
+          <i class="fas fa-mosque"></i>
+        </div>
+        <h5>Middle East & Africa</h5>
+        <p class="text-muted mb-2">5 Financial Centers</p>
+        <div class="text-primary small">
+          Dubai • Abu Dhabi • Riyadh • Johannesburg<br />
+          Lagos
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Professional form handling
+  document
+    .getElementById("professionalContactForm")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Show loading state
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML =
+        '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+      submitBtn.disabled = true;
+
+      // Simulate form submission
+      setTimeout(() => {
+        // Show success message
+        alert(
+          "Thank you for your inquiry. A dedicated relationship manager will contact you within 2 business hours."
+        );
+
+        // Reset form
+        this.reset();
+
+        // Restore button
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }, 1500);
+    });
+
+  // Initialize animations
+  const revealElements = document.querySelectorAll(".fade-in");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+  revealElements.forEach((el) => observer.observe(el));
+
+  // Add floating animation to elements
+  const floatingElements = document.querySelectorAll(".floating-element");
+  floatingElements.forEach((el, index) => {
+    el.style.animationDelay = `${index * 0.2}s`;
+  });
+</script>

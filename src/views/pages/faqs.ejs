@@ -1,0 +1,745 @@
+<% layout("layout/boilerplate") %>
+
+<!-- FAQS PAGE STYLES -->
+<style>
+  :root {
+    --primary-blue: #0f1b33;
+    --primary-navy: #1a2b6d;
+    --accent-gold: #c9a96a;
+    --accent-light: #f8f5f0;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --border-light: #eaeaea;
+    --text-dark: #2d3748;
+    --text-muted: #718096;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+    --gradient-primary: linear-gradient(135deg, #0f1b33 0%, #1a2b6d 100%);
+    --gradient-gold: linear-gradient(135deg, #c9a96a 0%, #d4b87a 100%);
+    --gradient-light: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  }
+
+  .faq-hero {
+    background: var(--gradient-light);
+    padding: 140px 0 80px;
+    margin-top: -2em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .faq-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at 20% 80%,
+        rgba(201, 169, 106, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 20%,
+        rgba(26, 43, 109, 0.03) 0%,
+        transparent 50%
+      );
+    z-index: 1;
+  }
+
+  .faq-hero .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .professional-display {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .banking-subtitle {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .banking-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .banking-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(201, 169, 106, 0.02) 0%,
+      rgba(15, 27, 51, 0.02) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .banking-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .banking-card:hover::before {
+    opacity: 1;
+  }
+
+  .faq-category-card {
+    padding: 2.5rem;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .faq-category-card.active {
+    border: 2px solid var(--accent-gold);
+  }
+
+  .faq-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-gold);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 1.5rem;
+    transition: all 0.4s ease;
+  }
+
+  .faq-category-card:hover .faq-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .faq-item {
+    margin-bottom: 1rem;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .faq-question {
+    background: white;
+    padding: 1.5rem;
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .faq-question:hover {
+    background: var(--light-bg);
+  }
+
+  .faq-question h5 {
+    margin: 0;
+    flex: 1;
+    color: var(--primary-blue);
+  }
+
+  .faq-toggle {
+    color: var(--accent-gold);
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+  }
+
+  .faq-answer {
+    background: var(--light-bg);
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .faq-answer.show {
+    padding: 1.5rem;
+    max-height: 500px;
+  }
+
+  .faq-item.active .faq-toggle {
+    transform: rotate(180deg);
+  }
+
+  .search-box {
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .banking-input {
+    background: var(--white);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.5rem;
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-family: "Inter", sans-serif;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  .banking-input:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 106, 0.1);
+    outline: none;
+  }
+
+  .search-input {
+    padding-right: 3rem;
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+  }
+
+  .banking-btn {
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 1.2rem 2.5rem;
+    color: white;
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .banking-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  .banking-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    color: white;
+  }
+
+  .banking-btn:hover::before {
+    left: 100%;
+  }
+
+  .btn-gold {
+    background: var(--gradient-gold);
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .floating-element {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .highlight {
+    background-color: rgba(201, 169, 106, 0.1);
+    border-left: 4px solid var(--accent-gold);
+  }
+
+  @media (max-width: 768px) {
+    .faq-hero {
+      padding: 120px 0 60px;
+    }
+  }
+</style>
+
+<!-- FAQ HERO -->
+<section class="faq-hero">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-8 fade-in">
+        <h1 class="professional-display mb-3">Frequently Asked Questions</h1>
+        <p class="banking-subtitle mb-4">
+          Find answers to common questions about our services, security
+          measures, and global operations.
+        </p>
+        <div class="search-box">
+          <input
+            type="text"
+            class="banking-input search-input"
+            placeholder="Search questions..."
+            id="faqSearch"
+          />
+          <i class="fas fa-search search-icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ CATEGORIES -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center professional-display mb-5 fade-in">
+      Browse by Category
+    </h2>
+    <div class="row g-4">
+      <div class="col-md-3 col-6 fade-in">
+        <div class="banking-card faq-category-card" data-category="corporate">
+          <div class="faq-icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <h5>Corporate Banking</h5>
+          <p class="text-muted small">
+            Treasury, accounts, and corporate services
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6 fade-in">
+        <div class="banking-card faq-category-card" data-category="wealth">
+          <div class="faq-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h5>Private Wealth</h5>
+          <p class="text-muted small">Wealth management and family office</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6 fade-in">
+        <div class="banking-card faq-category-card" data-category="security">
+          <div class="faq-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h5>Security</h5>
+          <p class="text-muted small">Safety measures and compliance</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6 fade-in">
+        <div class="banking-card faq-category-card" data-category="global">
+          <div class="faq-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h5>Global Services</h5>
+          <p class="text-muted small">International operations</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ CONTENT -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <!-- Corporate Banking FAQs -->
+        <div class="mb-5 fade-in" data-category="corporate">
+          <h3 class="professional-display mb-4">Corporate Banking</h3>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>What types of corporate accounts do you offer?</h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                We offer multi-currency corporate accounts, treasury management
+                accounts, escrow services, and specialized industry-specific
+                accounts. All accounts include real-time global access,
+                automated cash management, and dedicated relationship
+                management.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>How do you handle international wire transfers?</h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                Our international wire transfers are processed through SWIFT and
+                local clearing systems with real-time tracking. We offer
+                same-day settlement for major currencies and provide competitive
+                exchange rates with full transparency on fees.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>
+                What is your approach to cash management for multinational
+                corporations?
+              </h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                We provide sophisticated cash management solutions including
+                automated sweeping, pooling across jurisdictions, real-time
+                liquidity management, and AI-driven cash flow forecasting. Our
+                platform integrates with major ERP systems for seamless treasury
+                operations.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Private Wealth FAQs -->
+        <div class="mb-5 fade-in" data-category="wealth">
+          <h3 class="professional-display mb-4">Private Wealth Management</h3>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>
+                What are the minimum requirements for private wealth services?
+              </h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                Our private wealth services typically require a minimum
+                relationship value of $10 million. However, we offer tailored
+                solutions based on individual circumstances and long-term
+                potential. All clients undergo comprehensive suitability
+                assessment.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>How do you ensure investment portfolio security?</h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                We employ multi-layered security including segregated custody
+                accounts, institutional-grade encryption, biometric
+                authentication, and 24/7 monitoring. All assets are held with
+                regulated custodians and protected by comprehensive insurance
+                coverage.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>Do you offer family office services?</h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                Yes, we provide comprehensive family office services including
+                generational wealth transfer planning, tax optimization,
+                philanthropic strategy, concierge banking, and coordination with
+                external advisors and family members.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security & Compliance FAQs -->
+        <div class="mb-5 fade-in" data-category="security">
+          <h3 class="professional-display mb-4">Security & Compliance</h3>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>What security certifications do you hold?</h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                We maintain ISO 27001 certification for information security,
+                SOC 2 Type II for service organization controls, and are fully
+                compliant with GDPR, CCPA, and global banking regulations. We
+                undergo regular independent security audits and penetration
+                testing.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>How is client data protected?</h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                Client data is encrypted both in transit (TLS 1.3) and at rest
+                (AES-256). We implement zero-trust architecture, multi-factor
+                authentication, and regular security training for all employees.
+                Data is stored in geographically redundant, secure data centers.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>What is your AML/KYC process?</h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                Our AML/KYC process includes comprehensive identity
+                verification, source of wealth validation, ongoing transaction
+                monitoring, and regular risk assessment updates. We use
+                AI-powered systems to detect suspicious activities and maintain
+                compliance with global AML regulations.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Global Services FAQs -->
+        <div class="fade-in" data-category="global">
+          <h3 class="professional-display mb-4">Global Services</h3>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>In how many countries do you operate?</h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                We operate in 48 countries through our owned offices and serve
+                clients in 150+ countries through correspondent banking
+                relationships and strategic partnerships. Our global network
+                ensures seamless cross-border banking services.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>
+                How do you handle currency exchange for international
+                transactions?
+              </h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                We provide institutional-grade FX services with competitive
+                rates, forward contracts, options, and automated hedging
+                strategies. Our multi-currency platform allows real-time
+                conversion and settlement across 60+ currencies.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>What support do you offer for international expansion?</h5>
+              <i class="fas fa-chevron-down faq-toggle"></i>
+            </div>
+            <div class="faq-answer">
+              <p class="text-muted mb-0">
+                We provide comprehensive international expansion support
+                including local market intelligence, regulatory guidance,
+                cross-border payment solutions, trade finance, and introductions
+                to local business networks through our global presence.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="py-5">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-8 fade-in">
+        <div class="banking-card p-5">
+          <h3 class="professional-display mb-3">Still Have Questions?</h3>
+          <p class="text-muted mb-4">
+            Our dedicated client relations team is available to provide
+            personalized answers and guidance for your specific needs.
+          </p>
+          <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <button class="banking-btn">
+              <i class="fas fa-phone me-2"></i>Contact Support
+            </button>
+            <button class="banking-btn btn-gold">
+              <i class="fas fa-calendar me-2"></i>Schedule Call
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // FAQ toggle functionality
+  document.querySelectorAll(".faq-question").forEach((question) => {
+    question.addEventListener("click", function () {
+      const faqItem = this.parentElement;
+      const answer = this.nextElementSibling;
+
+      // Close all other FAQs
+      document.querySelectorAll(".faq-item").forEach((item) => {
+        if (item !== faqItem) {
+          item.classList.remove("active");
+          item.querySelector(".faq-answer").classList.remove("show");
+        }
+      });
+
+      // Toggle current FAQ
+      faqItem.classList.toggle("active");
+      answer.classList.toggle("show");
+    });
+  });
+
+  // Search functionality with debouncing
+  let searchTimeout;
+  const searchInput = document.getElementById("faqSearch");
+  searchInput.addEventListener("input", function () {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      const searchTerm = this.value.toLowerCase().trim();
+      const faqItems = document.querySelectorAll(".faq-item");
+      let hasResults = false;
+
+      faqItems.forEach((item) => {
+        const question = item.querySelector("h5").textContent.toLowerCase();
+        const answer = item
+          .querySelector(".faq-answer")
+          .textContent.toLowerCase();
+
+        if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+          item.style.display = "block";
+          item.classList.add("highlight");
+          hasResults = true;
+
+          // Auto-expand matching items
+          item.classList.add("active");
+          item.querySelector(".faq-answer").classList.add("show");
+        } else {
+          item.style.display = "none";
+          item.classList.remove("highlight");
+        }
+      });
+
+      // Show/hide category sections based on results
+      document.querySelectorAll(".mb-5, .fade-in").forEach((section) => {
+        if (section.dataset.category) {
+          const visibleItems = section.querySelectorAll(
+            '.faq-item[style="display: block"]'
+          );
+          if (visibleItems.length > 0 || searchTerm.length < 2) {
+            section.style.display = "block";
+          } else {
+            section.style.display = "none";
+          }
+        }
+      });
+
+      // Show no results message
+      const noResults = document.getElementById("no-results");
+      if (!hasResults && searchTerm.length >= 2) {
+        if (!noResults) {
+          const noResultsMsg = document.createElement("div");
+          noResultsMsg.id = "no-results";
+          noResultsMsg.className = "text-center text-muted py-4";
+          noResultsMsg.textContent = "No matching questions found.";
+          document.querySelector(".col-lg-10").appendChild(noResultsMsg);
+        }
+      } else if (noResults) {
+        noResults.remove();
+      }
+    }, 300);
+  });
+
+  // Category filtering
+  document.querySelectorAll(".faq-category-card").forEach((card) => {
+    card.addEventListener("click", function () {
+      const category = this.dataset.category;
+
+      // Reset all category cards
+      document.querySelectorAll(".faq-category-card").forEach((c) => {
+        c.classList.remove("active");
+      });
+
+      // Activate clicked category
+      this.classList.add("active");
+
+      // Show/hide FAQ sections
+      document.querySelectorAll(".mb-5, .fade-in").forEach((section) => {
+        if (section.dataset.category) {
+          if (section.dataset.category === category) {
+            section.style.display = "block";
+            section.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else {
+            section.style.display = "none";
+          }
+        }
+      });
+    });
+  });
+
+  // Initialize animations
+  const revealElements = document.querySelectorAll(".fade-in");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+  revealElements.forEach((el) => observer.observe(el));
+
+  // Add floating animation to elements
+  const floatingElements = document.querySelectorAll(".floating-element");
+  floatingElements.forEach((el, index) => {
+    el.style.animationDelay = `${index * 0.2}s`;
+  });
+</script>
